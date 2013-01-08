@@ -1,0 +1,93 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/pprights
+set curloptions = `cat $pdir/users/$puser/config/curloptions`
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set available = "false"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "available" ) then
+                @ i++
+                set available = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+set p4serverurl = `cat $pdir/users/$puser/config/p4serverurl`
+set p4account = `cat $pdir/users/$puser/config/p4account`
+set maxlines = `cat $pdir/users/$puser/config/maxlines`
+#set owliriprefix =  `cat $pdir/users/$puser/config/owliriprefix`
+#
+#Sanity check 
+if ( "$available" != "true" && "$available" != "false" ) then
+	echo "400"
+	echo "Bad request"
+	echo "$this got wrong value for available ( $available )"
+	exit 2
+endif
+curl "$p4serverurl/access/dip/list/rights?available=$available" -o $pdir/logs/$this.$$ -H "userID:${p4account}" $curloptions
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error"
+	echo "$this got $ret in retrieving queried list from $p4serverurl"
+	exit 3
+endif
+#
+#Will work only maxlines AIPs
+set gotlist = `head -n $maxlines $pdir/logs/$this.$$`
+set numtot = `cat $pdir/logs/$this.$$ | wc -l`
+echo '<html><head><style type="text/css">form {margin:0px;}</style></head><body>'
+echo "<h4>Got $#gotlist items out of $numtot total</h4>"
+if ( "$available" == "false" ) then
+	foreach aipid ( $gotlist ) 
+	#	echo '<form method="get" action="showbasicmets"><input type="submit" value="See '$aipid'"><input type="hidden" name="identifier" value="'$aipid'"></form>'
+		echo '<div style="clear:both"><div style="float:left"><form method="get" target="query_log" action="showbasicmets">'$aipid '<input type="submit" value="Info"><input type="hidden" name="identifier" value="'$aipid'"></form></div>'
+		echo '<div style="float:left"><form method="get" target="query_log" action="getvideoplayer"><input type="submit" value="View"><input type="hidden" name="dipid" value="'$aipid'"></form></div>'
+		echo '<div style="float:left"><form method="get" target="rightsdraw2_main" action="getbasicmets2create"><input type="submit" value="Create"><input type="hidden" name="identifier" value="'$aipid'"></form></div></div>'
+		echo '<div style="float:left"><form method="get" target="query_log" action="getbasicmets2create"><input type="submit" value="Create"><input type="hidden" name="identifier" value="'$aipid'"></form></div></div>'
+	end
+else if ( "$available" == "true" ) then
+	foreach aipid ( $gotlist ) 
+		echo '<div style="clear:both"><div style="float:left"><form method="get" target="query_log" action="showbasicmets">'$aipid '<input type="submit" value="Info"><input type="hidden" name="identifier" value="'$aipid'"></form></div>'
+		echo '<div style="float:left"><form method="get" target="query_log" action="getvideoplayer"><input type="submit" value="View"><input type="hidden" name="dipid" value="'$aipid'"></form></div>'
+		echo '<div style="float:left"><form method="get" target="query_log" action="../pprights/import"><input type="submit" value="Import"><input type="hidden" name="identifier" value="'$aipid'"></form></div></div>'
+	#	echo '<form method="get" action="../pprights/import"><input type="submit" value="Import '$aipid'"><input type="hidden" name="identifier" value="'$aipid'"></form>'
+	end
+endif
+echo '</body></html>'
+exit 0

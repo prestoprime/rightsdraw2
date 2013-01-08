@@ -1,0 +1,115 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/pprights
+set curloptions = `cat $pdir/users/$puser/config/curloptions`
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set instance = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "instance" ) then
+                @ i++
+                set instance = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this $QUERY_STRING"
+                exit 1
+        endif
+        @ i++
+end
+set p4serverurl = `cat $pdir/users/$puser/config/p4serverurl`
+set p4account = `cat $pdir/users/$puser/config/p4account`
+#Sanity check
+if ( !(-ersf "$repo/$instance")  ) then
+	echo "404"
+	echo "Not found"
+	exit 2
+endif
+##### TRYING FIRST THE UPDATE MODES
+if ( -ersf "$repo/.aipids/$instance.aipid" ) then
+	set aipid = `cat $repo/.aipids/$instance.aipid`
+else
+	set identifier = `xsltproc $pdir/xsl/getAVIdentifier.xsl "$repo/$instance" | sort -u`
+	set ret = $?
+	if ( $ret || "$identifier" == "" ) then
+		echo "500"
+		echo "Server error"
+		echo "$this got $ret in retrieving IPEntity identifier for $instance"
+		exit 3
+	endif
+	curl "$p4serverurl/search/identifier/${identifier}" -o $pdir/logs/$this.$$ -H "userID:${p4account}" $curloptions
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server error"
+		echo "$this got $ret in retrieving aipid $identifier for $instance"
+		exit 4
+	endif
+	set aipid =  `head -n 1 $pdir/logs/$this.$$`
+endif
+if ( "$aipid" != "" ) then
+	curl  -F id="${aipid}" -F resultFile=@"$repo/$instance" "$p4serverurl/wf/execute/rights_update" -o $pdir/logs/$this.$$ -H "userID:${p4account}" $curloptions
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server error"
+		echo "$this got $ret in updating aipid $aipid for $instance"
+		exit 5
+	endif
+#
+####	Warning: remote service might fail without raising exceptions
+	cat $pdir/logs/$this.$$
+	exit 0
+endif
+##### THIS IS THE FIRST INGEST MODE
+set now = `date +'%FT%T'`
+xsltproc --stringparam created $now --stringparam account $puser $pdir/xsl/createSIPRightsMD.xsl "$repo/$instance" > $pdir/logs/$instance.sip
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error"
+	echo "$this got $ret in creating sip for submitting $instance"
+	exit 6
+endif
+curl -F sipFile=@$pdir/logs/$instance.sip  "$p4serverurl/wf/execute/ingest_rights" -o $pdir/logs/$this.$$  -H "userID:${p4account}" $curloptions
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error"
+	echo "$this got $ret in submitting sip for $instance"
+	exit 7
+endif
+####	Warning: remote service might fail without raising exceptions
+cat $pdir/logs/$this.$$
+exit 0

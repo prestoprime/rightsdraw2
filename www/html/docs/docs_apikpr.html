@@ -1,0 +1,151 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>KPR Context interfaces</h2>
+		<p>
+The KPR context, with prefix <i>/cgi-bin/rightsdraw2/kpr</i>, provides the following Interfaces:
+		</p>
+<hr/>
+<a href="#copy2folder">copy2folder</a>
+<a href="#deploy">deploy</a>
+<a href="#guiadm">guiadm</a>
+<a href="#list">list</a>
+<a href="#view/graph">view/graph</a>
+<a href="#view/text">view/text</a>
+<a href="#withdraw">withdraw</a>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="copy2folder">
+		<h4>Name: copy2folder</h4>
+		<p>
+		<b>Description</b>
+Copies the OWL File representing a Key Pattern Right from <i>sourcefolder</i> to <i>targetfolder</i>.
+The possible source and folders are any of the Key Pattern repositories, i.e. <i>test</i> and <i>actual</i>, while as source folder it is also possible to give the specific <i>kpr</i> User's edititng area.
+It doesn't overwrite an existing document, but returns <i>403 Forbidden</i>.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+			<li><b>sourcefolder</b> - folder where the OWL file is
+			<li><b>targetfolder</b> - folder destination of the copy
+		</ul>
+		<p>
+		<b>See also:</b> <a href="#deploy">deploy</a>
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="deploy">
+		<h4>Name: deploy</h4>
+		<p>
+		<b>Description</b>
+Uploads an OWL File expected to represent a Key Pattern Right to the given folder.
+It doesn't overwrite an existing document, but returns <i>403 Forbidden</i>.
+		</p>
+		<p>
+		<b>Method:</b> POST
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+			<li><b>folder</b> - folder destination of the upload (<i>test</i> or <i>actual</i>)
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="guiadm">
+		<h4>Name: guiadm</h4>
+		<p>
+		<b>Description</b>
+Serves to the User, as html output, the lists of the Key Pattern in both <i>test</i> and <i>actual</i> shared repositories, and a number of forms for verifying the content and managing them.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+None
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="list">
+		<h4>Name: list</h4>
+		<p>
+		<b>Description</b>
+List the names of Key Patterns deployed in the given folder
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>folder</b> - name of Key Pattern folder (<i>test</i> or <i>actual</i>)
+		</ul>
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="view/graph">
+		<h4>Name: view/graph</h4>
+		<p>
+		<b>Description</b>
+Provides a diagram of the graph of the given Key Pattern
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>folder</b> - name of Key Pattern folder (<i>test</i> or <i>actual</i>)
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="view/text">
+		<h4>Name: view/text</h4>
+		<p>
+		<b>Description</b>
+Provides a derived text describing the given Key Pattern
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>folder</b> - name of Key Pattern folder (<i>test</i> or <i>actual</i>)
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="withdraw">
+		<h4>Name: withdraw</h4>
+		<p>
+		<b>Description</b>
+Removes the given instance of Key Pattern from the given Key Pattern deployment forlder.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>folder</b> - name of Key Pattern folder (<i>test</i> or <i>actual</i>)
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<hr/>
+	</body>
+</html>

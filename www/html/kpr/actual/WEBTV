@@ -1,0 +1,56 @@
+<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="http://www.prestoprime.eu/ppavro/2012/dummy.owl" ontologyIRI="http://www.prestoprime.eu/ppavro/2012/dummy.owl">
+  <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+  <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+  <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+  <Import>urn:mpeg:mpeg21:celmc:owl:2012#</Import>
+  
+  <Declaration>
+    <NamedIndividual IRI="#x390"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x391"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x392"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x393"/>
+  </Declaration>
+  
+  <ClassAssertion>
+    <Class IRI="http://purl.oclc.org/NET/mvco.owl#Permission"/>
+    <NamedIndividual IRI="#x390"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#CommunicationToThePublic"/>
+    <NamedIndividual IRI="#x391"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#Webcasting"/>
+    <NamedIndividual IRI="#x392"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#Internet"/>
+    <NamedIndividual IRI="#x393"/>
+  </ClassAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#permitsAction"/>
+    <NamedIndividual IRI="#x390"/>
+    <NamedIndividual IRI="#x391"/>
+  </ObjectPropertyAssertion>
+  
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x390"/>
+    <NamedIndividual IRI="#x392"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x390"/>
+    <NamedIndividual IRI="#x393"/>
+  </ObjectPropertyAssertion>
+  
+  
+  
+</Ontology>

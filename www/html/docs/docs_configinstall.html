@@ -1,0 +1,75 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>How to configure and install  <i class="rd">RightsDraw</i></h2>
+		<h3>Preparation</h3>
+		<p>
+The <i class="rd">Rightsdraw</i> sofware package is distributed in form tarball (tar.gz), and is expected to be installed on a Linux Ubuntu system. 
+		</p>
+		<p>
+In principle the service can run on any Linux system, however the resolution of dependencies and the name of some utilities command may be diffent. If you intend to install  <i class="rd">Rightsdraw</i> on a system with a Linux distribution different from Ubuntu, you will need to modify the dependency check part of the configuration and you may need to create aliases to some commands.
+		</p>
+		<p>
+You can unpack the tarball in any location of your filesystem, such as /opt or /usr/local, where the folder <i>rightsdraw2</i> will be created and will become the working directory of your  <i class="rd">Rightsdraw</i> services.
+		</p>
+		<p>
+The ownership of the working directory and its path hierarchy will be given to the system user indicated in the initial configuration.
+Write permission to some folders will also be given to the system user running apache web server. 
+		</p>
+		<p>
+The configuration script requires the <i>tcsh</i> interpreter.
+		</p>
+		<h3>Configuration</h3>
+		<p>
+Before actually installing the software it is required to run the configuration script.
+		</p>
+		<p>
+The configuration script will set a number of properties, the default values of which can be overwritten by indicating the desired option from the command line.
+		</p>
+		<p>
+To run the configuration, execute the following commands from a terminal:
+		</p>
+		<p class="cmd">
+$cd /&lt;yourpath&gt;/rightsdraw2<br/>
+$./configure [OPTIONS]
+		</p>
+		<p>
+For knowing the configuration options and their default values, just run:
+		</p>
+		<p class="cmd">
+$./configure -h 
+		</p>
+		<p>
+The configuration script will first run a dependency check. In case some package will result missing, the script will notify the problem and exit.
+		</p>
+		<p>
+On success, the configuration will create the scripts for completing the installation and for the users administration.
+		</p>
+		<h3>Install / Uninstall</h3>
+		<p>
+The installation command must be given with administration privileges.
+		</p>
+		<p class="cmd">
+$cd /&lt;yourpath&gt;/rightsdraw2<br/>
+$sudo ./install 
+		</p>
+		<p>
+Within the installation, a user named "default" is created. You will be required to set a password for this user and confirm it.
+		</p>
+		<p>
+The user "default" is used also as a template for the creation of other users. Do not drop it.
+		</p>
+		<p>
+To uninstall  <i class="rd">Rightsdraw</i> it is sufficient to run, as root:
+		</p>
+		<p class="cmd">
+$cd /&lt;yourpath&gt;/rightsdraw2<br/>
+$sudo ./uninstall 
+		</p>
+		<p>
+The uninstall script just makes inactive the services to the http server but it doesn't remove the users files and the  <i class="rd">Rightsdraw</i> working directories.
+		</p>
+	</body>
+</html>

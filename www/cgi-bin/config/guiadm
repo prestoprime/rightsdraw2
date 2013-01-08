@@ -1,0 +1,178 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/contracts
+set colors = `cat $pdir/users/$puser/config/colors`
+set rankdir = `cat $pdir/users/$puser/config/rankdir`
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+set uservariable = "null"
+set newvalue = "null"
+set action = "null"
+set htmlmode = ""
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "uservariable" ) then
+                @ i++
+                set uservariable = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "action" ) then
+                @ i++
+                set action = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "newvalue" ) then
+                @ i++
+                set newvalue = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "htmlmode" ) then
+                @ i++
+                set htmlmode = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+if ( "$uservariable" != null ) then
+#	if got 1 
+#		variable exist but value is not acceptable ; 
+#	if got greater than one 
+#		both variable and value are okayed
+	set checkinput = `echo "$uservariable=$newvalue;$useroptions" | awk '{r=0;n=split($1,a,";"); split(a[1],u,"=");for (i=2;i<=n;i++){ split(a[i],v,"=");if(v[1]==u[1]){r++; z=split(v[2],w,"|"); if (z<2) r++; for (j=1;j<=z;j++){if (w[j]==u[2])r++;}}}print r}'`
+	if ( $checkinput <= 0 ) then
+		echo "400"
+		echo "Bad request"
+		echo "$this Invalid variable $uservariable\n"
+		exit 3
+	else if ( $checkinput < 2 && "$newvalue" != null ) then
+		echo "400"
+		echo "Bad request"
+		echo "$this Value $newvalue for variable $uservariable is not acceptable\n"
+		exit 4
+	endif
+endif
+if ( "$action" == setdefault ) then
+	set vdefault = `echo "$uservariable=default;$useroptions" | awk '{n=split($1,a,";"); split(a[1],u,"=");for (i=2;i<=n;i++){ split(a[i],v,"=");if(v[1]==u[1]){ z=split(v[2],w,"|"); print w[1];}}}'`
+	echo "$vdefault" > $pdir/users/$puser/config/$uservariable
+	set ret = $?
+	if ( $ret != 0 ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this got $ret in setting default value ($vdefault) to $uservariable\n"
+		exit 6
+	endif
+	echo "200"
+	echo "Success"
+#	exit 0
+else if ( "$action" == setoption ) then
+	echo "$newvalue" >  $pdir/users/$puser/config/$uservariable
+	set ret = $?
+	if ( $ret != 0 ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this got $ret in setting value $newvalue to $uservariable\n"
+		exit 5
+	endif
+	echo "200"
+	echo "Success"
+#	exit 0
+else if ( "$action" == getvalue ) then
+	if ( -ersf "$pdir/users/$puser/config/$uservariable" ) then
+		cat "$pdir/users/$puser/config/$uservariable" 
+	else
+		echo "404"
+		echo "Not Found"
+		echo "$this could not read variable $uservariable"
+		exit 7
+	endif
+#	exit 0
+else if ( "$action" == getinfo ) then
+	set vinfo = `echo "$uservariable=default;$useroptions" | awk '{n=split($1,a,";"); split(a[1],u,"=");for (i=2;i<=n;i++){ split(a[i],v,"=");if(v[1]==u[1]){ z=split(v[2],w,"|"); for (j=1;j<=z;j++){print w[j];}}}'`
+	echo "$vinfo\n"
+	exit 0
+else if ( "$action" != null ) then
+	echo "400"
+	echo "Bad Request"
+	echo "$this Invalid action $action\n"
+	exit 2
+endif
+#
+#
+if ( "$action" == null || "$htmlmode" == true ) then
+#	Header things
+	echo "<html>\n<head/>\n<body>"
+	echo '<table border="0"><tr>'
+	echo '<td><h3 style="color:#660000"">Welcome <i>'$puser'</i> to your <i>Settings</i> section</h3></td>'
+	echo '<td width="40px"/>'
+	echo '<td><form method="get" action="guiadm" style="margin:0px">\n<input type="submit" value="Refresh"></input></form></td>'
+	echo '<td width="150px"/>'
+	echo '<td><form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px"><input type="hidden" name="username" value="'$puser'"/><input type="submit" value="Quit"/></form></td>'
+	echo '</tr></table>'
+	echo '<table border="0"><tr>'
+	#Column
+	echo '	<td style="vertical-align:top"><table border="0">'
+	set listofuvar = `echo "$useroptions" | awk '{n=split($1,a,";"); for (i=1;i<=n;i++){ split(a[i],v,"=");print v[1]}}'`
+	foreach uvar ( $listofuvar ) 
+		if ( -ersf "$pdir/users/$puser/config/$uvar" ) then
+			set cvalue = `cat "$pdir/users/$puser/config/$uvar"`
+		else
+			set cvalue = null
+		endif
+		echo "		<tr><td><b>$uvar=$cvalue</b></td><td>"
+		echo '	<form action="guiadm" method="get" style="margin:0px"><input type="submit" value="Change"/>'
+		echo '		<input type="hidden" name="action" value="setoption"/>'
+		echo '		<input type="hidden" name="htmlmode" value="true"/>'
+		echo '		<input type="hidden" name="uservariable" value="'$uvar'"/>'
+		set listofoptions = `echo "$uvar=default;$useroptions" | awk '{n=split($1,a,";"); split(a[1],u,"=");for (i=2;i<=n;i++){ split(a[i],v,"=");if(v[1]==u[1]){z=split(v[2],w,"|");for (j=1;j<=z;j++)print w[j];}}}'`
+		if ( $#listofoptions > 1 ) then
+			foreach opt ( $listofoptions )
+				echo "		$opt"'<input type="radio" name="newvalue" value="'$opt'"/>'
+			end
+		else
+			echo '		<input type="text" name="newvalue" value="'$listofoptions'" size="22"/>'
+		endif
+		echo '</form></td><td></td><td><form action="guiadm" method="get" style="margin:0px"><input type="submit" value="Set Default"/>'
+		echo '		<input type="hidden" name="action" value="setdefault"/>'
+		echo '		<input type="hidden" name="htmlmode" value="true"/>'
+		echo '		<input type="hidden" name="uservariable" value="'$uvar'"/>'
+		echo '	</form></td></tr>'
+	end
+	echo '	</table></td>'
+	echo "</tr></table>"
+	echo '<img src="/rightsdraw2/Logo600x100.png">'
+	echo "</body>\n</html>"
+endif
+exit 0
+
+
+
+
+
+
+

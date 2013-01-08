@@ -1,0 +1,196 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>MKR Context interfaces</h2>
+		<p>
+The MKR context, with prefix <i>/cgi-bin/rightsdraw2/mkr</i>, provides the following Interfaces:
+		</p>
+<hr/>
+<a href="#addkp">addkp</a>
+<a href="#create">create</a>
+<a href="#guiadm">guiadm</a>
+<a href="#removekp">removekp</a>
+<a href="#selectindividual">selectindividual</a>
+<a href="#showform">showform</a>
+<a href="#viewedit">viewedit</a>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="addkp">
+		<h4>Name: addkp</h4>
+		<p>
+		<b>Description</b>
+Adds to the OWL file and their IPEntities, the Permission pre-defined in the given Key Pattern Right.
+The required context Facts and the Permission properties can also be given. It is also possible to set the include Permission as <i>Secondary Permission</i>, indicating which is the related <i>Primary Permission</i>· 
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>contract</b> - IRI of the Contract in which this is issued
+			<li><b>instance</b> - name of OWL file
+			<li><b>kp</b> - name of the Key Pattern to be added
+			<li>DataProperties of the Permission (included from Key Pattern)
+			<li><b>isexclusive</b> - boolean value of mco-ipre:isExlclusive  (default: false) 
+			<li><b>hassublicense</b> - boolean value of mco-ipre:hasSublicenseRight  (default: true) 
+			<li>Related Action Fact and properties
+			<li><b>relatedaction</b> - IRI of a SubClassOf mco-core:ActionRelatedFact
+			<li><b>relatedactionperm</b> - IRI of the Permission, the permitted action of which will make true the mco-core:ActionRelatedFact
+			<li><b>relatedactiondelay</b> - value of DataProperty mco-ipre:withDelay
+			<li><b>relatedactionvalidity</b> - value of DataProperty mco-ipre:hasValidity
+			<li>Flags for setting Facts to Negative
+			<li><b>negativerelatedaction</b>
+			<li><b>negativespatialcontext</b>
+			<li><b>negativetemporalcontext</b>
+			<li><b>negativeusertimeaccess</b>
+			<li>DataProperties implying related Facts
+			<li><b>afterdate</b> - value of mco-ipre:afterDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>beforedate</b> - value of mco-ipre:beforeDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>languages</b> - value of mco-ipre:hasLanguage for a mco-ipre:Language - format: list of ISO 639-1 language codes (each as '#&lt;code&gt;;') 
+			<li><b>numruns</b> - value of mco-ipre:hasNumberOfRuns for a mco-ipre:Run - format: positiveInteger
+			<li><b>runduration</b> - value of mco-ipre:hasValidity for a mco-ipre:Run - ISO 8601 Duration
+			<li><b>territories</b> - value of mco-ipre:hasCountry for a mco-ipre:SpatialContext - format: list of ISO 3166 country codes (each as '#&lt;CODE&gt;;') 
+		</ul>
+		<p>
+		<b>See also:</b> <a href="docs_apimco.html#definepermission">mco/definepermission</a>, <a href="docs_apiquery.html#doquery">query/doquery</a>
+		</p>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="create">
+		<h4>Name: create</h4>
+		<p>
+		<b>Description</b>
+Creates a new OWL document, including an Individual of the Class appropriate to the context of the user's setting, with Annotation metadata if given.
+The first Individual can be a mco-core:Contract, an mvco:IPEntity or an mvco:Permission, according to context.
+After creation the OWL document is immediately open for editing, by re-direction to <a href="#viewedit">viewedit</a>.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>identifier</b> -  if given it will be the basename of the OWL file, which is otherwise created automatically. If an IPEntity is created, the same is also used for naming the IPEntity and its Identifier
+			<li><b>description</b> - value of Dublin Core AnnotationProperty
+			<li><b>title</b> - value of Dublin Core AnnotationProperty
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="guiadm">
+		<h4>Name: </h4>
+		<p>
+		<b>Description</b>
+Serves to the User a possibility of actions (viewing/editing, export, delete)  on the OWL files in his/her repository,
+and a form for requesting the creation of a new OWL file.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+None
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="removekp">
+		<h4>Name: removekp</h4>
+		<p>
+		<b>Description</b>
+Removes the given Individual of mvco:Permission, all its Properties (Object and Data), the related permitted actions, Facts intersections, action related facts, and any remaining <i>"orphans"</i> from the given OWL file, where <i>orphans</i> are those Indivuals without any ObjectProperty.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+			<li><b>permission</b> - IRI of Individual of mvco:Permission to be removed
+		</ul>
+		<p>
+		<b>Caveat:</b>
+It may leave the OWL file completely empty, when the graph of the OWL file is not yet defined enough.
+		</p>
+		<p>
+		<b>See also:</b> <a href="docs_apimco.html#remove">mco/remove</a>
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="selectindividual">
+		<h4>Name: selectindividual</h4>
+		<p>
+		<b>Description</b>
+Serves the list of Indivual of a given Class within an OWL file, as options for a select form in an htmlcontext.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>classiri</b> - IRI of the target Class 
+			<li><b>classname</b> - alternatively: suffix IRI of the target Class
+			<li><b>fieldname</b> - name of the field of the form, which is the target of the selection
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="showform">
+		<h4>Name: showform</h4>
+		<p>
+		<b>Description</b>
+Serves a form to the User, as html output, for filling the required details about to a given Key Pattern to be added. The form is contextualized with the values of the parameters given in input.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>fieldname</b> - name of field of the form, if applicable
+			<li><b>form</b> - name of a form among:
+			<ul>
+				<li>mkr-addkpr-form.html
+				<li>durationForm.html
+			</ul>
+			<li><b>instance</b> - name of OWL file
+			<li><b>kp</b> - name of a Key Pattern
+set kp = "null"
+		</ul>
+		<p>
+		<b>See also:</b> <a href="docs_apiquery#showform">query/showform</a>, <a href="#addkp">addkp</a>
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="viewedit">
+		<h4>Name: viewedit</h4>
+		<p>
+		<b>Description</b>
+Compares the given OWL files with the deployed Key Patterns, according to the Key Pattern repository in the User's settings, and presents, as html output, the current Permissions and their constraints, grouped according to Key Pattern matching.
+It also provides a number of forms, as html output, for modifying the OWL file instance. 
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+		<p>
+		<b>See also:</b> <a href="#addkp">addkp</a>, <a href="#removekp">removekp</a>
+		</p>
+<hr/>
+	</body>
+</html>

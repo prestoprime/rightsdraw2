@@ -1,0 +1,91 @@
+#!/bin/tcsh -f
+
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+set this = `basename $0`
+if ( !($?pdir) ) then
+	echo
+	echo "$this Error "
+	echo "\tVariable 'pdir' must be defined in environment"
+	echo
+	exit 99
+endif
+
+if ( $#argv < 1 ) then
+	echo
+	echo "\tUsage:"
+	echo "\t$this [options] rights-owl-instance"
+	echo "\t\t-id <id> (set RightsInstance id attribute to the given value, optional. Might be the AIPID)"
+	echo "\t\t-sav <RightsIndexFileName> (save data RightsIndexInstance in the given RightsIndexFile, optional. Default is stdout only)"
+	echo
+	echo
+	exit
+endif
+set i = 1
+set riid = ""
+set riidstringparam = ""
+set rifile = ""
+set rifilestringparam = ""
+while ( $i <= $#argv )
+	if ( "$argv[$i]" == "-id" ) then
+		@ i++
+		set riid = "$argv[$i]"
+		set riidstringparam = "--stringparam instanceid $riid"
+	else if ( "$argv[$i]" == "-sav" ) then
+		@ i++
+		set rifile = "$argv[$i]"
+		set rifilestringparam = "--stringparam indexfile $rifile"
+	else
+		set instance = "$argv[$i]"
+	endif
+	@ i++
+end
+#
+#	PRE-CONDITIONS
+if ( !(-ersf $instance) ) then
+	echo "${this}: error $instance not found"
+	exit 1
+endif
+xmllint $instance >& /dev/null
+set ret = $?
+if ( $ret != 0 ) then
+	echo "${this}: error $instance not good xml input"
+	exit 2
+endif
+#
+#	ACTUAL EXECUTION
+xsltproc $pdir/xsl/ByPassIntrsctns.xsl $instance > $pdir/logs/.tmp.ByPassIntrsctns.$$
+xsltproc --stringparam ppavro $pdir/share/ppavro.owl --stringparam countrycodes $pdir/share/ebu_Iso3166CountryCodeCS.xml --stringparam languagecodes $pdir/share/ebu_Iso639_1LanguageCodeCS.xml $riidstringparam $rifilestringparam $pdir/xsl/MakeRightsIndex.xsl $pdir/logs/.tmp.ByPassIntrsctns.$$ > $pdir/logs/.tmp.$$
+#
+#	POST-CHECKS
+xmllint --schema $pdir/share/RightsIndex.xsd $pdir/logs/.tmp.$$ >& $pdir/logs/.tmp.$$.xmllint.log
+set ret = $?
+if ( $ret != 0 ) then
+	echo "${this}: error not good index xml output. Left logs: $pdir/logs/.tmp.$$ and $pdir/logs/.tmp.$$.xmllint.log"
+	exit 3
+endif
+if ( "$rifile" != "" ) then
+	cp -b $pdir/logs/.tmp.$$ $rifile
+endif
+cat $pdir/logs/.tmp.$$
+rm $pdir/logs/.tmp.$$ $pdir/logs/.tmp.$$.xmllint.log
+exit 0

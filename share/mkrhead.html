@@ -1,0 +1,51 @@
+<html>
+<head>
+<link href="/rightsdraw2/css/mkr.css" type="text/css" rel="stylesheet"/>
+<script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
+<script src="/rightsdraw2/js/jquery.js"></script>
+<script>
+$(document).ready(function(){
+	$(".button").text('fill constraints');	
+	$(".nascosto").hide();
+	//$(".button")
+	$(".button").toggle(function(){
+	$(this).next().slideDown();
+	$(this).text('close constraints')
+	$(".button").addClass('button_open');
+},
+function(){
+	$(this).next().slideUp();
+	$(this).text('fill constraints');
+})
+});
+$(document).ready(function(){
+	$(".actedon").text('acted on:');	
+	$(".ipdetails").hide();
+	//$(".button")
+	$(".actedon").toggle(function(){
+	$(this).next().slideDown();
+	$(this).text('acted on:')
+	$(".actedon").addClass('button_open');
+},
+function(){
+	$(this).next().slideUp();
+	$(this).text('acted on:');
+})
+});
+</script>
+</head>
+<body>
+<table border="0"><tr>
+<td><h3>Welcome <i>+++puser+++</i>. You are viewing and editing your <i>+++instance+++</i> instance. Your kpr is set to <i>+++kprfolder+++</i></h3></td>
+<td width="30px"/>
+<td>
+<form method="get" action="viewedit" style="margin:0px">
+	<input type="hidden" name="instance" value="+++instance+++">
+	<input type="submit" value="Refresh">
+</form>
+</td>
+<td width="120px"/>
+<td>
+<form action="guiadm" style="margin:0px"><input type="submit" value="Quit"/></form>
+</td>
+</tr></table>

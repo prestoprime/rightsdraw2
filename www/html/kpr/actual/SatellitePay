@@ -1,0 +1,80 @@
+<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="http://www.prestoprime.eu/ppavro/2012/dummy.owl" ontologyIRI="http://www.prestoprime.eu/ppavro/2012/dummy.owl">
+  <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+  <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+  <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+  <Import>urn:mpeg:mpeg21:celmc:owl:2012#</Import>
+  
+  <Declaration>
+    <NamedIndividual IRI="#x368"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x369"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x370"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x371"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x372"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x373"/>
+  </Declaration>
+  
+  <ClassAssertion>
+    <Class IRI="http://purl.oclc.org/NET/mvco.owl#Permission"/>
+    <NamedIndividual IRI="#x368"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#CommunicationToThePublic"/>
+    <NamedIndividual IRI="#x369"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#Pay"/>
+    <NamedIndividual IRI="#x370"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#Broadcasting"/>
+    <NamedIndividual IRI="#x371"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#Satellite"/>
+    <NamedIndividual IRI="#x372"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#TelevisionSet"/>
+    <NamedIndividual IRI="#x373"/>
+  </ClassAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#permitsAction"/>
+    <NamedIndividual IRI="#x368"/>
+    <NamedIndividual IRI="#x369"/>
+  </ObjectPropertyAssertion>
+  
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x368"/>
+    <NamedIndividual IRI="#x370"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x368"/>
+    <NamedIndividual IRI="#x371"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x368"/>
+    <NamedIndividual IRI="#x372"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x368"/>
+    <NamedIndividual IRI="#x373"/>
+  </ObjectPropertyAssertion>
+  
+  
+  
+</Ontology>

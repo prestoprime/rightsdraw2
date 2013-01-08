@@ -1,0 +1,185 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>Query Context interfaces</h2>
+		<p>
+The query context, with prefix <i>/cgi-bin/rightsdraw2/query</i>, provides the following Interfaces:
+		</p>
+<hr/>
+<a href="#doquery">doquery</a>
+<a href="#getbasicmets2create">getbasicmets2create</a>
+<a href="#getlist">getlist</a>
+<a href="#getvideoplayer">getvideoplayer</a>
+<a href="#guiadm">guiadm</a>
+<a href="#showbasicmets">showbasicmets</a>
+<a href="#showform">showform</a>
+
+
+<hr/>
+		<a name="doquery">
+		<h4>Name: doquery</h4>
+		<p>
+		<b>Description</b>
+Creates a query, in terms of a target Permission, according to the given parameters and submit it to the <i>P4/wf/query_rights</i> interface. It gets the query results and presents them to the User for further actions.		
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>kp</b> - name of a Key Pattern, which can be used as template for the query instead of specifying a <i>permitted action</i> and most Facts. Still Facts specifying the contexts have normally to be specified
+			<li><b>permittedaction</b> - IRI of a SubClassOf mvco:Action, which is going to be permitted by the defined Permission
+			<li>DataProperties of the Permission
+			<li><b>isexclusive</b> - boolean value of mco-ipre:isExlclusive  (default: false) 
+			<li><b>hassublicense</b> - boolean value of mco-ipre:hasSublicenseRight  (default: true) 
+			<li>Classes of Facts
+			<li><b>accesspolicy</b> - IRI of a SubClassOf mco-ipre:AccessPolicy
+			<li><b>deliverymodality</b> - IRI of a SubClassOf mco-ipre:DeliveryModality
+			<li><b>device</b> - IRI of a SubClassOf mco-ipre:Device
+			<li><b>means</b> - IRI of a SubClassOf mco-ipre:Means
+			<li><b>relatedaction</b> - IRI of a SubClassOf mco-core:ActionRelatedFact
+			<li><b>serviceaccesspolicy</b> - IRI of a SubClassOf mco-ipre:ServiceAccessPolicy
+			<li><b>usertimeaccess</b> - IRI of a SubClassOf mco-ipre:UserTimeAccess
+			<li>Flags for setting Facts to Negative
+			<li><b>negativeaccesspolicy</b> 
+			<li><b>negativedeliverymodality</b>
+			<li><b>negativedevice</b>
+			<li><b>negativelanguages</b>
+			<li><b>negativemeans</b>
+			<li><b>negativerelatedaction</b>
+			<li><b>negativeserviceaccesspolicy</b>
+			<li><b>negativespatialcontext</b>
+			<li><b>negativetemporalcontext</b>
+			<li><b>negativeusertimeaccess</b>
+			<li>DataProperties implying related Facts
+			<li><b>afterdate</b> - value of mco-ipre:afterDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>beforedate</b> - value of mco-ipre:beforeDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>languages</b> - value of mco-ipre:hasLanguage for a mco-ipre:Language - format: list of ISO 639-1 language codes (each as '#&lt;code&gt;;') 
+			<li><b>numruns</b> - value of mco-ipre:hasNumberOfRuns for a mco-ipre:Run - format: positiveInteger
+			<li><b>runduration</b> - value of mco-ipre:hasValidity for a mco-ipre:Run - ISO 8601 Duration
+			<li><b>territories</b> - value of mco-ipre:hasCountry for a mco-ipre:SpatialContext - format: list of ISO 3166 country codes (each as '#&lt;CODE&gt;;') 
+		</ul>
+		<p>
+		<b>See also:</b> <a href="docs_apimco.html#definepermission">mco/definepermission</a>
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="getbasicmets2create">
+		<h4>Name: getbasicmets2create</h4>
+		<p>
+		<b>Description</b>
+Given the identifier of a P4 AIP, which is assumed to lack of rights information, it retrieves from <i>P4</i> the corresponding DIP, from which it extracts the basic Dublin Core information (identifier, title, and description) and uses them for re-directing the request to a <i>create</i> service in <i class="rd">RightsDraw</i>.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>identifier</b> - ID of a P4 AIP
+		</ul>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="getlist">
+		<h4>Name: getlist</h4>
+		<p>
+		<b>Description</b>
+Gets from P4 the list of archival items which already have (<i>available=true</i>) or not have yet (<i>available=false</i>) rights information included in the AIP. 
+The resulting list is served as html output with a number of forms, for each item, permitting to the User a selection among various working options.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>available</b> - true or false 
+		</ul>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="getvideoplayer">
+		<h4>Name: getvideoplayer</h4>
+		<p>
+		<b>Description</b>
+Gets from P4 a videoplayer for the content browsing quality of the given archival item
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>dipid</b> - ID of P4 DIP
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="guiadm">
+		<h4>Name: guiadm</h4>
+		<p>
+		<b>Description</b>
+Serves to the User, as html output, a number of forms for creating and submitting queries to P4 (getlist, doquery). 
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+None
+		</p>
+		<p>
+		<b>See also:</b> <a href="#doquery">doquery</a>, <a href="#getlist">getlist</a>, <a href="#showform">showform</a>
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="showbasicmets">
+		<h4>Name: showbasicmets</h4>
+		<p>
+		<b>Description</b>
+Given the identifier of a P4 AIP, it retrieves from <i>P4</i> the corresponding DIP and serves to the User, as html output, the basic Dublic Core information.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>identifier</b> - ID of a P4 AIP
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="showform">
+		<h4>Name: showform</h4>
+		<p>
+		<b>Description</b>
+Serves the requested form to the User as html output, for creating and posting queries
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>form</b> - name of a form among:
+			<ul>
+				<li>query-finditems-form.html
+				<li>query-free-form.html
+				<li>query-kpr-form.html
+			</ul>
+		</ul>
+		<p>
+		<b>See also:</b> <a href="#doquery">doquery</a>, <a href="#getlist">getlist</a>, <a href="#guiadm">guiadm</a>
+		</p>
+<hr/>
+	</body>
+</html>

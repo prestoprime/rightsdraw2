@@ -1,0 +1,493 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set repo = $pdir/users/$puser/repo/$mcomode
+set colors = `cat $pdir/users/$puser/config/colors`
+set rankdir = `cat $pdir/users/$puser/config/rankdir`
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set instance = "null"
+set handle = "null"
+set permittedaction = "null"
+set isexclusive = "null"
+set hassublicense = "null"
+set accesspolicy = "null"
+set serviceaccesspolicy = "null"
+set deliverymodality = "null"
+set means = "null"
+set device = "null"
+set usertimeaccess = "null"
+set relatedaction = "null"
+set negativeaccesspolicy = "no"
+set negativeserviceaccesspolicy = "no" 
+set negativedeliverymodality = "no"
+set negativemeans = "no"
+set negativedevice = "no"
+set negativeusertimeaccess = "no"
+set negativerelatedaction = "no"
+set afterdate = "null"
+set beforedate = "null"
+set negativetemporalcontext = "no"
+set territories = "null"
+set negativespatialcontext = "no"
+set languanges = "null"
+set negativelanguages = "no"
+set numruns = "null"
+set runduration = "null"
+set permissiontarget = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "instance" ) then
+                @ i++
+                set instance = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "handle" ) then
+                @ i++
+                set handle = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "permittedaction" ) then
+                @ i++
+                set permittedaction = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "isexclusive" ) then
+                @ i++
+                set isexclusive = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "hassublicense" ) then
+                @ i++
+                set hassublicense = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "accesspolicy" ) then
+                @ i++
+                set accesspolicy = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "serviceaccesspolicy" ) then
+                @ i++
+                set serviceaccesspolicy = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "deliverymodality" ) then
+                @ i++
+                set deliverymodality = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "means" ) then
+                @ i++
+                set means = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "device" ) then
+                @ i++
+                set device = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "usertimeaccess" ) then
+                @ i++
+                set usertimeaccess = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "relatedaction" ) then
+                @ i++
+                set relatedaction = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "afterdate" ) then
+                @ i++
+                set afterdate = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "beforedate" ) then
+                @ i++
+                set beforedate = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "territories" ) then
+                @ i++
+                set territories = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "languages" ) then
+                @ i++
+                set languages = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "numruns" ) then
+                @ i++
+                set numruns = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "runduration" ) then
+                @ i++
+                set runduration = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativeaccesspolicy" ) then
+                @ i++
+                set negativeaccesspolicy = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativeserviceaccesspolicy" ) then
+                @ i++
+                set negativeserviceaccesspolicy = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativedeliverymodality" ) then
+                @ i++
+                set negativedeliverymodality = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativemeans" ) then
+                @ i++
+                set negativemeans = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativedevice" ) then
+                @ i++
+                set negativedevice = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativeusertimeaccess" ) then
+                @ i++
+                set negativeusertimeaccess = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativerelatedaction" ) then
+                @ i++
+                set negativerelatedaction = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativetemporalcontext" ) then
+                @ i++
+                set negativetemporalcontext = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativespatialcontext" ) then
+                @ i++
+                set negativespatialcontext = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativelanguages" ) then
+                @ i++
+                set negativelanguages = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this Unknown input parameter: $inquery[$i]"
+		echo "QUERY_STRING=$QUERY_STRING"
+                exit 1
+        endif
+        @ i++
+end
+#Sanity check
+if ( !( -e "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not Found "
+	echo "$this $repo/$instance"
+	exit 2
+endif
+if ( "$permittedaction" == "null" || "$handle" == "null" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this instance=$instance, handle=$handle, permittdaction=$permittedaction"
+	exit 3
+endif
+set classofhandle = `xsltproc --stringparam ind $handle $pdir/xsl/getClassOfIndividual.xsl $repo/$instance`
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this failed on getClassOfIndividual ($handle) in $instance"
+	exit 4
+endif
+if ( $beforedate != null && $afterdate != null ) then
+	if ( $beforedate < $afterdate ) then
+		echo "400"
+		echo "Bad request "
+		echo "$this bad values for timecontext ($afterdate,$beforedate)"
+		exit 3
+	endif
+endif
+# TODO sanity check might be extended to the other input parameters
+# making a bak copy
+cp $repo/$instance $repo/.tmp/$instance.$$.bak
+
+########################
+
+if ( $classofhandle != "Permission" ) then
+	### handle is IPEntity, thus Permission has to be created first
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set ind = "#x$xnum"
+	set class = "http://purl.oclc.org/NET/mvco.owl#Permission"
+	xsltproc --stringparam twoclass $class --stringparam twoname $ind $pdir/xsl/addIndividual.xsl $repo/$instance > $repo/.tmp/$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addIndividual ($class, $ind) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 5
+	endif
+	mv $repo/.tmp/$instance $repo/$instance
+	if ( $classofhandle == "IPEntity" || $classofhandle == "Instance" || $classofhandle == "Work" || $classofhandle == "Manifestation" ) then
+		set permissiontarget = $handle
+	endif
+	set handle = $ind
+endif
+# creation of permitted action
+set obj = "http://purl.oclc.org/NET/mvco.owl#permitsAction"
+set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+@ xnum ++
+echo $xnum > $pdir/users/$puser/config/inumber
+set ind = "#x$xnum"
+xsltproc --stringparam obj $obj --stringparam one $handle --stringparam twoclass $permittedaction --stringparam twoname $ind $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp/$instance
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this failed on addObjProperty ($handle,$permittedaction, $ind) to $instance"
+	cp $repo/.tmp/$instance.$$.bak $repo/$instance
+	exit 5
+endif
+mv $repo/.tmp/$instance $repo/$instance
+# linking action to IPEntity if given
+if ( $permissiontarget != "null" ) then
+	set obj = "http://purl.oclc.org/NET/mvco.owl#actedOver"
+	xsltproc --stringparam obj $obj --stringparam one $ind  --stringparam twoname $permissiontarget $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp/$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($ind,default, $permissiontarget) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 5
+	endif
+	mv $repo/.tmp/$instance $repo/$instance
+endif
+# adding exclusivity if given
+if ( $isexclusive == "on" ) then
+	set owner = $handle
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#isExclusive"
+	set value = true
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 6
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+endif
+# adding sublicense if given
+if ( $hassublicense == "off" ) then
+	set owner = $handle
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasSublicenseRight"
+	set value = false
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 6
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+endif
+# looping the creation of the required facts (on condition side)
+set obj = "http://purl.oclc.org/NET/mvco.owl#hasRequired"
+foreach stuff ( $negativeaccesspolicy,$accesspolicy $negativeserviceaccesspolicy,$serviceaccesspolicy $negativedeliverymodality,$deliverymodality $negativemeans,$means $negativedevice,$device $negativeusertimeaccess,$usertimeaccess $negativerelatedaction,$relatedaction ) 
+	set negative = `echo $stuff | cut -d',' -f1`
+	set class = `echo $stuff | cut -d',' -f2-`
+	if ( "$class" != "null" ) then
+		set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+		@ xnum ++
+		echo $xnum > $pdir/users/$puser/config/inumber
+		set ind = "#x$xnum"
+		xsltproc --stringparam obj $obj --stringparam one $handle --stringparam negative $negative --stringparam twoclass $class --stringparam twoname $ind $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp/$instance
+		set ret = $?
+		if ( $ret ) then
+			echo "500"
+			echo "Server Error"
+			echo "$this failed on addObjProperty ($handle,$negative,$class, $ind) to $instance"
+			cp $repo/.tmp/$instance.$$.bak $repo/$instance
+			exit 7
+		endif
+		mv $repo/.tmp/$instance $repo/$instance
+	endif
+end
+#	create Fact Intersection 
+if ( $afterdate != null || $beforedate != null || $numruns != null || $runduration != null || $languages != null || $territories != null ) then
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:core:2012#FactIntersection"
+	set obj = "http://purl.oclc.org/NET/mvco.owl#hasRequired"
+	xsltproc --stringparam obj $obj --stringparam one $handle --stringparam twoclass $twoclass --stringparam twoname $twoname  $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $handle, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+	set one = $twoname
+	set obj = "urn:mpeg:mpeg21:mco:core:2012#hasFact"
+endif
+if ( $afterdate != null || $beforedate != null ) then
+#	create Temporal Context
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#TemporalContext"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative $negativetemporalcontext $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+#	add Data Properties
+	if ( $afterdate != null ) then
+		set owner = $twoname
+		set key = "urn:mpeg:mpeg21:mco:ipre:2012#afterDate"
+		set value = $afterdate
+		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+		set ret = $?
+		if ( $ret ) then
+			echo "500"
+			echo "Server Error"
+			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+			cp $repo/.tmp/$instance.$$.bak $repo/$instance
+			exit 8
+		endif
+		mv $repo/.tmp.$instance $repo/$instance
+	endif
+	if ( $beforedate != null ) then
+		set owner = $twoname
+		set key = "urn:mpeg:mpeg21:mco:ipre:2012#beforeDate"
+		set value = $beforedate
+		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+		set ret = $?
+		if ( $ret ) then
+			echo "500"
+			echo "Server Error"
+			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+			cp $repo/.tmp/$instance.$$.bak $repo/$instance
+			exit 8
+		endif
+		mv $repo/.tmp.$instance $repo/$instance
+	endif
+endif
+if ( $numruns != null || $runduration != null ) then
+#	create Run
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#Run"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative $negative $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+#	add Data Properties
+	if ( $numruns != null ) then
+		set owner = $twoname
+		set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRuns"
+		set value = $numruns
+		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+		set ret = $?
+		if ( $ret ) then
+			echo "500"
+			echo "Server Error"
+			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+			cp $repo/.tmp/$instance.$$.bak $repo/$instance
+			exit 8
+		endif
+		mv $repo/.tmp.$instance $repo/$instance
+	endif
+	if ( $runduration != null ) then
+		set owner = $twoname
+		set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasValidity"
+		set value = $runduration
+		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+		set ret = $?
+		if ( $ret ) then
+			echo "500"
+			echo "Server Error"
+			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+			cp $repo/.tmp/$instance.$$.bak $repo/$instance
+			exit 8
+		endif
+		mv $repo/.tmp.$instance $repo/$instance
+	endif
+endif
+if ( $languages != null ) then
+#	create Language
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#Language"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname  --stringparam negative $negativelanguages $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+#	add Data Properties
+	set owner = $twoname
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasLanguage"
+	set value = $languages
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+endif
+if ( $territories != null ) then
+#	create SpatialContext
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#SpatialContext"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative $negativespatialcontext $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+#	add Data Properties
+	set owner = $twoname
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#inCountry"
+	set value = $territories
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+endif
+echo "200"
+echo "Success"
+exit 0
+
+
+
+
+

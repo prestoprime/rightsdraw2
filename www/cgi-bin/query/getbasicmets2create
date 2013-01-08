@@ -1,0 +1,105 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/pprights
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set identifier = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "identifier" ) then
+                @ i++
+                set identifier = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+set p4serverurl = `cat $pdir/users/$puser/config/p4serverurl`
+set p4account = `cat $pdir/users/$puser/config/p4account`
+set curloptions = `cat $pdir/users/$puser/config/curloptions`
+#
+curl "$p4serverurl/access/dip/${identifier}" -o $pdir/logs/$this.$$ -H "userID:${p4account}" $curloptions
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error"
+	echo "$this got $ret in retrieving mets for $identifier from $p4serverurl"
+	exit 2
+endif
+xmllint $pdir/logs/$this.$$ >> /dev/null
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error"
+	echo "$this got $ret in checking the mets for $identifier"
+#	exit 3
+endif
+#
+#Trying to get very basic dc field for MCO doc creation
+foreach dcfield ( dc:identifier dc:title dc:description )
+	set dcvar = `echo $dcfield | sed -e s/://g`
+	set dcvalue = `xsltproc --stringparam dcfield "$dcfield" $pdir/xsl/getDublinCoreFieldFromMets.xsl $pdir/logs/$this.$$`
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this got $ret in parsing the DIP for $identifier"
+		exit 4
+	endif
+	if ( "$dcvalue" == "" ) then
+#		nothing at the moment
+	endif
+	set $dcvar = "$dcvalue"
+end
+#
+#	we would have a choice between mkr and mco contexts
+#
+set dcidentifier = `urlencode $dcidentifier`
+set dctitle = `urlencode $dctitle`
+set dcdescription = `urlencode $dcdescription`
+set mcocreateurl = "/cgi-bin/rightsdraw2/$puser/mco/create?identifier=$dcidentifier&title=$dctitle&description=$dcdescription"
+set mkrcreateurl = "/cgi-bin/rightsdraw2/$puser/mkr/create?identifier=$dcidentifier&title=$dctitle&description=$dcdescription"
+echo 200
+echo Success
+echo '<br/><a href="'$mcocreateurl'" target="rightsdraw_main">Edit in <b>MCO</b> context</a>'
+echo '<br/><a href="'$mkrcreateurl'" target="rightsdraw_main">Edit in <b>MKR</b> context</a>'
+exit 0
+#
+#Previous implementation
+#
+setenv QUERY_STRING "identifier=$dcidentifier&title=$dctitle&description=$dcdescription"
+$pdir/www/cgi-bin/mkr/create | awk 'FNR>1'
+exit 0

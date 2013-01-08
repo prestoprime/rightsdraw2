@@ -1,0 +1,49 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>Rights queries</h2>
+		<p>
+This context of <i class="rd">RightsDraw</i> provides the means to define a rights specific query, post it to the <i>P4</i> connected system, and examine its results. 
+		</p>
+		<p>
+It is required that the <i>P4</i> connected system, which holds the persistent repository, 
+has installed the<i class="rd">RightsDraw</i> components for:
+	<ul>
+		<li>rights indexing
+		<li>rights comparing
+	</ul>
+		</p>
+		<p>
+This functionality only works with MCO <i>pprights</i> documents.
+		</p>
+		<a name="forms"><h3>Available query forms</h3></a>
+		<p>
+The available rights query forms are the following:
+	<ul>
+		<li>rights availability - which is used for knowing from <i>P4</i> which archival items have or not rights information associated;
+		<li>query based on <i>kpr</i> - in which the <i>User</i> defines a rights context for a <a href="docs_kpr"><i>key pattern right</i></a>, to be used as query to <i>P4</i>; 
+		<li>free query - in which the <i>User</i> defines a query as a <i>target permission</i>;
+	</ul>
+		</p>
+		<a name="rightsmatch"><h3>Rights comparison</h3></a>
+		<p>
+The rights comparison performed on <i>P4</i> service by the <i class="rd">RightsDraw</i> components returns the list of <i>IP entities</i> having at least one permission matching the query target permission. 
+		</p>
+		<p>
+The comparison between two permissions returns a <i>boolean</i> result:
+	<ul>
+		<li>true - when the <i>candidate permission</i> is equal or wider (less restrictive) than the <i>target permission</i>
+		<li>false - when the <i>candidate permission</i> is narrower (more restrictive) than the <i>target permission</i>
+	</ul>
+		</p>
+		<a name="postquery"><h3><i>User's</i> actions on query results</h3></a>
+		<p>
+The <i>User</i> can first browse the matching items list, including information useful to perform a selection. Any item can then be <a href="docs_repo.html#import"><i>imported</i></a> from <i>P4</i> into <i class="rd">RightsDraw</i> for editing. 
+		</p>
+		<p>
+When the <i>User</i> identifies archival items lacking rights information, he/she can use the information obtained from <i>P4</i> for initiating an MCO <i>pprights</i> document which, once completed, can be <a href="docs_repo.html#submit"><i>submitted</i></a> for updating the archival package.
+		</p>
+	</body>
+</html>

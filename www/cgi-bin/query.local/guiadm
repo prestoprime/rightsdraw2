@@ -1,0 +1,51 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/pprights
+set mykpr = `cat $pdir/users/$puser/config/mykpr`
+set linelimit = 100
+set this = `basename $0`
+#  Header things
+cat $pdir/share/queryhead.html | sed -e s/'+++puser+++'/$puser/g | sed -e s/'+++kprfolder+++'/$mykpr/g
+
+echo '<div id="query-forms" style="float:left">'
+#echo ' <div id="query-form-1"><iframe id="query_finditems_form" name="query_finditems_form" src="showform?form=query-finditems-form.html" width="600" height="100" frameborder="0" scrolling="auto"></iframe></div>'
+echo ' <div id="query-form-1"><form method="get" action="rebuildindex" target="query_view"><input type="submit" value="Rebuild Index"></form></div>'
+echo ' <div id="query-form-2"><iframe id="query_free_form" name="query_free_form" src="showform?form=query-free-form.html" width="600" height="400" frameborder="0" scrolling="auto"></iframe></div>'
+echo ' <div id="query-form-3"><iframe id="query_kpr_form" name="query_kpr_form" src="showform?form=query-kpr-form.html" width="600" height="350" frameborder="0" scrolling="auto"></iframe></div>'
+echo '</div>'
+echo '<div id="query-results" style="float:left">'
+echo ' <div id="query-results-1"><iframe id="query_view" name="query_view" src="about:blank" width="800" height="450" frameborder="0" scrolling="auto"></iframe></div>'
+echo ' <div id="query-results-2"><iframe id="query_log" name="query_log" src="about:blank" width="800" height="350" frameborder="0" scrolling="auto"></iframe></div>'
+echo '</div>'
+
+echo '<div style="clear:both">'
+echo '<img src="/rightsdraw2/Logo600x100.png"></div>'
+echo "</body>\n</html>"
+exit 0
+
+
+
+
+
+

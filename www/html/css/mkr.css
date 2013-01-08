@@ -1,0 +1,143 @@
+
+/*
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+h3 {
+	color: #660000;
+}
+
+.button {
+	background: #f0f0f0;
+	clear: both;
+	float: left;
+	width: 200px;
+	height: 26px;
+	margin: 0 auto;
+	color: auto;
+	text-align: center;
+	cursor: pointer;
+}
+
+.nascosto {
+	background: #f0f0f0;
+	clear: both;
+	position: left
+	width: auto;
+	height: auto;
+	margin: 0 auto;
+	text-align: center;
+	display: none;
+}
+
+.spatial {
+	background: #efefcf;
+	margin: 0 10px;
+	width: 150px;
+	z-index:-1;
+	position: relative;
+}
+
+.temporal {
+	background: #e8e8e8;
+	margin: 0 10px;
+	width: 150px;
+	z-index:-1;
+	position: relative;
+}
+
+.languages {
+	background: #d8efef;
+	margin: 0 10px;
+	width: 150px;
+	z-index:-1;
+	position: relative;
+}
+
+.runs {
+	background: #efefd8;
+	margin: 0 10px;
+	width: 150px;
+	z-index:-1;
+	position: relative;
+}
+
+.ipdetails {
+	background: #f0f0f0;
+	margin: 2px;
+	border: 2px solid white;
+	position: absolute;
+	z-index:2;
+}
+
+.exclflag {
+	background: #afafcf;
+}
+
+.yesbut {
+	background: #f0f0f0;
+	text-align: center;
+	width: 674px;
+}
+
+.yep {
+	background: #20ff20;
+	height: 26px;
+}
+
+.yes {
+	background: #f0f0f0;
+	height: 40px;
+}
+
+.no {
+	background: #f0f0f0;
+	height: 26px;
+}
+
+.yellowbox {
+	background: #ffff30;
+	float: left;
+	width: 16px;
+	height: 16px;
+}
+
+.greenbox {
+	background: #30ff30;
+	float: left;
+	width: 16px;
+	height: 16px;
+}
+
+.redbox {
+	background: #ff3030;
+	float: left;
+	width: 16px;
+	height: 16px;
+}
+
+.indent {
+	background: #f0f0f0;
+	width: 64px;
+}
+
+form {
+	margin:0px;
+}

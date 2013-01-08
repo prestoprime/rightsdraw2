@@ -1,0 +1,34 @@
+<form action="addkp" method="get" target="+++addkpform+++" name="+++addkpform+++" >
+	<script id="jscal1x">var cal1x = new CalendarPopup(); </script>
+	<input type="hidden" name="kp" value="+++addkpform+++">
+	<input type="hidden" name="instance" value="+++instance+++">
+<div class="no"><b>+++addkpform+++ NO</b></div><div style="float:right;text-align:right"> <input type="submit" value="Add +++addkpform+++"></div>
+<div class="button"></div>
+<div class="nascosto">
+	<table border="0" cellspacing="0" cellpadding="8">
+		<tr>
+<td class="temporal">after</td> <td class="temporal"> <input type="text" size="8" value="null" name="afterdate"> </td>
+<td class="temporal">before</td> <td class="temporal"> <input type="text" size="8" value="null" name="beforedate"> </td>
+<td class="spatial">countries</td> <td class="spatial"> <input type="text" size="8" value="null" name="territories"> </td>
+<td class="languages">languages</td> <td class="languages"> <input type="text" size="8" value="null" name="languages"> </td>
+<td class="runs">number of runs</td> <td class="runs"> <input type="text" size="4" value="null" name="numruns"> </td>
+<td class="runs">run validity</td> <td  class="runs"> <input type="text" size="8" value="null" name="runduration"> </td>
+		</tr>
+		<tr>
+<td colspan="2" class="temporal">
+	<a HREF="#" onClick="cal1x.select(document.forms['+++addkpform+++'].afterdate,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['+++addkpform+++'].afterdate,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x"><small>format: YYYYMMDD</small></a>
+</td>
+<td colspan="2" class="temporal">
+	<a HREF="#" onClick="cal1x.select(document.forms['+++addkpform+++'].beforedate,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['+++addkpform+++'].beforedate,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x"><small>format: YYYYMMDD</small></a>
+</td>
+<td colspan="2" class="spatial">
+	<small>list of country codes <br/>in the format #XX;#XY;#XZ;</small>
+</td>
+<td colspan="2" class="languages">
+	<small>list of language codes <br/>in the format #xx;#xy;#xz;</small>
+</td>
+<td colspan="4" class="runs"></td>
+		</tr>
+	</table>
+</div>
+</form>

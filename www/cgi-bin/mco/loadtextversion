@@ -1,0 +1,117 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set repo = $pdir/users/$puser/repo/$mcomode
+set this = `basename $0`
+if ( $REQUEST_METHOD != "POST" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only POST"
+	exit 99
+endif
+if ( $CONTENT_LENGTH > $securesize ) then
+	echo "413"
+	echo "Request Entity Too Large"
+	exit 1
+endif
+#Getting this from multipart
+set indata = $pdir/logs/$this.$$
+cat > $indata
+set mpsep = `head -n 1 $indata|sed 's/.$//'`  #to remove hidden CR
+
+set instancepointer = `grep -n "Content-Disposition" $indata | grep 'name="instance"'|cut -d':' -f1`
+if ( $instancepointer == "" ) then
+	echo "400"
+	echo "Bad request"
+	echo "$this missing instance"
+	exit 11
+endif
+@ instancepointer += 2
+set instance = `head -n $instancepointer $indata | tail -n1|sed 's/.$//'`  #to remove hidden CR
+
+set handlepointer = `grep -n "Content-Disposition" $indata | grep 'name="handle"'|cut -d':' -f1`
+if ( $handlepointer == "" ) then
+	echo "400"
+	echo "Bad request"
+	echo "$this missing handle"
+	exit 11
+endif
+@ handlepointer += 2
+set handle = `head -n $handlepointer $indata | tail -n1|sed 's/.$//'`  #to remove hidden CR
+
+set ctvpointer = `grep -n "Content-Disposition" $indata | grep 'name="contracttextversion"'|cut -d':' -f1`
+if ( $ctvpointer == "" ) then
+	echo "400"
+	echo "Bad request"
+	echo "$this missing contracttextversion"
+	exit 11
+endif
+set ctv = `head -n $ctvpointer $indata | tail -n1|sed 's/.$//'`  #to remove hidden CR
+
+@ ctvpointer += 2
+
+set mpseppointers = `grep -n "\$mpsep" $indata | cut -d':' -f1`
+set ctvlines = 0
+foreach mpseppointer ( $mpseppointers )
+	if ( $mpseppointer >= $ctvpointer ) then
+		break;
+	endif
+end
+@ mpseppointer-= 2
+@ ctvlines = $mpseppointer - $ctvpointer
+set outdata = $pdir/logs/$this.$$.out
+echo "<DataValue>" > $outdata
+#head -n $mpseppointer $indata | tail -n $ctvlines >> $outdata
+head -n $mpseppointer $indata | tail -n $ctvlines|sed 's/.$//' >> $outdata
+echo "</DataValue>" >> $outdata
+set isiso8859 = `file $outdata |grep -c ISO-8859`
+if ( $isiso8859 ) then
+	mv $outdata $outdata.ori
+	iconv -f ISO8859-1 -t UTF-8 $outdata.ori > $outdata
+endif
+fromdos $outdata
+#Sanity check
+if ( !( -ersf "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not Found"
+	echo "$this $repo/$instance"
+	exit 3
+endif
+# making a bak copy
+cp $repo/$instance $repo/.tmp/$instance.$$.bak
+set owner = $handle
+set key = "urn:mpeg:mpeg21:mco:core:2012#TextVersion"
+set value = loadfile
+set valuefile = $outdata
+xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value --stringparam valuefile $valuefile  $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this failed on addDataProperty ($owner, $key, $value, $valuefile) to $instance"
+	exit 4
+endif
+mv $repo/.tmp.$instance $repo/$instance
+echo "200"
+echo "Success"
+exit 0

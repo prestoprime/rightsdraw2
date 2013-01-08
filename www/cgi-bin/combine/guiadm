@@ -1,0 +1,77 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set repo = $pdir/users/$puser/repo/
+set linelimit = 100
+set this = `basename $0`
+
+#  Header things
+echo "<html>\n<head/>\n<body>"
+echo '<table border="0"><tr>'
+echo '<td><h3 style="color:#660000"">Welcome <i>'$puser'</i> to your <i>MCO Purchases & Sales</i> environment</h3></td>'
+echo '<td width="150px"/>'
+echo '<td><form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px"><input type="hidden" name="username" value="'$puser'"/><input type="submit" value="Quit"/></form></td></tr>'
+
+set listapprights = `ls -1 $repo/pprights`
+set listacontracts = `ls -1 $repo/contracts`
+echo '<tr><td><h4 style="color:#660000">You have '$#listapprights' items in your pprights repo and '$#listacontracts' contracts in your contracts repo.</h4></td>'
+#echo '<td width="100px"/>'
+echo '<td><form method="get" action="guiadm" style="margin:0px">'
+echo '<input type="submit" value="Refresh"></input></form></td>'
+echo '</tr></table>'
+
+#### selection for view and edit
+echo '<div style="float:left;vertical-align:top">'
+#view and Edit
+echo '<form action="combine" method="get" style="margin:0px" target="combine_log">'
+echo '	<input type="submit" value="Apply Contract to PPRights"/><br/>'
+echo '          Contract: <select name="contract">'
+	echo '		<option/>'
+foreach instance ( $listacontracts )
+        echo '          <option>'"$instance"'</option>'
+end
+echo '          </select>'
+echo '        Instance:  <select name="instance">'
+	echo '		<option/>'
+foreach instance ( $listapprights )
+        echo '          <option>'"$instance"'</option>'
+end
+echo '          </select>'
+echo '  </form>'
+echo '</div>'
+echo '<div style="float:left;vertical-align:top">'
+echo '          <iframe id="combine_log" name="combine_log" src="about:blank" frameborder="0" width="600" height="120"></iframe>'
+echo '</div>'
+echo '<div style="clear:both;vertical-align:top"/>'
+#echo "<p>End of the story</p>"
+#echo '<form method="get" action="guiadm" style="margin:0px">'
+#echo '<input type="submit" value="Refresh"></input></form>'
+echo '<img src="/rightsdraw2/Logo600x100.png">'
+echo "</body>\n</html>"
+exit 0
+
+
+
+
+

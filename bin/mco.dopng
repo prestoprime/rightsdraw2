@@ -1,0 +1,74 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set repo = $pdir/users/$puser/repo/$mcomode
+set colors = `cat $pdir/users/$puser/config/colors`
+set rankdir = `cat $pdir/users/$puser/config/rankdir`
+set size = `cat $pdir/users/$puser/config/size`
+set omitdata = `cat $pdir/users/$puser/config/omitdata`
+set datanamepos = `cat $pdir/users/$puser/config/datanamepos`
+set this = `basename $0`
+set instance = "null"
+set tfolder = mco
+if ( $#argv != 1 && $#argv != 2 ) then
+	echo "403"
+	echo "Bad Request"
+	echo "$this instance [tfolder]"
+	exit 1
+endif
+set instance = $1
+if ( $#argv == 2 ) then
+	set tfolder = $2
+endif
+##
+set localrepo = `dirname $instance`
+if ( $localrepo != '.' ) then
+	set repo = "$localrepo"
+	set instance = `basename $instance`
+endif
+##
+set ret = 0
+#Sanity check
+if ( !( -e "$pdir/www/html/$tfolder/" ) ) then
+	echo "404"
+	echo "Not Found "
+	echo "$this tfolder $tfolder"
+	exit 2
+endif
+if ( !( -e "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not Found "
+	echo "$this $repo/$instance"
+	exit 2
+endif
+# Producing the picture
+set mcoformurl = "/cgi-bin/rightsdraw2/$puser/mco/doform?instance=$instance"
+xsltproc --stringparam datanamepos $datanamepos --stringparam colors $colors --stringparam omitdata "$omitdata" --stringparam mcoformurl "$mcoformurl" $pdir/xsl/writedigraph2.xsl $repo/$instance > $pdir/logs/$this.$$.digraph
+xsltproc --stringparam datanamepos $datanamepos --stringparam colors $colors --stringparam omitdata "$omitdata" --stringparam mcoformurl "$mcoformurl" $pdir/xsl/writedigraph2.xsl $repo/$instance | dot -Ntarget=mco_forms -Tpng -Grankdir=$rankdir -Gsize="$size" -Ghref="/rightsdraw2/mco/$instance.png" -o $pdir/www/html/mco/$instance.png
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this got $ret in creating diagram for $instance"
+	exit 3
+endif
+exit 0

@@ -1,0 +1,100 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set mykpr = `cat $pdir/users/$puser/config/mykpr`
+set repo = $pdir/users/$puser/repo/pprights
+set this = `basename $0`
+date > $pdir/logs/$this.time
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set instance = "null"
+set classname = "null"
+set classiri = "null"
+set fieldname = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "instance" ) then
+                @ i++
+                set instance = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "fieldname" ) then
+                @ i++
+                set fieldname = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "classname" ) then
+                @ i++
+                set classname = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "classiri" ) then
+                @ i++
+                set classiri = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this Unknown input parameter: $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+set ret = 0
+#Sanity check
+if ( !( -e "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not Found "
+	echo "$this $repo/$instance"
+	exit 2
+endif
+if ( "$classname" == null && "$classiri" == null ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this requires either classname or classiri"
+	exit 2
+endif
+#  Getting list of individuals
+set listofindividuals = `xsltproc --stringparam classname "$classname" --stringparam classiri "$classiri" $pdir/xsl/getIndividualsOfClass.xsl $repo/$instance | sort -u`
+if ( "$classname" == null ) then
+	set classname = "$classiri"
+endif
+#  Serving the choice
+echo '<html> \
+<head> \
+<script src="/rightsdraw2/js/putlabels.js"></script> \
+</head> \
+<body> \
+<h4>'$classname's in '$instance'</h4> \
+<div style="background:white;float:left"><form action="javascript:window.close()"><input type="submit" value="Close"></form></div> \
+<div style="background:white;float:left"><form action="javascript:setLabel('"'pform','$fieldname','null')"'"><input type="submit" value="Clear"></form></div>'
+foreach ind ( $listofindividuals )
+	echo '<div style="clear:left"><a href="javascript:setLabel('"'pform','$fieldname','$ind')"'">'$ind'</a></div>'
+end
+echo "</body>\n</html>"
+exit 0
+
+
+
+
+

@@ -1,0 +1,52 @@
+<html>
+<head>
+<link href="/rightsdraw2/css/query.css" type="text/css" rel="stylesheet"/>
+<script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
+<script src="/rightsdraw2/js/putrunproperties"></script>
+</head>
+<body>
+<h4>Query which archival items match with your Key Rights</h4>
+<div name="definepermission" style="float:left;background:#f0f0f0"><form id="pform" action="doquery" method="get" target="query_view">
+<script id="jscal1x">var cal1x = new CalendarPopup(); </script>
+<input type="submit" value="Do query for ">
+<select name="kp">+++kproptions+++</select> 
+		exclusive: <input type="checkbox" selected name="isexclusive"><br>
+<div name="constraints" style="float:left"><table border="0">
+<tr>
+<td colspan="2">Conditions</td>
+<td style="color:#ff0000;font-size:8pt;text-align:center">negative<br>flag</td>
+</tr>
+<tr>
+<td><a HREF="#" onClick="cal1x.select(document.forms['pform'].afterdate,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['pform'].afterdate,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x">after</a></td>
+<td><input type="text" size="8" value="null" name="afterdate"></td>
+<td><input type="checkbox" name="negativetemporalcontext" selected></td>
+</tr>
+<tr>
+<td><a HREF="#" onClick="cal1x.select(document.forms['pform'].beforedate,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['pform'].beforedate,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x">before</a></td>
+<td><input type="text" size="8" value="null" name="beforedate"></td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/territoriesOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">country codes</a></td>
+<td><input type="text" size="8" value="null" name="territories"></td>
+<td><input type="checkbox" name="negativespatialcontext" selected></td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/languagesOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">language codes</a></td>
+<td><input type="text" size="8" value="null" name="languages"></td>
+<td><input type="checkbox" name="negativelanguages" selected></td>
+</tr>
+<tr>
+<td>number of runs</td>
+<td><input type="text" size="4" value="null" name="numruns"></td>
+<td>
+<a href="javascript:decrun('pform','numruns')">-</a> / <a href="javascript:incrun('pform','numruns')">+</a>
+</td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/durationForm.html','','top=100,left=300,width=400,height=400,scrollbars')">run validity</a></td>
+<td><input type="text" size="8" value="null" name="runduration"></td>
+</tr>
+</table></div>
+</form></div>
+</div>
+

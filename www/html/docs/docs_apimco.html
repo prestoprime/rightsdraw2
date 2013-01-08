@@ -1,0 +1,483 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>MCO Context interfaces</h2>
+		<p>
+The MCO context, with prefix <i>/cgi-bin/rightsdraw2/mco</i>, provides the following Interfaces:
+		</p>
+<hr/>
+<a href="#adddataproperty">adddataproperty</a>
+<a href="#adddeontic">adddeontic</a>
+<a href="#addfacts">addfacts</a>
+<a href="#addmd">addmd</a>
+<a href="#addobj">addobj</a>
+<a href="#addtextualclause">addtextualclause</a>
+<a href="#create">create</a>
+<a href="#definepermission">definepermission</a>
+<a href="#delete">delete</a>
+<a href="#doform">doform</a>
+<a href="#export">export</a>
+<a href="#guiadm">guiadm</a>
+<a href="#loadtextversion">loadtextversion</a>
+<a href="#mergein">mergein</a>
+<a href="#remove">remove</a>
+<a href="#removedataproperty">removedataproperty</a>
+<a href="#removemd">removemd</a>
+<a href="#showmd">showmd</a>
+<a href="#showtextversion">showtextversion</a>
+<a href="#viewedit">viewedit</a>
+
+<hr/>
+		<a name="adddataproperty">
+		<h4>Name: adddataproperty</h4>
+		<p>
+		<b>Description</b>
+Adds a DataProperty, with value, to an Individual of a given OWL instance
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual to which the DataProperty has to be assigned
+			<li><b>instance</b> - name of OWL file
+			<li><b>key</b> - IRI of the DataProperty
+			<li><b>value</b> - value to be assigned 
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="adddeontic">
+		<h4>Name: adddeontic</h4>
+		<p>
+		<b>Description</b>
+Adds the ObjectProperty mco-core:issuedIn to the Individual of Contract <i>handle</i> from an Invidual of DeonticExpression <i>ind</i>, which is created if not existing or not given.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+
+			<li><b>class</b> - IRI of the SubClassOf mco-core:DeonticExpression to be added
+			<li><b>handle</b> - IRI of Individual of mco-core:Contract to which deontic has to added
+			<li><b>ind</b> - IRI of the Deonticexpression
+			<li><b>instance</b> - name of OWL file
+		</ul>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="addfacts">
+		<h4>Name: addfacts</h4>
+		<p>
+		<b>Description</b>
+Adds a number of Media Contract Facts, together with their DataProperties, to either a DeonticExpression or to a FactComposition Individual. All Parameters are optional. Parameters with value = "null" will be ignored.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual to which the Facts will be added
+			<li><b>instance</b> - name of OWL file
+			<li>Classes of Facts
+			<li><b>accesspolicy</b> - IRI of a SubClassOf mco-ipre:AccessPolicy
+			<li><b>deliverymodality</b> - IRI of a SubClassOf mco-ipre:DeliveryModality
+			<li><b>device</b> - IRI of a SubClassOf mco-ipre:Device
+			<li><b>means</b> - IRI of a SubClassOf mco-ipre:Means
+			<li><b>relatedaction</b> - IRI of a SubClassOf mco-core:ActionRelatedFact
+			<li><b>serviceaccesspolicy</b> - IRI of a SubClassOf mco-ipre:ServiceAccessPolicy
+			<li><b>usertimeaccess</b> - IRI of a SubClassOf mco-ipre:UserTimeAccess
+			<li>Flags for setting Facts to Negative
+			<li><b>negativeaccesspolicy</b> 
+			<li><b>negativedeliverymodality</b>
+			<li><b>negativedevice</b>
+			<li><b>negativelanguages</b>
+			<li><b>negativemeans</b>
+			<li><b>negativerelatedaction</b>
+			<li><b>negativeserviceaccesspolicy</b>
+			<li><b>negativespatialcontext</b>
+			<li><b>negativetemporalcontext</b>
+			<li><b>negativeusertimeaccess</b>
+			<li>DataProperties implying related Facts
+			<li><b>afterdate</b> - value of mco-ipre:afterDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>beforedate</b> - value of mco-ipre:beforeDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>languages</b> - value of mco-ipre:hasLanguage for a mco-ipre:Language - format: list of ISO 639-1 language codes (each as '#&lt;code&gt;;') 
+			<li><b>numruns</b> - value of mco-ipre:hasNumberOfRuns for a mco-ipre:Run - format: positiveInteger
+			<li><b>runduration</b> - value of mco-ipre:hasValidity for a mco-ipre:Run - ISO 8601 Duration
+			<li><b>territories</b> - value of mco-ipre:hasCountry for a mco-ipre:SpatialContext - format: list of ISO 3166 country codes (each as '#&lt;CODE&gt;;') 
+		</ul>
+		<p>
+		<b>See also:</b> <a href="#definepermission">definepermission</a>
+		</p>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="addmd">
+		<h4>Name: addmd</h4>
+		<p>
+		<b>Description</b>
+Add Dublin Core metadata to an Individual of the given OWL instance, as AnnotationProperty
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual to which the metadata will be added
+			<li><b>instance</b> - name of OWL file
+			<li><b>mdkey</b> - metadata field to add
+			<li><b>mdvalue</b> - value of the metadata field
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="addobj">
+		<h4>Name: addobj</h4>
+		<p>
+		<b>Description</b>
+Adds an ObjectProperty <i>obj</i> from the Individual <i>handle</i> to the Individual <i>ind</i>.
+If <i>ind</i> doesn't exist or is not given, it will be created as member of Class <i>class</i>.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>class</b> - IRI of the Class to which the Individual acting as range of ObjectProperty belongs
+			<li><b>handle</b> - IRI of Individual acting as domain of ObjectProperty
+			<li><b>ind</b> - IRI of Individual acting as range of ObjectProperty
+			<li><b>instance</b> - name of OWL file
+			<li><b>obj</b> - IRI of the Object Property to be added
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="addtextualclause">
+		<h4>Name: addtextualclause</h4>
+		<p>
+		<b>Description</b>
+Adds <i>ind</i> as Individual of mco-core:TextualClause, with its text as DataProperty, as the range of the ObjectProperty mco-core:implements having as domain an Individual of DeonticExpression <i>handle</i>. 
+If <i>ind</i> doesn't exist or is not given, it is created.
+		</p>
+		<p>
+		<b>Method:</b> POST
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>clausetext</b> - value of the mco-core:Text DataProperty
+			<li><b>handle</b> - IRI of Individual of mco-core:DeonticExpression acting as domain
+			<li><b>ind</b> - IRI of Individual of mco-core:TextualClause acting as range
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="create">
+		<h4>Name: create</h4>
+		<p>
+		<b>Description</b>
+Creates a new OWL document, including an Individual of the Class appropriate to the context of the user's setting, with Annotation metadata if given.
+The first Individual can be a mco-core:Contract, an mvco:IPEntity or an mvco:Permission, according to context.
+After creation the OWL document is immediately open for editing, by re-direction to <a href="#viewedit">viewedit</a>.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>identifier</b> -  if given it will be the basename of the OWL file, which is otherwise created automatically. If an IPEntity is created, the same is also used for naming the IPEntity and its Identifier
+			<li><b>description</b> - value of Dublin Core AnnotationProperty
+			<li><b>title</b> - value of Dublin Core AnnotationProperty
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="definepermission">
+		<h4>Name: definepermission</h4>
+		<p>
+		<b>Description</b>
+It completely defines a Permission for an Action, including all required Facts and their DataProperties.  If the given <i>handle</i> is of Class mvco:Permission, the permitted Action will be created, but the IPEntity over which it can be acted will still need to be identified.
+If the given <i>handle</i> is of Class mvco:IPEntity (or its SubClasses), both the Permission and the Action will be created and thus the deontic expression will be completely defined.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual from which the request was activated. If it is of Class mvco:IPentity (or its subclasses), a new mvco:Permission will be created, otherwise the <i>handle</i> is expected to be an undefined Permission
+			<li><b>instance</b> - name of OWL file
+			<li><b>permittedaction</b> - IRI of a SubClassOf mvco:Action, which is going to be permitted by the defined Permission
+			<li>DataProperties of the Permission
+			<li><b>isexclusive</b> - boolean value of mco-ipre:isExlclusive  (default: false) 
+			<li><b>hassublicense</b> - boolean value of mco-ipre:hasSublicenseRight  (default: true) 
+			<li>Classes of Facts
+			<li><b>accesspolicy</b> - IRI of a SubClassOf mco-ipre:AccessPolicy
+			<li><b>deliverymodality</b> - IRI of a SubClassOf mco-ipre:DeliveryModality
+			<li><b>device</b> - IRI of a SubClassOf mco-ipre:Device
+			<li><b>means</b> - IRI of a SubClassOf mco-ipre:Means
+			<li><b>relatedaction</b> - IRI of a SubClassOf mco-core:ActionRelatedFact
+			<li><b>serviceaccesspolicy</b> - IRI of a SubClassOf mco-ipre:ServiceAccessPolicy
+			<li><b>usertimeaccess</b> - IRI of a SubClassOf mco-ipre:UserTimeAccess
+			<li>Flags for setting Facts to Negative
+			<li><b>negativeaccesspolicy</b> 
+			<li><b>negativedeliverymodality</b>
+			<li><b>negativedevice</b>
+			<li><b>negativelanguages</b>
+			<li><b>negativemeans</b>
+			<li><b>negativerelatedaction</b>
+			<li><b>negativeserviceaccesspolicy</b>
+			<li><b>negativespatialcontext</b>
+			<li><b>negativetemporalcontext</b>
+			<li><b>negativeusertimeaccess</b>
+			<li>DataProperties implying related Facts
+			<li><b>afterdate</b> - value of mco-ipre:afterDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>beforedate</b> - value of mco-ipre:beforeDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>languages</b> - value of mco-ipre:hasLanguage for a mco-ipre:Language - format: list of ISO 639-1 language codes (each as '#&lt;code&gt;;') 
+			<li><b>numruns</b> - value of mco-ipre:hasNumberOfRuns for a mco-ipre:Run - format: positiveInteger
+			<li><b>runduration</b> - value of mco-ipre:hasValidity for a mco-ipre:Run - ISO 8601 Duration
+			<li><b>territories</b> - value of mco-ipre:hasCountry for a mco-ipre:SpatialContext - format: list of ISO 3166 country codes (each as '#&lt;CODE&gt;;') 
+		</ul>
+		<p>
+		<b>See also:</b> <a href="#addfacts">addfacts</a>
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="delete">
+		<h4>Name: delete</h4>
+		<p>
+		<b>Description</b>
+Deletes the given OWL file from the User's repository
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="doform">
+		<h4>Name: doform</h4>
+		<p>
+		<b>Description</b>
+Provides a number of html forms for requesting services related to the current context of the given Individual.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>ind</b> - IRI of Individual about which forms are served
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="export">
+		<h4>Name: export</h4>
+		<p>
+		<b>Description</b>
+Serves the requested OWL file to User
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="guiadm">
+		<h4>Name: guiadm</h4>
+		<p>
+		<b>Description</b>
+Serves to the User a possibility of actions (viewing/editing, export, delete)  on the OWL files in his/her repository,
+and a form for requesting the creation of a new OWL file.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+None
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="loadtextversion">
+		<h4>Name: loadtextversion</h4>
+		<p>
+		<b>Description</b>
+Uploads the textual version of a Contract to be attached as DataProperty to the given Individual of mco-core:Contract
+		</p>
+		<p>
+		<b>Method:</b> POST
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>contracttextversion</b> - upload plain/text of contract 
+			<li><b>handle</b> - IRI of Individual of Contract 
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="mergein">
+		<h4>Name: mergein</h4>
+		<p>
+		<b>Description</b>
+Tries to merge two Indivuals (of same Class) into a single one.
+The remaining Individual will inherits all the Properties of the removed one.
+This service can be used when it is recognised that two distinct Individuals of the same Class should actually be the same.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual to merge
+			<li><b>instance</b> - name of OWL file
+			<li><b>mergetarget</b> - IRI of the Individual target of the merge
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="remove">
+		<h4>Name: remove</h4>
+		<p>
+		<b>Description</b>
+Removes the given Individual, all its Properties (Object and Data), and any remaining <i>"orphans"</i> from the given OWL file, where <i>orphans</i> are those Indivuals without any ObjectProperty.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual to be removed
+			<li><b>instance</b> - name of OWL file
+		</ul>
+		<p>
+		<b>Caveat:</b>
+It may leave the OWL file completely empty, when the graph of the OWL file is not yet defined enough.
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="removedataproperty">
+		<h4>Name: removedataproperty</h4>
+		<p>
+		<b>Description</b>
+Removes the  DataProperty, identified by its IRI, its value, and its owner, from the given OWL file
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual owning the DataProperty to be removed
+			<li><b>instance</b> - name of OWL file
+			<li><b>key</b> - IRI of the DataProperty to be removed
+			<li><b>value</b> - value of the DataProperty to be removed
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="removemd">
+		<h4>Name: removemd</h4>
+		<p>
+		<b>Description</b>
+Removes the  AnnotationProperty, identified by its IRI, its value, and its owner, from the given OWL file
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual owning the AnnotationProperty to be removed
+			<li><b>instance</b> - name of OWL file
+			<li><b>mdkey</b> - IRI of the AnnotationProperty to be removed
+			<li><b>mdvalue</b> - value of the AnnotationProperty to be removed
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="showmd">
+		<h4>Name: showmd</h4>
+		<p>
+		<b>Description</b>
+Shows the AnnotationProperties of the given Individual as html output.
+Foreach AnnotationProperties a form for requesting its removal is also served.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual the AnnotationProperties of which are showed
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="showtextversion">
+		<h4>Name: showtextversion</h4>
+		<p>
+		<b>Description</b>
+Shows the TextualVersion of the given Individual of mco-core:Contract as html output.
+A form for requesting its removal is also served.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual of mco-core:Contract the TextualVersion of which is showed
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="viewedit">
+		<h4>Name: viewedit</h4>
+		<p>
+		<b>Description</b>
+Draws the SVG Diagram representing the given OWL file and presents an html output for its visualisation and editing. Each node of the diagram (circle) can be clicked for obtaining a request to the service <a href="#doform">doform</a> with <i>handle</i> equal to the IRI of the Individual. Clicking on the background it is possible to get the PNG version of the same diagram, for copying or saving the picture.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<hr/>
+	</body>
+</html>

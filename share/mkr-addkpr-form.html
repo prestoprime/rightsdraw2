@@ -1,0 +1,113 @@
+<html>
+<head>
+<link href="/rightsdraw2/css/mkr.css" type="text/css" rel="stylesheet"/>
+<script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
+<script src="/rightsdraw2/js/putrunproperties"></script>
+<script src="/rightsdraw2/js/jquery.js"></script>
+<script src="/rightsdraw2/js/showhidefields.js"></script>
+</head>
+<body>
+<div name="definepermission" style="float:left;background:#f0f0f0"><form id="pform" name="pform" action="addkp" method="get" target="+++kproptions+++">
+<script id="jscal1x">var cal1x = new CalendarPopup(); </script>
+<div style="float:left">
+<input type="submit" value="Add +++kproptions+++">
+<input type="hidden" name="kp" value="+++kproptions+++"> 
+<input type="hidden" name="instance" value="+++instance+++"> 
+</div>
+<div style="float:left">
+exclusive: <input type="checkbox" name="isexclusive">
+<br/>
+sublicense: <input type="checkbox" checked="checked" name="hassublicense">
+<br>issued in 
+<a href="#" onclick="window.open('selectindividual?instance=+++instance+++&fieldname=contract&classname=Contract','','top=100,left=300,width=400,height=400,scrollbars')">contract</a>
+<input name="contract" type="text" size="8" value="null">
+<br>for being acted by 
+<input name="actedby" type="text" size="8" value="null">
+<br>
+<small>
+<a href="#" onclick="window.open('selectindividual?instance=+++instance+++&fieldname=actedby&classname=Organization','','top=100,left=300,width=400,height=400,scrollbars')">Organization</a>
+ or
+<a href="#" onclick="window.open('selectindividual?instance=+++instance+++&fieldname=actedby&classname=User','','top=100,left=300,width=400,height=400,scrollbars')">User</a>
+</small>
+</div>
+<br>
+<div name="conditions" style="float:left"><table border="0">
+<tr>
+<td colspan="2">With conditions</td>
+<td style="color:#ff0000;font-size:8pt;text-align:center">negative<br>flag</td>
+</tr>
+<tr>
+<td><a HREF="#" onClick="cal1x.select(document.forms['pform'].afterdate,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['pform'].afterdate,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x">after</a></td>
+<td><input type="text" size="8" value="null" name="afterdate"></td>
+<td><input type="checkbox" name="negativetemporalcontext" selected></td>
+</tr>
+<tr>
+<td><a HREF="#" onClick="cal1x.select(document.forms['pform'].beforedate,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['pform'].beforedate,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x">before</a></td>
+<td><input type="text" size="8" value="null" name="beforedate"></td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/territoriesOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">country codes</a></td>
+<td><input type="text" size="8" value="null" name="territories"></td>
+<td><input type="checkbox" name="negativespatialcontext" selected></td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/languagesOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">language codes</a></td>
+<td><input type="text" size="8" value="null" name="languages"></td>
+<td><input type="checkbox" name="negativelanguages" selected></td>
+</tr>
+<tr>
+<td>number of runs</td>
+<td><input type="text" size="4" value="null" name="numruns"></td>
+<td>
+<a href="javascript:decrun('pform','numruns')">-</a> / <a href="javascript:incrun('pform','numruns')">+</a>
+</td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/durationForm.html','','top=100,left=300,width=400,height=400,scrollbars')">run validity</a></td>
+<td><input type="text" size="8" value="null" name="runduration"></td>
+</tr>
+</table>
+<hr/></div>
+<div class="button">As Secondary Permission</div>
+<div class="nascosto">
+Cancel <input type="radio" name="relatedaction" value="null" checked>
+	<table border="0">
+
+<tr>
+<td colspan="2">Related to action permitted by</td>
+</tr><tr>
+<td><a href="#" onclick="window.open('selectindividual?instance=+++instance+++&fieldname=relatedactionperm&classname=Permission','','top=100,left=300,width=400,height=400,scrollbars')">permission:</a></td>
+<td><input name="relatedactionperm" type="text" size="12" value="null">
+</tr>
+<tr>
+<tr>
+<td>required to be:</td>
+</tr><tr>
+<td colspan="2">
+Started<input type="radio" name="relatedaction" value="urn:mpeg:mpeg21:mco:core:2012#ActionStarted">
+Done<input type="radio" name="relatedaction" value="urn:mpeg:mpeg21:mco:core:2012#ActionDone">
+</td>
+<td><input type="checkbox" name="negativerelatedaction" selected></td>
+</tr>
+<!--
+<tr>
+<td colspan="2"><select name="relatedaction"><option value="null">RelatedAction: none</option>
+<optgroup label="RelatedAction">
+<option value="urn:mpeg:mpeg21:mco:core:2012#ActionDone">Done</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#ActionStarted">Started</option>
+</optgroup></select></td>
+<td><input type="checkbox" name="negativerelatedaction" selected></td>
+</tr>
+-->
+<tr>
+<td><a href="#" onclick="window.open('showform?form=durationForm.html&fieldname=relatedactiondelay','','top=100,left=300,width=400,height=400,scrollbars')">with delay</a></td>
+<td> <input name="relatedactiondelay" type="text" size="12" value="null">
+</tr><tr>
+<td><a href="#" onclick="window.open('showform?form=durationForm.html&fieldname=relatedactionvalidity','','top=100,left=300,width=400,height=400,scrollbars')">validity</a></td>
+<td><input name="relatedactionvalidity" type="text" size="12" value="null">
+</tr>
+	</table>
+</div>
+</form></div>
+</div>
+

@@ -1,0 +1,45 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>Users Administration</h2>
+		<p>
+It is possible to have multiple users of <i class="rd">Rightsdraw</i>. Each user owns his/her repository of OWL files, which are not shared. As opposite to KPR which are shared among all the user-
+		</p>
+		<p>
+To add or drop users it is required to have administration privileges.
+		</p>
+		<h3>Add New User</h3>
+		<p>
+To create a new user run from the terminal:
+		</p>
+		<p class="cmd">
+$cd /&lt;yourpath&gt;/rightsdraw2<br/>
+$sudo ./adduser &lt;username&gt;
+		</p>
+		<p>
+You will be required to set a password for the new user and confirm it.
+In this version the user cannot modify the password by the browser.
+		</p>
+		<h3>Dropping a User</h3>
+		<p>
+To drop a user run from the terminal:
+		</p>
+		<p class="cmd">
+$cd /&lt;yourpath&gt;/rightsdraw2<br/>
+$sudo ./drop &lt;username&gt;
+		</p>
+		<p>
+Warning: all the files of the user will be removed.
+		</p>
+		<h3>Setting User's KPR privileges</h3>
+		<p>
+A normal user cannot edit, deploy, and withdraw KPR. It's possible to set the User's KPR privileges by running the following command from a terminal.
+		</p>
+		<p class="cmd">
+$cd /&lt;yourpath&gt;/rightsdraw2<br/>
+$./setkpr &lt;username&gt; on|off
+		</p>
+	</body>
+</html>

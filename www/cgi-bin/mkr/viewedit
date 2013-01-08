@@ -1,0 +1,122 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set mykpr = `cat $pdir/users/$puser/config/mykpr`
+set repo = $pdir/users/$puser/repo/pprights
+set this = `basename $0`
+date > $pdir/logs/$this.time
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set instance = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "instance" ) then
+                @ i++
+                set instance = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this Unknown input parameter: $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+set ret = 0
+#Sanity check
+if ( !( -e "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not Found "
+	echo "$this $repo/$instance"
+	exit 2
+endif
+#  Header things
+cat $pdir/share/mkrhead.html | sed -e s/'+++puser+++'/$puser/g | sed -e s/'+++instance+++'/$instance/g | sed -e s/'+++kprfolder+++'/$mykpr/g
+##  Creating index of our instance
+$pdir/bin/rightsindexinstance $repo/$instance > $pdir/logs/.tmp.$this.$$.$instance.index
+set ret = $?
+if ( $ret ) then
+        echo "500"
+        echo "Server Error"
+	echo "$this got $ret from rightsindexinstance $instance"
+	exit 3
+endif
+date >> $pdir/logs/$this.time
+set mylist = `setenv QUERY_STRING "folder=$mykpr" ; $pdir/www/cgi-bin/kpr/list | awk 'FNR>1'`
+set ret = $?
+if ( $ret ) then
+        echo "500"
+        echo "Server Error"
+	echo "$this got $ret from listing kp from $mykpr"
+	exit 4
+endif
+if ( "$mylist[1]" != 200 ) then
+	echo "$mylist"
+else
+	#Got Success
+	echo '<div style="float:left"><table border="0">'
+	set loop = 3
+	set tobypass = 1
+	while ( $loop <= $#mylist )
+		$pdir/bin/rightscompare -disablecontexts -all $pdir/www/html/kpr/$mykpr/$mylist[$loop] $pdir/logs/.tmp.$this.$$.$instance.index > $pdir/logs/.tmp.$this.$$.$loop.rpout
+		set ret = $?
+		if ( $ret ) then
+        		echo "500"
+        		echo "Server Error"
+			echo "$this got $ret from rightscompare working on kp $mylist[$loop] with index of $instance"
+		endif
+		set perm = `cat $pdir/logs/.tmp.$this.$$.$loop.rpout|grep true |cut -d '|' -f4|sed -e s/\$/';'/g `
+		echo "$perm" >> $pdir/logs/$this.time
+		echo '<tr><td>'
+#################
+		if ( $tobypass ) then
+			xsltproc $pdir/xsl/ByPassIntrsctns.xsl $repo/$instance > $pdir/logs/.tmp.ByPassIntrsctns.$$
+			set tobypass = 0
+		endif
+		xsltproc  --stringparam kp $mylist[$loop] --stringparam permissions "$perm" --stringparam instance $instance $pdir/xsl/showPermissionConstraints.xsl $pdir/logs/.tmp.ByPassIntrsctns.$$
+#################
+		echo '<td><iframe name="'$mylist[$loop]'" src="about:blank" height="30" width="200" frameborder="0"></iframe></td>'
+		echo '</tr>'
+		@ loop++
+(echo -n "---"; date) >> $pdir/logs/$this.time
+	end
+date >> $pdir/logs/$this.time
+	echo '</table></div><div style="float:left"><iframe name="addkpform" width="450" height="600" frameborder="0" src="about:blank"></iframe></div>'
+endif
+
+echo '<div style="clear:both;vertical-align:top"/>'
+echo '<img src="/rightsdraw2/Logo600x100.png">'
+echo "</body>\n</html>"
+date >> $pdir/logs/$this.time
+exit 0
+
+
+
+
+

@@ -1,0 +1,135 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/pprights
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set i = 1
+set instance = "null"
+set permission = "null"
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "instance" ) then
+                @ i++
+                set instance = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "permission" ) then
+                @ i++
+                set permission = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this $QUERY_STRING"
+                exit 1
+        endif
+        @ i++
+end
+#Sanity check
+if ( !( -e "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not found"
+	echo "$this instance $instance not in repo"
+	exit 2
+endif
+#####################
+set permittedactions = `xsltproc --stringparam permission $permission $pdir/xsl/getPermittedActions.xsl $repo/$instance`
+set factintersections = `xsltproc --stringparam permission $permission $pdir/xsl/getRequiredFactIntersections.xsl $repo/$instance`
+#####################
+
+# from here down we are going to modify our instance
+# making a bak copy
+cp $repo/$instance $repo/.tmp/$instance.$$.bak
+
+# removing permission
+xsltproc --stringparam target $permission $pdir/xsl/removeIndividual.xsl $repo/$instance > $repo/.tmp.$instance
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this removing $permission from  $instance"
+	cp $repo/.tmp/$instance.$$.bak $repo/$instance
+	exit 3
+endif
+mv $repo/.tmp.$instance $repo/$instance
+#####################
+set actionrelatedfacts = ""
+foreach fi ( $factintersections )
+	set actionrelatedfacts = "$actionrelatedfacts "`xsltproc --stringparam permission $fi $pdir/xsl/getActionRelatedFacts.xsl $repo/$instance`
+	xsltproc --stringparam target $fi $pdir/xsl/removeIndividual.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+			echo "500"
+		echo "Server Error"
+		echo "$this removing $fi from  $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 4
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+end
+#####################
+foreach arf ( $actionrelatedfacts )
+	xsltproc --stringparam target $arf $pdir/xsl/removeIndividual.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+			echo "500"
+		echo "Server Error"
+		echo "$this removing $fi from  $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 4
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+end
+#####################
+xsltproc  $pdir/xsl/removeOrphans.xsl $repo/$instance > $repo/.tmp.$instance
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this removing orphans from  $instance"
+	cp $repo/.tmp/$instance.$$.bak $repo/$instance
+	exit 5
+endif
+mv $repo/.tmp.$instance $repo/$instance
+#####################
+foreach pa ( $permittedactions )
+	xsltproc --stringparam target $pa $pdir/xsl/removeIndividual.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+			echo "500"
+		echo "Server Error"
+		echo "$this removing $pa from  $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 6
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+end
+#####################
+echo "200"
+echo "Success"
+exit 0

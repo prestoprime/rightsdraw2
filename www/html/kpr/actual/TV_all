@@ -1,0 +1,55 @@
+<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="http://www.prestoprime.eu/ppavro/2012/TV_all" ontologyIRI="http://www.prestoprime.eu/ppavro/2012/TV_all">
+  <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+  <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+  <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+  <Import>urn:mpeg:mpeg21:celmc:owl:2012#</Import>
+  <Declaration>
+    <NamedIndividual IRI="#x801"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x802"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x803"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x804"/>
+  </Declaration>
+  <ClassAssertion>
+    <Class IRI="http://purl.oclc.org/NET/mvco.owl#Permission"/>
+    <NamedIndividual IRI="#x801"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#CommunicationToThePublic"/>
+    <NamedIndividual IRI="#x802"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#BroadcastTechnology"/>
+    <NamedIndividual IRI="#x803"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#TelevisionDevice"/>
+    <NamedIndividual IRI="#x804"/>
+  </ClassAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#permitsAction"/>
+    <NamedIndividual IRI="#x801"/>
+    <NamedIndividual IRI="#x802"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x801"/>
+    <NamedIndividual IRI="#x803"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x801"/>
+    <NamedIndividual IRI="#x804"/>
+  </ObjectPropertyAssertion>
+  <AnnotationAssertion>
+    <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/title"/>
+    <IRI>#x801</IRI>
+    <Literal datatypeIRI="&amp;xsd;string">description</Literal>
+  </AnnotationAssertion>
+</Ontology>

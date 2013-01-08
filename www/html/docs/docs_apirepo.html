@@ -1,0 +1,119 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>In/Out Context interfaces</h2>
+		<p>
+The In/Out context, with prefix <i>/cgi-bin/rightsdraw2/pprights</i>, provides the following Interfaces:
+		</p>
+<hr/>
+<a href="#delete">delete</a>
+<a href="#export">export</a>
+<a href="#guiadm">guiadm</a>
+<a href="#import">import</a>
+<a href="#load">load</a>
+<a href="#submit">submit</a>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="delete">
+		<h4>Name: delete</h4>
+		<p>
+		<b>Description</b>
+Deletes the given OWL file from the User's repository
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="export">
+		<h4>Name: export</h4>
+		<p>
+		<b>Description</b>
+Serves the requested OWL file to User
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="guiadm">
+		<h4>Name: guiadm</h4>
+		<p>
+		<b>Description</b>
+Serves to the User, as html output, a number of forms for managing the User's repository (export, delete, load) and for interacting with P4 (submission, import) 
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+None
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="import">
+		<h4>Name: import</h4>
+		<p>
+		<b>Description</b>
+Given the identifier of a P4 AIP, it imports the rights part of it into User's repository and makes it available for viewing/editing.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>identifier</b> - ID of a P4 AIP
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="load">
+		<h4>Name: load</h4>
+		<p>
+		<b>Description</b>
+Uploads an OWL file to the User's repository
+		</p>
+		<p>
+		<b>Method:</b> POST
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="submit">
+		<h4>Name: submit</h4>
+		<p>
+		<b>Description</b>
+Submits the given <i>instance</i> to P4. If an AIP identifier is already known for this instance, the update interface will be used. Otherwise a new SIP is created, containing a Descriptive Metadata section (DMD secion in Mets) filled with the Dublin Core Metadata associated to the main IPEntity as AnnotationProperties, and submitted to the P4 ingest interface for rights-only SIPs.
+The jobid received from P4 is returned.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+<hr/>
+	</body>
+</html>

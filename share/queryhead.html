@@ -1,0 +1,33 @@
+<html>
+<head>
+<link href="/rightsdraw2/css/query.css" type="text/css" rel="stylesheet"/>
+<script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
+<script src="/rightsdraw2/js/jquery.js"></script>
+<script>
+$(document).ready(function(){
+	$(".button").text('fill constraints');	
+	$(".nascosto").hide();
+	//$(".button")
+	$(".button").toggle(function(){
+	$(this).next().slideDown();
+	$(this).text('close constraints')
+	$(".button").addClass('button_open');
+},
+function(){
+	$(this).next().slideUp();
+	$(this).text('fill constraints');
+})
+});
+</script>
+<script src="/rightsdraw2/js/putrunproperties"></script>
+</head>
+<body>
+<table border="0"><tr>
+<td><h3>Welcome <i>+++puser+++</i> to your <i>Query service</i> page. Your kpr is set to <i>+++kprfolder+++</i></h3></td>
+<td width="30px"/><td>
+<form method="get" action="guiadm" style="margin:0px"> <input type="submit" value="Refresh"></input></form>
+</td>
+<td width="120px"/>
+<td>
+<form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px"><input type="hidden" name="username" value="+++puser+++"/><input type="submit" value="Quit"/></form></td>
+</tr></table>

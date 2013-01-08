@@ -1,0 +1,113 @@
+#!/bin/tcsh -f
+
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyritght (C) 2012-2013 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+set this = `basename $0`
+if ( !($?pdir) ) then
+	echo
+	echo "$this Error "
+	echo "\tVariable 'pdir' must be defined in environment"
+	echo
+	exit 99
+endif
+
+if ( $#argv < 2 ) then
+	echo
+	echo "\tUsage:"
+	echo "\t$this [options] query-owl-file rightsindexfile"
+	echo "\t\t(default is to give only the Identifiers of matching records)" 
+	echo "\t\t-all (complete unfiltered output)" 
+	echo "\t\t-disablecontexts (doesn't take contexts into account when comparing)"
+	echo "\t\t-false (will give the Identifiers of non-matching records)"
+	echo "\t\t-quick (skip checking of RightsIndex file)"
+	echo
+	echo
+	exit
+endif
+set i = 1
+set allflag = "false"
+set reverseflag = "false"
+set quickflag = "false"
+set disablecontexts = "false"
+while ( $i <= $#argv )
+	if ( "$argv[$i]" == "-all" ) then
+		set allflag = "true"
+		set reverseflag = "false"
+	else if ( "$argv[$i]" == "-false" ) then
+		set reverseflag = "true"
+		set allflag = "false"
+	else if ( "$argv[$i]" == "-quick" ) then
+		set quickflag = "true"
+	else if ( "$argv[$i]" == "-disablecontexts" ) then
+		set disablecontexts = "true"
+	else
+#		set querydoc = `pwd`/`basename "$argv[$i]"`
+		set querydoc = "$argv[$i]"
+		@ i++
+		set indexfile = "$argv[$i]"
+	endif
+	@ i++
+end
+#
+#	PRE-CONDITIONS
+if ( !(-ersf $querydoc) ) then
+	echo "${this}: error $querydoc not found"
+	exit 1
+endif
+xmllint $querydoc >& /dev/null
+set ret = $?
+if ( $ret != 0 ) then
+	echo "${this}: error $querydoc not good xml input"
+	exit 2
+endif
+if ( !(-ersf $indexfile) ) then
+	echo "${this}: error $indexfile not found"
+	exit 3
+endif
+if ( $quickflag == "false" ) then
+	xmllint --schema $pdir/share/RightsIndex.xsd $indexfile >& /dev/null
+	set ret = $?
+	if ( $ret != 0 ) then
+		echo "${this}: error $indexfile not good xml input"
+		exit 4
+	endif
+endif
+#
+#	ACTUAL EXECUTION
+#xsltproc --stringparam disablecontexts $disablecontexts --stringparam ppavro $pdir/share/ppavro.owl --stringparam countrycodes $pdir/share/ebu_Iso3166CountryCodeCS.xml --stringparam languagecodes $pdir/share/ebu_Iso639_1LanguageCodeCS.xml --stringparam querydoc $querydoc $pdir/xsl/RightsCompareFromIndex.xsl $indexfile > $pdir/logs/.tmp.$$
+xsltproc $pdir/xsl/ByPassIntrsctns.xsl $querydoc > $pdir/logs/.tmp.ByPassIntrsctns.$$
+xsltproc --stringparam disablecontexts $disablecontexts --stringparam ppavro $pdir/share/ppavro.owl --stringparam countrycodes $pdir/share/ebu_Iso3166CountryCodeCS.xml --stringparam languagecodes $pdir/share/ebu_Iso639_1LanguageCodeCS.xml --stringparam querydoc $pdir/logs/.tmp.ByPassIntrsctns.$$ $pdir/xsl/RightsCompareFromIndex.xsl $indexfile > $pdir/logs/.tmp.$$
+#
+#	POST-CHECKS
+set ret = $?
+if ( $ret != 0 ) then
+	echo "${this}: error not good index xml output. Left logs: $pdir/logs/.tmp.$$ and $pdir/logs/.tmp.$$.xmllint.log"
+	exit 5
+endif
+if ( $allflag == "true" ) then
+	cat $pdir/logs/.tmp.$$
+else if ( $reverseflag == "true" ) then
+	grep false $pdir/logs/.tmp.$$ | cut -d'|' -f2 | sort -u
+else 
+	grep true $pdir/logs/.tmp.$$ | cut -d'|' -f2 | sort -u
+endif
+rm $pdir/logs/.tmp.$$ 
+exit 0

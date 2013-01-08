@@ -1,0 +1,79 @@
+<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="http://www.prestoprime.eu/ppavro/2012/MyFreeTV" ontologyIRI="http://www.prestoprime.eu/ppavro/2012/MyFreeTV">
+  <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+  <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+  <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+  <Prefix name="mco-core" IRI="urn:mpeg:mpeg21:mco:core:2012#"/>
+  <Prefix name="mco-ipre" IRI="urn:mpeg:mpeg21:mco:ipre:2012#"/>
+  <Import>urn:mpeg:mpeg21:mco:ipre:2012#</Import>
+  <Declaration>
+    <NamedIndividual IRI="#x1064"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x1065"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x1066"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x1067"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#RAI.IT"/>
+  </Declaration>
+  <ClassAssertion>
+    <Class IRI="http://purl.oclc.org/NET/mvco.owl#Permission"/>
+    <NamedIndividual IRI="#x1064"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#CommunicationToThePublic"/>
+    <NamedIndividual IRI="#x1065"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#FreeOfCharge"/>
+    <NamedIndividual IRI="#x1066"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#Linear"/>
+    <NamedIndividual IRI="#x1067"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mepg21:mco:core:2012#Organization"/>
+    <NamedIndividual IRI="#RAI.IT"/>
+  </ClassAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#permitsAction"/>
+    <NamedIndividual IRI="#x1064"/>
+    <NamedIndividual IRI="#x1065"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x1064"/>
+    <NamedIndividual IRI="#x1066"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x1064"/>
+    <NamedIndividual IRI="#x1067"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#actedBy"/>
+    <NamedIndividual IRI="#x1065"/>
+    <NamedIndividual IRI="#RAI.IT"/>
+  </ObjectPropertyAssertion>
+  <DataPropertyAssertion>
+    <DataProperty IRI="urn:mpeg:mpeg21:mco:ipre:2012#isExclusive"/>
+    <NamedIndividual IRI="#x1064"/>
+    <Literal datatypeIRI="http://www.w3.org/2001/XMLSchema#string">true</Literal>
+  </DataPropertyAssertion>
+  <AnnotationAssertion>
+    <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/title"/>
+    <IRI>#x1064</IRI>
+    <Literal datatypeIRI="&amp;xsd;string">My&amp;nbsp;Free&amp;nbsp;TV</Literal>
+  </AnnotationAssertion>
+  <AnnotationAssertion>
+    <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/description"/>
+    <IRI>#x1064</IRI>
+    <Literal datatypeIRI="&amp;xsd;string">this&amp;nbsp;is&amp;nbsp;how&amp;nbsp;it&amp;nbsp;is&amp;nbsp;meant&amp;nbsp;free&amp;nbsp;TV</Literal>
+  </AnnotationAssertion>
+</Ontology>

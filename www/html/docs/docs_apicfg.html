@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>MCO Context interfaces</h2>
+		<p>
+The MCO context, with prefix <i>/cgi-bin/rightsdraw2/config</i>, provides the following Interfaces:
+		</p>
+<hr/>
+<a href="#guiadm">guiadm</a>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="guiadm">
+		<h4>Name: </h4>
+		<p>
+		<b>Description</b>
+If no action is requested or html output is requested, it serves the current User's settings situations and a number for forms for requesting modifications. 
+Otherwise it can be used to set the given <i>uservariable</i> either to its default value or to the given <i>newvalue</i> or to get information about the current value and the possible available options.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>action</b> - if given, one among:
+			<ul>
+				<li>getinfo
+				<li>getvalue
+				<li>setdefault
+				<li>setoption
+			</ul>
+			<li><b>html</b> - flag for requesting the setting current situation served as html output with a a number of forms for requesting modifications
+			<li><b>newvalue</b> 
+			<li><b>uservariable</b>
+		</ul>
+		<p>
+		<b>See also:</b> <a href="docs_settings.html">User Guide: User's Settings</a>
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+	</body>
+</html>

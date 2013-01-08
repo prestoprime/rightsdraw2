@@ -1,0 +1,63 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+set celmode = `cat $pdir/users/$puser/config/celmode`
+set repo = $pdir/users/$puser/repo/$celmode
+set colors = `cat $pdir/users/$puser/config/colors`
+set rankdir = `cat $pdir/users/$puser/config/rankdir`
+set size = `cat $pdir/users/$puser/config/size`
+set omitdata = `cat $pdir/users/$puser/config/omitdata`
+set datanamepos = `cat $pdir/users/$puser/config/datanamepos`
+set this = `basename $0`
+set instance = "null"
+if ( $#argv != 1 ) then
+	echo "403"
+	echo "Bad Request"
+	echo "$this instance"
+	exit 1
+endif
+set instance = $1
+set ret = 0
+#Sanity check
+if ( !( -e "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not Found "
+	echo "$this $repo/$instance"
+	exit 2
+endif
+# Producing the picture
+set celformurl = "/cgi-bin/rightsdraw2/$puser/cel/doform?instance=$instance"
+xsltproc --stringparam datanamepos $datanamepos --stringparam colors $colors --stringparam omitdata "$omitdata" --stringparam celformurl "$celformurl" $pdir/xsl/writedigraph2.xsl $repo/$instance > $pdir/logs/$this.$$.digraph
+xsltproc --stringparam datanamepos $datanamepos --stringparam colors $colors --stringparam omitdata "$omitdata" --stringparam celformurl "$celformurl" $pdir/xsl/writedigraph2.xsl $repo/$instance | dot -Ntarget=cel_forms -Tsvg -Grankdir=$rankdir -Gsize="$size" -Ghref="/rightsdraw2/cel/$instance.png" -o $pdir/www/html/cel/$instance.svg
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this got $ret in creating diagram for $instance"
+	exit 3
+endif
+convert $pdir/www/html/cel/$instance.svg $pdir/www/html/cel/$instance.png
+exit 0
+
+
+
+
+

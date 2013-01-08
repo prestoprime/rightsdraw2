@@ -1,0 +1,68 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/pprights
+set linelimit = 100
+set this = `basename $0`
+
+#  Header things
+echo "<html>\n<head/>\n<body>"
+echo '<table border="0"><tr>'
+echo '<td><h3 style="color:#660000"">Welcome <i>'$puser'</i> to your <i>MKR</i> page</h3></td>'
+echo '<td width="150px"/>'
+echo '<td><form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px"><input type="hidden" name="username" value="'$puser'"/><input type="submit" value="Quit"/></form></td></tr>'
+
+set lista = `ls -1 $repo`
+echo '<tr><td><h4 style="color:#660000">You have '$#lista' items in your repo</h4></td>'
+echo '<td><form method="get" action="guiadm" style="margin:0px">\n<input type="submit" value="Refresh"></input></form></td>'
+echo '</tr></table>'
+
+########################################
+echo '<div style="float:left;vertical-align:top">'
+echo '<form method="get" action="create" target="rightsdraw2_main"><input type="submit" value="Create new MCO pprights document">'
+echo '<b>What this is about</b> (IP Entity)<br/>Identifier <input type="text" name="identifier"> Title <input type="text" name="title"><br/>Description <textarea rows="2" cols="60" name="description"></textarea></form>'
+echo '</div>'
+##############
+
+#### selection for view and edit
+echo '<div style="float:left;vertical-align:top">'
+#view and Edit
+echo '<form action="viewedit" method="get" style="margin:0px" target="rightsdraw2_main">'
+echo '	<input type="submit" value="View and Edit"/>'
+echo '          <select name="instance">'
+	echo '		<option/>'
+foreach instance ( $lista )
+        echo '          <option>'"$instance"'</option>'
+end
+echo '          </select>'
+echo '  </form>'
+echo '</div>'
+##############
+echo '<div style="float:left;vertical-align:top">'
+echo '          <iframe id="mkr_view" name="mkr_view" src="about:blank" frameborder="0" width="600" height="120"></iframe>'
+echo '</div>'
+##############
+echo '<div style="clear:both;vertical-align:top"/>'
+echo '<img src="/rightsdraw2/Logo600x100.png">'
+echo "</body>\n</html>"
+exit 0

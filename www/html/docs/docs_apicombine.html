@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>MCO combine Context interfaces</h2>
+		<p>
+The MCO combine context, with prefix <i>/cgi-bin/rightsdraw2/combine</i>, provides the following Interfaces:
+		</p>
+<hr/>
+<a href="#combine">combine</a>
+<a href="#guiadm">guiadm</a>
+
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="combine">
+		<h4>Name: combine</h4>
+		<p>
+		<b>Description</b>
+Attempts to update the OWL file instance, in the User's <i>pprights</i> repository, according to what is stated in the given MCO OWL contract, in the User's <i>contracts</i> repository. 
+In order to be effective the two OWL documents must be consistent.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>contract</b> - name of OWL file in the contracts User's repository
+			<li><b>instance</b> - name of OWL file in the pprights User's repository
+		</ul>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="guiadm">
+		<h4>Name: </h4>
+		<p>
+		<b>Description</b>
+Serves to the User, as html output, a form for selecting one Contract and one PPRights instance in order to request them to be combined into an update of the latter.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+None
+		</p>
+		<p>
+		<b>See also:</b> <a href="#combine">combine</a>
+		</p>
+<hr/>
+	</body>
+</html>

@@ -1,0 +1,151 @@
+<html>
+<head>
+<link href="/rightsdraw2/css/query.css" type="text/css" rel="stylesheet"/>
+<script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
+<script src="/rightsdraw2/js/putrunproperties"></script>
+</head>
+<body>
+'<h4>Query which archival items match with the Permission that you will define</h4>
+<div name="definepermission" style="float:left;background:#f0f0f0"><form id="pform" action="doquery" method="get" target="query_view">
+<script id="jscal1x">var cal1x = new CalendarPopup(); </script>
+<input type="submit" value="Do query for "><select name="permittedaction"><optgroup label="Actions">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#ExploitIPRights">ExploitIPRights</option>
+<optgroup label="Exploit IP Rights">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#CommunicationToThePublic">CommunicationToThePublic</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#Distribute">Distribute</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#PublicPerformance">PublicPerformance</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Duplicate">Duplicate</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Fixate">Fixate</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Transform">Transform</option>
+</optgroup>
+<optgroup label="Transform">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#MakeCutAndEdit">MakeCutAndEdit</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#MakeExcerpt">MakeExcerpt</option>
+</optgroup>
+</optgroup></select> 
+		exclusive: <input type="checkbox" selected name="isexclusive"><br><div name="conditions" style="float:left"><table border="0">
+<tr>
+<td>Conditions</td>
+<td style="color:#ff0000;font-size:8pt;text-align:center">negative<br>flag</td>
+</tr>
+<tr>
+<td><select name="accesspolicy"><option value="null">AccessPolicy: any</option>
+<optgroup label="AccessPolicy">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#FreeOfCharge">Free of Charge</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Pay">Pay</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#PayPerView">Pay: PayPerView</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Subscription">Pay: Subscription</option>
+</optgroup></select></td>
+<td><input type="checkbox" name="negativeaccesspolicy" selected></td>
+</tr>
+<tr>
+<td><select name="serviceaccesspolicy"><option value="null">ServiceAccessPolicy: any</option>
+<optgroup label="ServiceAccessPolicy">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Open">Open</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Restricted">Restricted</option>
+</optgroup></select></td>
+<td><input type="checkbox" name="negativeserviceaccesspolicy" selected></td>
+</tr>
+<tr>
+<td><select name="deliverymodality"><option value="null">DeliveryModality: any</option>
+<optgroup label="DeliveryModality">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Linear">Linear</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#NonLinear">Non Linear</option>
+<optgroup label="DeliveryModality: Linear">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Broadcasting">Broadcasting</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Webcasting">Webcasting</option>
+</optgroup>
+<optgroup label="DeliveryModality: Non Linear">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandBasis">OnDemand Basis</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandDownload">OnDemand Basis: Download</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandStreaming">OnDemand Streaming</option>
+</optgroup>
+</optgroup></select></td>
+<td><input type="checkbox" name="negativedeliverymodality" selected></td>
+</tr>
+<tr>
+<td><select name="means"><option value="null">Means: any</option>
+<optgroup label="Means">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#BroadcastTechnology">Broadcast Technology</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileTechnology">Mobile Technology</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Internet">Internet</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Radio">Radio</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Videogram">Videogram</option>
+<optgroup label="Means: Broadcast Technology">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Cable">Cable</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#IPNetwork">IPNetwork</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Satellite">Satellite</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Terrestrial">Terrestrial</option>
+</optgroup>
+</optgroup></select></td>
+<td><input type="checkbox" name="negativemeans" selected></td>
+</tr>
+<tr>
+<td><select name="device"><option value="null">Device: any</option>
+<optgroup label="Device">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Computer">Computer</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileDevice">Mobile Device</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileBroadcastDevice">Mobile Broadcast Device</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileTelecommunicationDevice">Mobile Telecommunication Device</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#StorageDevice">Storage Device</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#TelevisionDevice">Television Device</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#TelevisionSet">Television Set</option>
+</optgroup></select></td>
+<td><input type="checkbox" name="negativedevice" selected></td>
+</tr>
+<tr>
+<td><select name="usertimeaccess"><option value="null">UserTimeAccess: any</option>
+<optgroup label="UserTimeAccess">
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Limited">Limited</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Unlimited">Unlimited</option>
+</optgroup></select></td>
+<td><input type="checkbox" name="negativeusertimeaccess" selected></td>
+</tr>
+<tr>
+<td><select name="relatedaction"><option value="null">RelatedAction: none</option>
+<optgroup label="RelatedAction">
+<option value="urn:mpeg:mpeg21:mco:core:2012#ActionDone">Done</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#ActionStarted">Started</option>
+</optgroup></select></td>
+<td><input type="checkbox" name="negativerelatedaction" selected></td>
+</tr>
+</table></div>
+<div name="constraints" style="float:left"><table border="0">
+<tr>
+<td colspan="2">Conditions</td>
+<td style="color:#ff0000;font-size:8pt;text-align:center">negative<br>flag</td>
+</tr>
+<tr>
+<td><a HREF="#" onClick="cal1x.select(document.forms['pform'].afterdate,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['pform'].afterdate,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x">after</a></td>
+<td><input type="text" size="8" value="null" name="afterdate"></td>
+<td><input type="checkbox" name="negativetemporalcontext" selected></td>
+</tr>
+<tr>
+<td><a HREF="#" onClick="cal1x.select(document.forms['pform'].beforedate,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['pform'].beforedate,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x">before</a></td>
+<td><input type="text" size="8" value="null" name="beforedate"></td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/territoriesOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">country codes</a></td>
+<td><input type="text" size="8" value="null" name="territories"></td>
+<td><input type="checkbox" name="negativespatialcontext" selected></td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/languagesOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">language codes</a></td>
+<td><input type="text" size="8" value="null" name="languages"></td>
+<td><input type="checkbox" name="negativelanguages" selected></td>
+</tr>
+<tr>
+<td>number of runs</td>
+<td><input type="text" size="4" value="null" name="numruns"></td>
+<td>
+<a href="javascript:decrun('pform','numruns')">-</a> / <a href="javascript:incrun('pform','numruns')">+</a>
+</td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/durationForm.html','','top=100,left=300,width=400,height=400,scrollbars')">run validity</a></td>
+<td><input type="text" size="8" value="null" name="runduration"></td>
+</tr>
+</table></div>
+</form></div>
+</div>
+

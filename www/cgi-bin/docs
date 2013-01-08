@@ -1,0 +1,30 @@
+#!/bin/tcsh -f
+set echo_style = both
+set this = `basename $0`
+echo "content-type: text/html\n"
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set username = "default"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "username" ) then
+                @ i++
+                set username = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request"
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+if ( -er "$pdir/users/$username" ) then
+	cat $pdir/www/html/docs/index.html |sed -e s/'+++puser+++'/$username/g
+else
+	echo "404"
+	echo "Not found"
+	echo "$this : User $username unknown"
+endif
+exit
+#
+#

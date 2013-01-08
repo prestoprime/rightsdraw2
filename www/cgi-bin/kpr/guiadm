@@ -1,0 +1,110 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyritght (C) 2012-2013 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/www/html/kpr
+set linelimit = 100
+set this = `basename $0`
+
+#  Header things
+echo "<html>\n<head/>\n<body>"
+#echo '<table border="0"><tr><td><img src="/rightsdraw2/Logo33.JPG" width="75%"></td>'
+#echo '<td style="color:#660000"><h2>RightsDraw2 -  Welcome to the KPR admin page </h2></td></tr></table>'
+echo '<table border="0"><tr>'
+echo '<td><h3 style="color:#660000"">Welcome to the KPR admin page</h3></td>'
+echo '<td width="50px"/>'
+echo '<td><form method="get" action="/cgi-bin/rightsdraw2/'$puser'/kpr/guiadm" style="margin:0px">\n<input type="submit" value="Refresh"></input></form></td>'
+echo '<td width="200px"/>'
+echo '<td><form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px"><input type="hidden" name="username" value="'$puser'"/><input type="submit" value="Quit"/></form></td>'
+echo '</tr></table>'
+echo '<table border="0"><tr>'
+foreach kprfolder ( test actual )
+	set otherfolder = test
+	if ( $kprfolder == $otherfolder ) then
+		set otherfolder = actual
+	endif
+
+#echo '<div id="kpradm'$kprfolder'" name="kpradm'$kprfolder'" style="float:left;width:50%">'
+echo '<td width="40%">'
+echo "<h4>Repository: $kprfolder</h4>"
+# getting list of repository items
+#set mylist = `curl -u ${puser} "http://$HTTP_HOST/cgi-bin/rightsdraw2/$puser/kpr/list?folder=$kprfolder"`
+set mylist = `setenv QUERY_STRING "folder=$kprfolder" ; $pdir/www/cgi-bin/kpr/list | awk 'FNR>1'`
+set ret = $?
+if ( $ret ) then
+        echo "500"
+        echo "Server Error"
+endif
+if ( "$mylist[1]" != 200 ) then
+	echo "$mylist"
+else
+	#Got Success
+	echo '<table border="0">'
+	set loop = 3
+	while ( $loop <= $#mylist )
+		set instance = "$mylist[$loop]"
+		echo '<tr><td><a href="'/rightsdraw2/kpr/$kprfolder/$instance'" target="'kpr_view'">'$instance'</a></td>'
+		echo '<td><form method="get" target="'kpr_view'" action="view/graph" style="margin:0px">'
+		echo '<input type="hidden" name="instance" value="'$instance'"></input>'
+		echo '<input type="hidden" name="folder" value="'$kprfolder'"></input>'
+		echo '<input type="submit" value="view graph"></input></form></td>'
+		echo '<td><form method="get" target="'kpr_view'" action="view/text" style="margin:0px">'
+		echo '<input type="hidden" name="instance" value="'$instance'"></input>'
+		echo '<input type="hidden" name="folder" value="'$kprfolder'"></input>'
+		echo '<input type="submit" value="view text"></input></form></td>'
+		echo '<td><form method="get" target="'kpr_${kprfolder}_$instance'" action="withdraw" style="margin:0px">'
+		echo '<input type="hidden" name="instance" value="'$instance'"></input>'
+		echo '<input type="hidden" name="folder" value="'$kprfolder'"></input>'
+		echo '<input type="submit" value="withdraw"></input></form></td>'
+		echo '<td><form method="get" target="'kpr_${kprfolder}_$instance'" action="copy2folder" style="margin:0px">'
+		echo '<input type="hidden" name="instance" value="'$instance'"></input>'
+		echo '<input type="hidden" name="sourcefolder" value="'$kprfolder'"></input>'
+		echo '<input type="hidden" name="targetfolder" value="'$otherfolder'"></input>'
+		echo '<input type="submit" value="copy2'$otherfolder'"></input></form></td>'
+		echo '<td><iframe id="'kpr_${kprfolder}_$instance'" name="'kpr_${kprfolder}_$instance'" src="about:blank" height="40" width="200" frameborder="0"></iframe></td>'
+		echo "</tr>"
+		@ loop++
+	end
+	echo "</table>"
+endif
+#Form for deploy stuff
+echo '<table border="0"><tr>'
+echo '<td><form method="post" target="'kpr_${kprfolder}_deploy'" action="deploy" ENCTYPE="multipart/form-data" style="margin:0px">'
+echo '<input name="instance" type="file" size="20"></input>'
+echo '<input type="hidden" name="folder" value="'$kprfolder'"></input>'
+echo '<input type="submit" value="deploy"></input></form></td>'
+echo '<td><iframe id="'kpr_${kprfolder}_deploy'" name="'kpr_${kprfolder}_deploy'" src="about:blank" height="40" width="250" frameborder="0"></iframe></td>'
+echo "</tr></table>"
+#echo '</div>'
+echo '</td>'
+
+end
+#echo '</div>'
+echo '</tr></table>'
+echo '<img src="/rightsdraw2/Logo600x100.png">'
+echo "</body>\n</html>"
+exit 0
+
+
+
+
+

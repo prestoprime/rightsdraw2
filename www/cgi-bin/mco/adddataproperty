@@ -1,0 +1,97 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set repo = $pdir/users/$puser/repo/$mcomode
+set colors = `cat $pdir/users/$puser/config/colors`
+set rankdir = `cat $pdir/users/$puser/config/rankdir`
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set instance = "null"
+set handle = "null"
+set key = "null"
+set value = "null"
+set valuefile = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "instance" ) then
+                @ i++
+                set instance = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "key" ) then
+                @ i++
+                set key = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "value" ) then
+                @ i++
+                set value = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "handle" ) then
+                @ i++
+                set handle = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+set ret = 0
+#Sanity check
+if ( !( -e "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not Found "
+	echo "$this $repo/$instance"
+	exit 2
+endif
+if ( "$key" == "null" || "$handle" == "null" ||  "$value" == "null" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this instance=$instance, handle=$handle, key=$key,  value=$value"
+	exit 3
+endif
+# making a bak copy
+cp $repo/$instance $repo/.tmp/$instance.$$.bak
+# Just doing it
+xsltproc --stringparam owner $handle --stringparam key $key --stringparam value "$value"  $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp/$instance
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this failed on addDataProperty ($owner, $key, $value, $valuefile) to $instance"
+	cp $repo/.tmp/$instance.$$.bak $repo/$instance
+	exit 4
+endif
+mv $repo/.tmp/$instance $repo/$instance
+echo "200"
+echo "Success"
+$pdir/bin/mco.dosvg $instance
+exit 0
+
+
+

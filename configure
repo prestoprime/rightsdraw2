@@ -1,0 +1,439 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#
+# Configuration is made of:
+#	rightsdraw2-http.conf
+#	install
+#	uninstall
+#	users/default/config/ 
+#		p4serverurl
+#		p4account
+#		owliriprefix
+#		inumber
+#		rankdir
+#		colors
+#		mykpr
+#		mcomode
+#		curloptions
+#		datanamepos
+#		maxlines
+#		omitdata
+#		size
+
+#
+# ./configure can be used for preparing the installion or for modifying an existing configuration
+#
+# DEPENDENCIES: tcsh, apache2, xsltproc, graphviz, imagemagick, curl, tofrodos (fromdos), gridsite-clients (urlencode), libxml2-utils
+#	cannot solve tcsh as it's required for running the script (apt-get install tcsh)
+#
+# STEPS: checking dependencies, checking pre-existing configuration, parsing user inputs, creating or updating configuration
+#
+set echo_style = both
+set this = `basename $0`
+cd `dirname $0`
+set rightsdraw2dir = `pwd`
+#
+#	Checking dependencies
+#
+set statusOK = "Status: install ok installed"
+set status = `dpkg -s apache2|grep Status:`
+if ( "$status" != "$statusOK" ) then
+	echo "apache2 not found. Try apt-get install apache2"
+	exit 1
+endif
+set status = `dpkg -s xsltproc|grep Status:`
+if ( "$status" != "$statusOK" ) then
+	echo "xsltproc not found. Try apt-get install xsltproc"
+	exit 1
+endif
+set status = `dpkg -s graphviz|grep Status:`
+if ( "$status" != "$statusOK" ) then
+	echo "graphviz not found. Try apt-get install graphviz"
+	exit 1
+endif
+set status = `dpkg -s imagemagick|grep Status:`
+if ( "$status" != "$statusOK" ) then
+	echo "imagemagick not found. Try apt-get install imagemagick"
+	exit 1
+endif
+set status = `dpkg -s curl|grep Status:`
+if ( "$status" != "$statusOK" ) then
+	echo "curl not found. Try apt-get install curl"
+	exit 1
+endif
+set status = `dpkg -s tofrodos|grep Status:`
+if ( "$status" != "$statusOK" ) then
+	echo "tofrodos not found. Try apt-get install tofrodos"
+	exit 1
+endif
+set status = `dpkg -s gridsite-clients|grep Status:`
+if ( "$status" != "$statusOK" ) then
+	echo "gridsite-clients not found. Try apt-get install gridsite-clients"
+	exit 1
+endif
+set status = `dpkg -s libxml2-utils|grep Status:`
+if ( "$status" != "$statusOK" ) then
+	echo "libxml2-utils not found. Try apt-get install libxml2-utils"
+	exit 1
+endif
+echo "Dependencies okayed. Running check of existing configuration"
+set securesize_default = 32768
+if ( -ersf rightsdraw2-http.conf ) then
+	cp -v rightsdraw2-http.conf rightsdraw2-http.conf.bak
+	set rightsdraw2dir_old = `grep "SetEnv pdir" rightsdraw2-http.conf | cut -f3 -d' '`
+	if ( $rightsdraw2dir != $rightsdraw2dir_old ) then
+		echo "Wrong setting. Corrected $rightsdraw2dir"
+	endif
+	set securesize = `grep "SetEnv securesize" rightsdraw2-http.conf | cut -f3 -d' '`
+else
+	set securesize = $securesize_default
+endif
+if ( -ersf users/default/config/colors ) then
+	set colors = `cat users/default/config/colors`
+else
+	set colors = on
+endif
+if ( -ersf users/default/config/inumber ) then
+	set inumber = `cat users/default/config/inumber`
+else
+	set inumber = 1
+endif
+if ( -ersf users/default/config/owliriprefix ) then
+	set owliriprefix = `cat users/default/config/owliriprefix`
+else
+	set owliriprefix = "http://www.prestoprime.eu/ppavro/2012/"
+endif
+if ( -ersf users/default/config/p4account ) then
+	set p4account = `cat users/default/config/p4account`
+else
+	set p4account = pprime
+endif
+if ( -ersf users/default/config/p4serverurl ) then
+	set p4serverurl = `cat users/default/config/p4serverurl`
+else
+	set p4serverurl = "https://p4.prestoprime.eu/p4ws"
+endif
+if ( -ersf users/default/config/rankdir ) then
+	set rankdir = `cat users/default/config/rankdir`
+else
+	set rankdir = LR
+endif
+if ( -ersf users/default/config/mykpr ) then
+	set mykpr = `cat users/default/config/mykpr`
+else
+	set mykpr = test
+endif
+if ( -ersf users/default/config/mcomode ) then
+	set mcomode = `cat users/default/config/mcomode`
+else
+	set mcomode = test
+endif
+if ( -ersf users/default/config/curloptions ) then
+	set curloptions = `cat users/default/config/curloptions`
+else
+	set curloptions = "--insecure --connect-timeout 10 -m 60 --retry 2"
+endif
+if ( -ersf users/default/config/datanamepos ) then
+	set datanamepos = `cat users/default/config/datanamepos`
+else
+	set datanamepos = box
+endif
+if ( -ersf users/default/config/maxlines ) then
+	set maxlines = `cat users/default/config/maxlines`
+else
+	set maxlines = 20
+endif
+if ( -ersf users/default/config/omitdata ) then
+	set omitdata = `cat users/default/config/omitdata`
+else
+	set omitdata = "(TextVersion),(Text)"
+endif
+if ( -ersf users/default/config/size ) then
+	set size = `cat users/default/config/size`
+else
+	set size = "10,16"
+endif
+set apachehtmldir = /var/www/html
+set apachecgibindir = /var/www/cgi-bin
+set apacheconfigdir = /etc/apache2/conf.d
+set apachehtpasswdcmd = htpasswd
+set apacheuser = www-data
+set rightsdraw2user = `whoami`
+
+# generic parsing of input
+set i = 1
+while ( $i <= $#argv )
+        if ( "$argv[$i]" == "-h" || "$argv[$i]" == "--help" ) then
+#		write help
+		echo "$this usage:"
+		echo "\t\t--apachecgibindir ($apachecgibindir)"
+		echo "\t\t--apacheconfigdir ($apacheconfigdir)"
+		echo "\t\t--apachehtmldir ($apachehtmldir)"
+		echo "\t\t--apachehtpasswdcmd ($apachehtpasswdcmd)"
+		echo "\t\t--apacheuser ($apacheuser)"
+		echo "\t\t--mcomode pprights|contracts ($mcomode)"
+		echo "\t\t--colors on|off ($colors)"
+		echo "\t\t--curloptions ($curloptions)"
+		echo "\t\t--datanamepos ($datanamepos)"
+		echo "\t\t--inumber ($inumber)"
+		echo "\t\t--maxlines ($maxlines)"
+		echo "\t\t--mykpr actual|test ($mykpr)"
+		echo "\t\t--omitdata ($omitdata)"
+		echo "\t\t--owliriprefix ($owliriprefix)"
+		echo "\t\t--p4account ($p4account)"
+		echo "\t\t--p4serverurl ($p4serverurl)"
+		echo "\t\t--rankdir LR|RL|BT|TB ($rankdir)"
+		echo "\t\t--rightsdraw2user ($rightsdraw2user)"
+		echo "\t\t--securesize ($securesize)"
+		echo "\t\t--size ($size)"
+		echo 
+		exit 0
+        else if ( "$argv[$i]" == "--securesize" ) then
+                @ i++
+                set securesize = `echo "a=$argv[$i];a*(a>0)"|bc`
+        else if ( "$argv[$i]" == "--maxlines" ) then
+                @ i++
+                set maxlines = `echo "a=$argv[$i];a*(a>0)"|bc`
+        else if ( "$argv[$i]" == "--apachehtmldir" ) then
+                @ i++
+                set apachehtmldir = "$argv[$i]"
+        else if ( "$argv[$i]" == "--apachecgibindir" ) then
+                @ i++
+                set apachecgibindir = "$argv[$i]"
+        else if ( "$argv[$i]" == "--apacheconfigdir" ) then
+                @ i++
+                set apacheconfigdir = "$argv[$i]"
+        else if ( "$argv[$i]" == "--apachehtpasswdcmd" ) then
+                @ i++
+                set apachehtpaswdcmd = "$argv[$i]"
+        else if ( "$argv[$i]" == "--apacheuser" ) then
+                @ i++
+                set apacheuser = "$argv[$i]"
+        else if ( "$argv[$i]" == "--rightsdraw2user" ) then
+                @ i++
+                set rightsdraw2user = "$argv[$i]"
+        else if ( "$argv[$i]" == "--colors" ) then
+                @ i++
+		if ( "$argv[$i]" == "on" ) then
+			set colors = $argv[$i]
+		else if ( "$argv[$i]" == "off" ) then
+			set colors = $argv[$i]
+		else
+			echo "Bad value: $argv[$i]"
+		endif
+        else if ( "$argv[$i]" == "--rankdir" ) then
+                @ i++
+		if ( "$argv[$i]" == "RL" ) then
+			set rankdir = $argv[$i]
+		else if ( "$argv[$i]" == "LR" ) then
+			set rankdir = $argv[$i]
+		else if ( "$argv[$i]" == "TB" ) then
+			set rankdir = $argv[$i]
+		else if ( "$argv[$i]" == "BT" ) then
+			set rankdir = $argv[$i]
+		else
+			echo "Bad value: $argv[$i]"
+		endif
+        else if ( "$argv[$i]" == "--mykpr" ) then
+                @ i++
+		if ( "$argv[$i]" == "actual" ) then
+			set mykpr = $argv[$i]
+		else if ( "$argv[$i]" == "test" ) then
+			set mykpr = $argv[$i]
+		else
+			echo "Bad value: $argv[$i]"
+		endif
+        else if ( "$argv[$i]" == "--mcomode" ) then
+                @ i++
+		if ( "$argv[$i]" == "contract" ) then
+			set mcomode = $argv[$i]
+		else if ( "$argv[$i]" == "pprights" ) then
+			set mcomode = $argv[$i]
+		else
+			echo "Bad value: $argv[$i]"
+		endif
+        else if ( "$argv[$i]" == "--datanamepos" ) then
+                @ i++
+		if ( "$argv[$i]" == "box" ) then
+			set datanamepos = $argv[$i]
+		else if ( "$argv[$i]" == "edge" ) then
+			set datanamepos = $argv[$i]
+		else
+			echo "Bad value: $argv[$i]"
+		endif
+        else if ( "$argv[$i]" == "--curloptions" ) then
+                @ i++
+                set curloptions = "$argv[$i]"
+        else if ( "$argv[$i]" == "--owliriprefix" ) then
+                @ i++
+                set owliriprefix = "$argv[$i]"
+        else if ( "$argv[$i]" == "--inumber" ) then
+                @ i++
+                set inumber  = `echo "a=$argv[$i];a*(a>0)"|bc`
+        else if ( "$argv[$i]" == "--p4account" ) then
+                @ i++
+                set p4account = "$argv[$i]"
+        else if ( "$argv[$i]" == "--p4serverurl" ) then
+                @ i++
+                set p4serverurl = "$argv[$i]"
+        else if ( "$argv[$i]" == "--omitdata" ) then
+                @ i++
+                set omitdata = "$argv[$i]"
+        else if ( "$argv[$i]" == "--size" ) then
+                @ i++
+                set size = "$argv[$i]"
+        else
+		echo "$this syntax error"
+		echo "$0 -h for help on usage"
+		exit 1
+        endif
+	@ i++
+end
+# Sanity check
+if (!(-e $apachehtmldir ) ) then
+	echo "\n${this}: apachehtmldir error: $apachehtmldir not found"
+	exit 2
+else if (!(-e $apachecgibindir ) ) then
+	echo "\n${this}: apachecgibindir error: $apachecgibindir not found"
+	exit 2
+else if (!(-e $apacheconfigdir ) ) then
+	echo "\n${this}: apacheconfigdir error: $apacheconfigdir not found"
+	exit 2
+endif
+set isuser = `grep -c $apacheuser /etc/passwd`
+if ( !($isuser) ) then
+	echo "\n${this}: apacheuser $apacheuser not found"
+	exit 2
+endif
+set isuser = `grep -c $rightsdraw2user /etc/passwd`
+if ( !($isuser) ) then
+	echo "\n${this}: rightsdraw2user $rightsdraw2user not found"
+	exit 2
+endif
+which $apachehtpasswdcmd > /dev/null
+if ( $? ) then
+	echo "\n${this}: apachehtpasswdcmd $apachehtpasswdcmd not found"
+	exit 
+endif
+
+# Write config somewhere
+echo $p4serverurl > users/default/config/p4serverurl
+echo $p4account > users/default/config/p4account
+echo $owliriprefix > users/default/config/owliriprefix
+echo $inumber >  users/default/config/inumber
+echo $rankdir >  users/default/config/rankdir
+echo $colors >  users/default/config/colors
+echo $mykpr >  users/default/config/mykpr
+echo $mcomode  >  users/default/config/mcomode
+echo $curloptions  >  users/default/config/curloptions
+echo $datanamepos  >  users/default/config/datanamepos
+echo $maxlines  >  users/default/config/maxlines
+echo $omitdata  >  users/default/config/omitdata
+echo $size  >  users/default/config/size
+## create or update rightsdraw2-http.conf
+echo "<Directory $apachecgibindir/rightsdraw2>" > rightsdraw2-http.conf
+echo "SetEnv pdir $rightsdraw2dir" >> rightsdraw2-http.conf
+echo "SetEnv securesize $securesize"  >> rightsdraw2-http.conf
+echo 'SetEnv useroptions "colors=on|off;rankdir=RL|LR|BT|TB;mykpr=actual|test;omitdata='$omitdata';size='$size';p4account='$p4account';p4serverurl='$p4serverurl';mcomode=pprights|contracts|kpr;datanamepos=box|edge;owliriprefix='$owliriprefix';"' >> rightsdraw2-http.conf
+echo "</Directory>" >> rightsdraw2-http.conf
+echo "<Directory $apachecgibindir/rightsdraw2/default>" >> rightsdraw2-http.conf
+echo "AuthType Basic" >> rightsdraw2-http.conf
+echo 'AuthName "By Invitation Only"' >> rightsdraw2-http.conf
+echo "AuthUserFile $rightsdraw2dir/rightsdraw2-htpasswords" >> rightsdraw2-http.conf
+echo "Require user default" >> rightsdraw2-http.conf
+echo "SetEnv puser default" >> rightsdraw2-http.conf
+echo "</Directory>" >> rightsdraw2-http.conf
+
+## write install command
+if ( -ersf install ) then
+	cp -v install install.bak
+endif
+echo "ln -s $rightsdraw2dir/www/html/ $apachehtmldir/rightsdraw2" > install
+echo "mkdir $apachecgibindir/rightsdraw2" >> install
+echo "ln -s $rightsdraw2dir/www/cgi-bin/ $apachecgibindir/rightsdraw2/default" >> install
+echo "ln -s $rightsdraw2dir/www/cgi-bin/rightsdraw2login $apachecgibindir/rightsdraw2/rightsdraw2login" >> install
+echo "ln -s $rightsdraw2dir/rightsdraw2-http.conf $apacheconfigdir/rightsdraw2-http.conf" >> install
+echo "chown -h -R $rightsdraw2user $apachecgibindir/rightsdraw2" >> install
+echo "chown $rightsdraw2user.$apacheuser $rightsdraw2dir/logs" >> install
+echo "chmod g+w $rightsdraw2dir/logs" >> install
+echo "chown -R $rightsdraw2user.$apacheuser $rightsdraw2dir/www/html" >> install
+echo "chmod -R g+w $rightsdraw2dir/www/html" >> install
+echo "chown -R $rightsdraw2user.$apacheuser $rightsdraw2dir/users/default" >> install
+echo "chmod -R g+w  $rightsdraw2dir/users/default" >> install
+echo "echo insert the password for user default" >> install
+echo "$apachehtpasswdcmd -c rightsdraw2-htpasswords default" >> install
+echo "echo going to get third parties js" >> install
+echo "curl http://www.mattkruse.com/javascript/calendarpopup/combined/CalendarPopup.js -o $rightsdraw2dir/www/html/js/CalendarPopup.js" >> install
+echo "service apache2 reload" >> install
+echo ""
+chmod +x install
+## write uninstall command
+if ( -ersf uninstall ) then
+	cp -v uninstall uninstall.bak
+endif
+echo "rm $apachehtmldir/rightsdraw2" > uninstall
+echo "rm -rf $apachecgibindir/rightsdraw2" >> uninstall
+echo "rm $apacheconfigdir/rightsdraw2*http.conf" >> uninstall
+echo "service apache2 reload" >> uninstall
+chmod +x uninstall
+## write adduser command
+if ( -ersf adduser ) then
+	cp -v adduser adduser.bak
+endif
+echo 'newuser=$1' > adduser
+echo 'if [ -z "$newuser" ]; then echo bad request, please give username; exit; fi;' >> adduser
+echo 'if [  -e $newuser ]; then echo bad request, user already existing  exit; fi;' >> adduser
+echo 'rsync -av users/default/ users/$newuser/' >> adduser
+echo 'rm -f users/$newuser/repo/*/*' >> adduser
+echo 'rm -f users/$newuser/repo/*/.tmp/*' >> adduser
+echo 'rm -rf users/$newuser/repo/kpr' >> adduser
+echo "ln -s $rightsdraw2dir/www/cgi-bin $apachecgibindir/rightsdraw2/"'$newuser' >> adduser
+echo "chown -h -R $rightsdraw2user $apachecgibindir/rightsdraw2/"'$newuser' >> adduser
+echo 'chown -R '$rightsdraw2user.$apacheuser $rightsdraw2dir/users'/$newuser' >> adduser
+echo 'chmod -R g+w '$rightsdraw2dir'/users/$newuser' >> adduser 
+echo 'echo "<Directory '$apachecgibindir'/rightsdraw2/$newuser>" > users/$newuser/config/rightsdraw2-http.conf' >> adduser
+echo 'echo AuthType Basic >> users/$newuser/config/rightsdraw2-http.conf' >> adduser
+echo 'echo AuthName '"'"'"'"'"'By Invitation Only'"'"'"'"'"' >> users/$newuser/config/rightsdraw2-http.conf' >> adduser
+echo 'echo AuthUserFile '$rightsdraw2dir'/rightsdraw2-htpasswords >> users/$newuser/config/rightsdraw2-http.conf' >> adduser
+echo 'echo Require user $newuser >> users/$newuser/config/rightsdraw2-http.conf' >> adduser
+echo 'echo SetEnv puser $newuser >> users/$newuser/config/rightsdraw2-http.conf' >> adduser
+echo 'echo "</Directory>" >> users/$newuser/config/rightsdraw2-http.conf' >> adduser
+echo 'ln -s '$rightsdraw2dir'/users/$newuser/config/rightsdraw2-http.conf '$apacheconfigdir'/rightsdraw2.$newuser.http.conf' >> adduser
+echo "echo insert the password for user "'$newuser' >> adduser
+echo "$apachehtpasswdcmd rightsdraw2-htpasswords "'$newuser' >> adduser
+echo "service apache2 reload" >> adduser
+chmod +x adduser
+## write dropuser command
+if ( -ersf dropuser ) then
+	cp -v dropuser dropuser.bak
+endif
+echo 'currentuser=$1' > dropuser
+echo 'if [ -z "$currentuser" ]; then echo bad request, please give username; exit; fi;' >> dropuser
+echo 'if [ ! -e users/$currentuser ]; then echo user not found; exit; fi;' >> dropuser
+echo "rm $apachecgibindir/rightsdraw2/"'$currentuser' >> dropuser
+echo 'rm -rf users/$currentuser' >> dropuser
+echo 'rm '$apacheconfigdir'/rightsdraw2.$currentuser.http.conf' >> dropuser
+echo "$apachehtpasswdcmd -D rightsdraw2-htpasswords "'$currentuser' >> dropuser
+echo "service apache2 reload" >> dropuser
+chmod +x dropuser
+##End of The Story
+echo "${this}: end of the story"
+exit 0

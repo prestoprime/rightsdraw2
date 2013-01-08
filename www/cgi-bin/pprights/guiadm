@@ -1,0 +1,95 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/pprights
+set linelimit = 100
+set this = `basename $0`
+
+#  Header things
+echo "<html>\n<head/>\n<body>"
+#echo '<table border="0"><tr><td><img src="/rightsdraw2/Logo33.JPG" width="75%"></td>'
+#echo '<td style="color:#660000"><h2>RightsDraw2 -  Welcome to the KPR admin page </h2></td></tr></table>'
+echo '<table border="0"><tr>'
+echo '<td><h3 style="color:#660000"">Welcome <i>'$puser'</i> to your PPRIGHTS Repo admin page</h3></td>'
+echo '<td width="150px"/>'
+echo '<td><form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px"><input type="hidden" name="username" value="'$puser'"/><input type="submit" value="Quit"/></form></td></tr>'
+
+set lista = `ls -1 $repo`
+echo '<tr><td><h4 style="color:#660000">You have '$#lista' items in your repo</h4></td>'
+echo '<td><form method="get" action="guiadm" style="margin:0px">\n<input type="submit" value="Refresh"></input></form></td>'
+echo '</tr></table>'
+echo '<table border="0"><tr>'
+#### FIRST COLUMN
+echo '	<td style="vertical-align:top"><table border="0">'
+#Export
+echo '		<tr><td><form action="export" method="get" style="margin:0px" target="pprights_view"><input type="submit" value="Export             "/>'
+echo '          <select name="instance">'
+	echo '		<option/>'
+foreach instance ( $lista )
+        echo '          <option>'"$instance"'</option>'
+end
+echo '          </select>'
+echo '          </form></td></tr>'
+#Submit
+echo '		<tr><td><form action="submit" method="get" style="margin:0px" target="pprights_view"><input type="submit" value="Submit Ingest"/>'
+echo '          <select name="instance">'
+	echo '		<option/>'
+foreach instance ( $lista )
+        echo '          <option>'"$instance"'</option>'
+end
+echo '          </select>'
+echo '          </form></td></tr>'
+#Delete
+echo '		<tr><td><form action="delete" method="get" style="margin:0px" target="pprights_view"><input type="submit" value="Delete              "/>'
+echo '          <select name="instance">'
+	echo '		<option/>'
+foreach instance ( $lista )
+        echo '          <option>'"$instance"'</option>'
+end
+echo '          </select>'
+echo '          </form></td></tr>'
+echo '	</table></td>'
+#### SECOND COLUMN
+echo '	<td style="vertical-align:top"><table border="0">'
+#Import
+echo '		<tr><td><form action="import" method="get" style="margin:0px"><input type="submit" value="Import"/>'
+echo '			<input type="text" name="identifier" size="24"/>'
+echo '          </form></td></tr>'
+#Load
+echo '		<tr><td><form action="load" method="post" style="margin:0px" ENCTYPE="multipart/form-data" target="pprights_view"><input type="submit" value="Load"/>'
+echo '          	<input type="file" name="instance"/>'
+echo '          </form></td></tr>'
+echo '	</table></td>'
+#### THIRD COLUMN (OUTPUT IFRAME)
+echo '	<td style="vertical-align:top">'
+echo '		<iframe id="pprights_view" name="pprights_view" src="about:blank" frameborder="0"></iframe>'
+echo '	</td>'
+echo '</tr></table>'
+echo '<img src="/rightsdraw2/Logo600x100.png">'
+echo "</body>\n</html>"
+exit 0
+
+
+
+
+

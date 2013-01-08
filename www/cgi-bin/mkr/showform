@@ -1,0 +1,75 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set mykpr = `cat $pdir/users/$puser/config/mykpr`
+set repo = $pdir/users/$puser/repo/pprights
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set form = "null"
+set kp = "null"
+set fieldname = "null"
+set instance = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "form" ) then
+                @ i++
+                set form = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "kp" ) then
+                @ i++
+                set kp = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "instance" ) then
+                @ i++
+                set instance = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "fieldname" ) then
+                @ i++
+                set fieldname = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+#Sanity Check
+if ( !(-ersf $pdir/share/$form) ) then
+	echo "404"
+	echo "Not Found form $form"
+	exit 2
+endif
+if ( $instance != null && !(-ersf $repo/$instance) ) then
+	echo "404"
+	echo "Not Found instance $instance"
+	exit 3
+endif
+cat $pdir/share/$form | sed -e s/'+++kproptions+++'/$kp/g |sed -e s/'+++instance+++'/$instance/g |sed -e s/'+++fieldname+++'/$fieldname/g 
+exit 0

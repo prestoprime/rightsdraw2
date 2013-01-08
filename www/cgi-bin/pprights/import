@@ -1,0 +1,128 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2012 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+echo "content-type: text/html\n"
+set repo = $pdir/users/$puser/repo/pprights
+set curloptions = `cat $pdir/users/$puser/config/curloptions`
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set identifier = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "identifier" ) then
+                @ i++
+                set identifier = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+set p4serverurl = `cat $pdir/users/$puser/config/p4serverurl`
+set p4account = `cat $pdir/users/$puser/config/p4account`
+set owliriprefix =  `cat $pdir/users/$puser/config/owliriprefix`
+#
+curl "$p4serverurl/access/dip/${identifier}/rights/result" -o $pdir/logs/$this.$$ -H "userID:${p4account}" $curloptions
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error"
+	echo "$this got $ret in retrieving url for accessing pprights for $identifier from $p4serverurl"
+	exit 2
+endif
+curl `head -n 1 $pdir/logs/$this.$$` -o $pdir/logs/$this.$$.owl  -H "userID:${p4account}" $curloptions 
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error"
+	echo "$this got $ret in retrieving pprights for $identifier from $p4serverurl"
+	exit 21
+endif
+xmllint $pdir/logs/$this.$$.owl >> /dev/null
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error"
+	echo "$this got $ret in checking the rights for $identifier"
+	exit 3
+endif
+set instance = `xsltproc --stringparam afterPrefix "$owliriprefix" $pdir/xsl/getSetOntologyIRI.xsl $pdir/logs/$this.$$.owl`
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this got $ret in retrieving OWL IRI of DIP $identifier"
+	exit 4
+endif
+if ( "$instance" == "" ) then
+	set instance = `xsltproc $pdir/xsl/getAVIdentifier.xsl $pdir/logs/$this.$$.owl`.owl
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this got $ret in retrieving IPEntity Identifier of DIP $identifier"
+		exit 4
+	endif
+endif
+#Sanity check
+if ( -ersf "$repo/$instance"  ) then
+	echo "403"
+	echo "Forbidden"
+	echo "$this instance $instance already in repo"
+	exit 5
+endif
+cp $pdir/logs/$this.$$.owl "$repo/$instance"
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error "
+	echo "$this got $ret saving instance $instance into repo"
+	exit 6
+endif
+if ( !(-e $repo/.aipids ) ) then
+	mkdir $repo/.aipids
+endif
+#echo $identifier > $repo/\.$instance/aipid
+echo $identifier > $repo/.aipids/$instance.aipid
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server error "
+	echo "$this got $ret saving aipid $identifier for instance $instance into repo"
+	rm -f "$repo/$instance"
+	exit 7
+endif
+echo "200"
+echo "Success"
+echo "$instance imported"
+exit 0
