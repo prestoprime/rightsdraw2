@@ -525,12 +525,27 @@
 		<textarea name="clausetext" rows="3" cols="18"/>
 	</form>
 </div>	
+<div name="addfactcomposition" style="float:right">
+	<xsl:call-template name="insertfactcomposition"/>
+</div>
 	<xsl:call-template name="addfacts"/>
 	</xsl:when>
 	<xsl:otherwise>
 		<xsl:call-template name="definepermission"/>
 	</xsl:otherwise>
 </xsl:choose>
+</xsl:template>
+<!-- ************************************************************-->
+<xsl:template name="insertfactcomposition">
+	<form action="addobj" method="get" target="mco_log">
+		<xsl:call-template name="inserthiddeninput"/>
+		<input type="hidden" name="obj" value="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+		<input type="submit" value="Add"/>
+		<select name="class">
+			<option value="urn:mpeg:mpeg21:mco:core:2012#FactUnion">FactUnion</option>
+			<option value="urn:mpeg:mpeg21:mco:core:2012#FactIntersection">FactIntersection</option>
+		</select>
+	</form>
 </xsl:template>
 <!-- ************************************************************-->
 <xsl:template name="factcomposition">

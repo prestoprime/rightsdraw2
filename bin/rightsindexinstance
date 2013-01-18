@@ -74,7 +74,9 @@ endif
 #
 #	ACTUAL EXECUTION
 xsltproc $pdir/xsl/ByPassIntrsctns.xsl $instance > $pdir/logs/.tmp.ByPassIntrsctns.$$
-xsltproc --stringparam ppavro $pdir/share/ppavro.owl --stringparam countrycodes $pdir/share/ebu_Iso3166CountryCodeCS.xml --stringparam languagecodes $pdir/share/ebu_Iso639_1LanguageCodeCS.xml $riidstringparam $rifilestringparam $pdir/xsl/MakeRightsIndex.xsl $pdir/logs/.tmp.ByPassIntrsctns.$$ > $pdir/logs/.tmp.$$
+#	EXPERIMENTAL BY-PASS UNION (must follow ByPassIntrsctns )
+xsltproc $pdir/xsl/ByPassUnions.xsl  $pdir/logs/.tmp.ByPassIntrsctns.$$ > $pdir/logs/.tmp.ByPassUnions.$$
+xsltproc --stringparam ppavro $pdir/share/ppavro.owl --stringparam countrycodes $pdir/share/ebu_Iso3166CountryCodeCS.xml --stringparam languagecodes $pdir/share/ebu_Iso639_1LanguageCodeCS.xml $riidstringparam $rifilestringparam $pdir/xsl/MakeRightsIndex.xsl $pdir/logs/.tmp.ByPassUnions.$$ > $pdir/logs/.tmp.$$
 #
 #	POST-CHECKS
 xmllint --schema $pdir/share/RightsIndex.xsd $pdir/logs/.tmp.$$ >& $pdir/logs/.tmp.$$.xmllint.log

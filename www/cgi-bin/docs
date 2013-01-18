@@ -4,7 +4,7 @@ set this = `basename $0`
 echo "content-type: text/html\n"
 set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
 set inquery = `$pdir/bin/clean.querystring $inquery`
-set username = "default"
+set username = "$puser"
 set i = 1
 while ( $i < $#inquery )
         if ( "$inquery[$i]" == "username" ) then

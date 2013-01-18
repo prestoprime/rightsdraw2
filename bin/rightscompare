@@ -92,9 +92,10 @@ if ( $quickflag == "false" ) then
 endif
 #
 #	ACTUAL EXECUTION
-#xsltproc --stringparam disablecontexts $disablecontexts --stringparam ppavro $pdir/share/ppavro.owl --stringparam countrycodes $pdir/share/ebu_Iso3166CountryCodeCS.xml --stringparam languagecodes $pdir/share/ebu_Iso639_1LanguageCodeCS.xml --stringparam querydoc $querydoc $pdir/xsl/RightsCompareFromIndex.xsl $indexfile > $pdir/logs/.tmp.$$
 xsltproc $pdir/xsl/ByPassIntrsctns.xsl $querydoc > $pdir/logs/.tmp.ByPassIntrsctns.$$
-xsltproc --stringparam disablecontexts $disablecontexts --stringparam ppavro $pdir/share/ppavro.owl --stringparam countrycodes $pdir/share/ebu_Iso3166CountryCodeCS.xml --stringparam languagecodes $pdir/share/ebu_Iso639_1LanguageCodeCS.xml --stringparam querydoc $pdir/logs/.tmp.ByPassIntrsctns.$$ $pdir/xsl/RightsCompareFromIndex.xsl $indexfile > $pdir/logs/.tmp.$$
+#	EXPERIMENTAL BY-PASS UNION (must follow ByPassIntrsctns )
+xsltproc $pdir/xsl/ByPassUnions.xsl  $pdir/logs/.tmp.ByPassIntrsctns.$$ > $pdir/logs/.tmp.ByPassUnions.$$
+xsltproc --stringparam disablecontexts $disablecontexts --stringparam ppavro $pdir/share/ppavro.owl --stringparam countrycodes $pdir/share/ebu_Iso3166CountryCodeCS.xml --stringparam languagecodes $pdir/share/ebu_Iso639_1LanguageCodeCS.xml --stringparam querydoc $pdir/logs/.tmp.ByPassUnions.$$ $pdir/xsl/RightsCompareFromIndex.xsl $indexfile > $pdir/logs/.tmp.$$
 #
 #	POST-CHECKS
 set ret = $?

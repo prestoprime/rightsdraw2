@@ -46,12 +46,12 @@ if ( $mcomode == "contracts" ) then
 ##############
 else if ( $mcomode == "pprights" ) then
 ##############
-	echo '<form method="get" action="create" target="rightsdraw2_main"><input type="submit" value="Create new CEL pprights document">'
+	echo '<form method="get" action="create" target="rightsdraw2_main"><input type="submit" value="Create new MCO pprights document">'
 	echo '<b>What this is about</b> (IP Entity)<br/>Identifier <input type="text" name="identifier"> Title <input type="text" name="title"><br/>Description <textarea rows="2" cols="60" name="description"></textarea></form>'
 ##############
 else if ( $mcomode == "kpr" ) then
 ##############
-	echo '<form method="get" action="create" target="rightsdraw2_main"><input type="submit" value="Create new CEL Key Pattern document">'
+	echo '<form method="get" action="create" target="rightsdraw2_main"><input type="submit" value="Create new MCO Key Pattern document">'
 	echo '<b>Key Pattern Name</b> <input type="text" name="identifier"> Title <input type="text" name="title"><br/>Description <textarea rows="2" cols="60" name="description"></textarea></form>'
 ##############
 endif

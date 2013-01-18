@@ -4,7 +4,7 @@
 #  Version: 2.0.1
 #  Authors: L. Boch
 #
-#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -199,7 +199,19 @@
 		</xsl:for-each>
 	</xsl:for-each>
 	</xsl:variable>
+	<xsl:variable name="owner">
+	<!-- Given the permission, it finds first the action and returns the owner -->
+	<xsl:for-each select="../owl:ObjectPropertyAssertion[substring-after(owl:NamedIndividual[position()=1]/@IRI,'#')=$permid and substring-after(owl:ObjectProperty/@IRI,'#')='permitsAction']">
+		<xsl:variable name="aname"><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
+		<xsl:for-each select="../owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=1]/@IRI=$aname and substring-after(owl:ObjectProperty/@IRI,'#')='actedBy']">
+			<xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/>
+		</xsl:for-each>
+	</xsl:for-each>
+	</xsl:variable>
 <Record>
+	<xsl:if test="$owner != ''">
+		<Owner><xsl:value-of select="$owner"/></Owner>
+	</xsl:if>
 	<Identifier><xsl:value-of select="$irelid"/></Identifier>
 	<AVname><xsl:value-of select="$iname"/></AVname>
 	<Pname>#<xsl:value-of select="$permid"/></Pname> 
@@ -280,7 +292,13 @@
 		<xsl:variable name="aclass"><xsl:value-of select="../owl:ClassAssertion[substring-after(owl:NamedIndividual/@IRI,'#')=substring-after($aname,'#')]/owl:Class/@IRI"/></xsl:variable>
 		<xsl:variable name="theclass">#<xsl:value-of select="substring-after($aclass,'#')"/>;</xsl:variable>
 		<xsl:if test="contains($facts,$theclass)">
-			<xsl:value-of select="$theclass"/><xsl:text> </xsl:text>
+			<xsl:choose>
+				<xsl:when test="contains($aname,'UNION_')">#<xsl:value-of select="substring-after($aclass,'#')"/><xsl:text>; </xsl:text></xsl:when>
+				<xsl:otherwise><xsl:text>#INTERSECTION_</xsl:text><xsl:value-of select="substring-after($aclass,'#')"/><xsl:text>; </xsl:text></xsl:otherwise>
+				<!--
+				<xsl:otherwise><xsl:text>#</xsl:text><xsl:value-of select="substring-after($aclass,'#')"/><xsl:text>; </xsl:text></xsl:otherwise>
+				-->
+			</xsl:choose>
 			<xsl:call-template name="getSubClasses">
 				<xsl:with-param name="class"><xsl:value-of select="substring-before($theclass,';')"/></xsl:with-param>
 				<xsl:with-param name="dir" select="1"/>
@@ -305,14 +323,23 @@
 	<xsl:choose>
 		<xsl:when test="$whitelist != ''">
 			<xsl:call-template name="setlist">
-				<xsl:with-param name="yeslist"><xsl:value-of select="$whitelist"/></xsl:with-param>
-				<xsl:with-param name="nolist"><xsl:value-of select="$blacklist"/> </xsl:with-param>
+				<xsl:with-param name="yeslist">
+					<xsl:call-template name="intersectionlist">
+						<xsl:with-param name="inlist"><xsl:value-of select="$whitelist"/></xsl:with-param>
+					</xsl:call-template>
+				</xsl:with-param>
+				<!--
+				<xsl:with-param name="yeslist">
+					<xsl:value-of select="$whitelist"/>
+				</xsl:with-param>
+				-->
+				<xsl:with-param name="nolist"><xsl:text> </xsl:text><xsl:value-of select="$blacklist"/></xsl:with-param>
 			</xsl:call-template>
 		</xsl:when>
 		<xsl:otherwise>
 			<xsl:call-template name="setlist">
 				<xsl:with-param name="yeslist"><xsl:value-of select="$facts"/></xsl:with-param>
-				<xsl:with-param name="nolist"><xsl:value-of select="$blacklist"/> </xsl:with-param>
+				<xsl:with-param name="nolist"><xsl:text> </xsl:text><xsl:value-of select="$blacklist"/></xsl:with-param>
 			</xsl:call-template>
 		</xsl:otherwise>
 	</xsl:choose>
@@ -430,6 +457,34 @@
 </xsl:template>
 
 <!-- ************************************************************-->
+<xsl:template name="intersectionlist">
+	<!-- the output is the inlist with intersections cleaned -->
+	<xsl:param name="inlist" select="null"/>
+	<xsl:param name="intersectionflag" select="false"/>
+	<xsl:param name="intersectionlist" select="null"/>
+	<xsl:variable name="item"><xsl:value-of select="substring-before($inlist,';')"/>;</xsl:variable>
+	<xsl:variable name="itemtarget"><xsl:value-of select="substring-after($item,'INTERSECTION_')"/></xsl:variable>
+	<xsl:choose>
+		<xsl:when test="$item != ';'">
+			<xsl:if test="$itemtarget = ''"><xsl:value-of select="$item"/><xsl:text></xsl:text></xsl:if>
+			<xsl:variable name="tail"><xsl:value-of select="substring-after($inlist,';')"/></xsl:variable>
+			<xsl:call-template name="intersectionlist">
+				<xsl:with-param name="inlist"><xsl:value-of select="$tail"/></xsl:with-param>
+				<xsl:with-param name="intersectionlist">
+					<xsl:value-of select="$intersectionlist"/>
+					<xsl:if test="$itemtarget != ''"><xsl:if test="$intersectionlist != 'null'">_</xsl:if><xsl:value-of select="substring-before($itemtarget,';')"/></xsl:if>
+				</xsl:with-param>
+				<xsl:with-param name="intersectionflag">
+					<xsl:if test="$itemtarget != '' and $intersectionlist != 'null'">true</xsl:if>
+				</xsl:with-param>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:if test="$intersectionlist != 'null' and $intersectionlist != ''">#<xsl:if test="$intersectionflag = 'true'">INTERSECTION_</xsl:if><xsl:value-of select="$intersectionlist"/>;<xsl:text></xsl:text></xsl:if>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+<!-- ************************************************************-->
 
 <xsl:template name="setlist">
 	<!-- the output is the yeslist without members of nolist -->
@@ -448,11 +503,20 @@
 	</xsl:if>
 </xsl:template>
 
+<!-- ************************************************************-->
+
 <xsl:template name="getSubClasses">
 	<xsl:param name="class" select="null"/>
 	<xsl:param name="dir" select="1"/>
 	<xsl:for-each select="document($ppavro)/owl:Ontology/owl:SubClassOf[owl:Class/@IRI=$class]/owl:Class[position()=$dir]">
-		<xsl:variable name="classiri"><xsl:value-of select="@IRI"/></xsl:variable>
+		<!--xsl:variable name="classiri"><xsl:value-of select="@IRI"/><xsl:value-of select="@abbreviatedIRI"/></xsl:variable>
+		-->
+		<xsl:variable name="classiri">
+			<xsl:choose>
+				<xsl:when test="@IRI"><xsl:value-of select="@IRI"/></xsl:when>
+				<xsl:otherwise>#<xsl:value-of select="substring-after(@abbreviatedIRI,'mvco:')"/></xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:if test="$classiri != $class">
 			<xsl:value-of select="$classiri"/><xsl:text>; </xsl:text>
 			<xsl:call-template name="getSubClasses">

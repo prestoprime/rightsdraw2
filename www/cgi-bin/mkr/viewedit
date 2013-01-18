@@ -91,11 +91,14 @@ else
         		echo "Server Error"
 			echo "$this got $ret from rightscompare working on kp $mylist[$loop] with index of $instance"
 		endif
-		set perm = `cat $pdir/logs/.tmp.$this.$$.$loop.rpout|grep true |cut -d '|' -f4|sed -e s/\$/';'/g `
+		set perm = `cat $pdir/logs/.tmp.$this.$$.$loop.rpout|grep true |cut -d '|' -f5|sed -e s/\$/';'/g `
 		echo "$perm" >> $pdir/logs/$this.time
 		echo '<tr><td>'
 #################
 		if ( $tobypass ) then
+#			shouldn't be modified as in rightscompare? (i.e. making also ByPassUnions)
+#			this is done for showing the constraints on the identified Permission
+#			NO impact untill constraints are put in Union, which is uncovered however
 			xsltproc $pdir/xsl/ByPassIntrsctns.xsl $repo/$instance > $pdir/logs/.tmp.ByPassIntrsctns.$$
 			set tobypass = 0
 		endif
