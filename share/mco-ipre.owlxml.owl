@@ -1,0 +1,1271 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="urn:mpeg:mpeg21:mco:ipre:2012"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     ontologyIRI="urn:mpeg:mpeg21:mco:ipre:2012">
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="mco-ipre" IRI="urn:mpeg:mpeg21:mco:ipre:2012#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Prefix name="dc" IRI="http://purl.org/dc/elements/1.1/"/>
+    <Prefix name="mvco" IRI="http://purl.oclc.org/NET/mvco.owl#"/>
+    <Prefix name="mco-core" IRI="urn:mpeg:mpeg21:mco:core:2012#"/>
+    <Import>http://purl.oclc.org/NET/mvco.owl</Import>
+    <Import>urn:mpeg:mpeg21:mco:core:2012#</Import>
+    <Import>http://protege.stanford.edu/plugins/owl/dc/protege-dc.owl</Import>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="dc:title"/>
+        <Literal datatypeIRI="&xsd;string">Media Contract Ontology -  Extension for Exploitation of Intellectual Property Rights</Literal>
+    </Annotation>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:Action"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:Adaptation"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:Distribute"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:Fact"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:MakeAdaptation"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:MakeCopy"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:MakeInstance"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:ModifyCopy"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:Permission"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:PublicCommunication"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:User"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mvco:Work"/>
+    </Declaration>
+    <Declaration>
+        <Class abbreviatedIRI="mco-core:DeonticExpression"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AccessPolicy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BroadcastTechnology"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Broadcasting"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cable"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CommunicationToThePublic"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Computer"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DeliveryModality"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Device"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Download"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Dub"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Duplicate"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Excerpt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExploitIPRights"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExploitationCondition"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fixate"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FreeOfCharge"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IPEntityContext"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IPNetwork"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Internet"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Language"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Length"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Limited"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Linear"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MakeCutAndEdit"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MakeExcerpt"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Means"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MobileBroadcastDevice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MobileBroadcastTechnology"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MobileDevice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MobileTechnology"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MobileTelecommunicationDevice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MobileTelecommunicationTechnology"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NonLinear"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OnDemandBasis"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OnDemandDownload"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#OnDemandStreaming"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Open"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Pay"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PayPerView"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PublicPerformance"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Radio"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Remix"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Restricted"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RobotDevice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Run"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Satellite"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ServiceAccessPolicy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpatialContext"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#StorageDevice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Subscription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TelevisionDevice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TelevisionSet"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TemporalContext"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Terrestrial"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Transform"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Translate"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Unlimited"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Upload"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#UserTimeAccess"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Videogram"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Webcasting"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI="mvco:actedBy"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI="mvco:actedOver"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI="mvco:permitsAction"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty abbreviatedIRI="owl:topObjectProperty"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#partOf"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI="mco-core:deonticProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#afterDate"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#beforeDate"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasIncomePercentage"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasLanguage"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasMaxLength"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasNumberOfRepetitions"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasNumberOfRuns"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasPropertyPercentage"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasSublicenseRight"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasValidity"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#inCountry"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#isExclusive"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#withDelay"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#MakeAdaptation001"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty abbreviatedIRI="dc:date"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty abbreviatedIRI="dc:title"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty abbreviatedIRI="owl:versionInfo"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="#hasValidity"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="#withDelay"/>
+    </Declaration>
+    <Declaration>
+        <Datatype abbreviatedIRI="xsd:date"/>
+    </Declaration>
+    <Declaration>
+        <Datatype abbreviatedIRI="xsd:duration"/>
+    </Declaration>
+    <EquivalentClasses>
+        <Class abbreviatedIRI="mvco:MakeCopy"/>
+        <Class IRI="#Duplicate"/>
+    </EquivalentClasses>
+    <EquivalentClasses>
+        <Class abbreviatedIRI="mvco:MakeInstance"/>
+        <Class IRI="#Fixate"/>
+    </EquivalentClasses>
+    <SubClassOf>
+        <Class abbreviatedIRI="mvco:Broadcast"/>
+        <Class IRI="#CommunicationToThePublic"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class abbreviatedIRI="mvco:Distribute"/>
+        <Class IRI="#ExploitIPRights"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AccessPolicy"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BroadcastTechnology"/>
+        <Class IRI="#Means"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Broadcasting"/>
+        <Class IRI="#Linear"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cable"/>
+        <Class IRI="#BroadcastTechnology"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CommunicationToThePublic"/>
+        <Class abbreviatedIRI="mvco:PublicCommunication"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CommunicationToThePublic"/>
+        <Class IRI="#ExploitIPRights"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Computer"/>
+        <Class IRI="#Device"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DeliveryModality"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Device"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Download"/>
+        <Class IRI="#Internet"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Dub"/>
+        <Class abbreviatedIRI="mvco:ModifyCopy"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Duplicate"/>
+        <Class IRI="#ExploitIPRights"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Excerpt"/>
+        <Class abbreviatedIRI="mvco:Adaptation"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ExploitIPRights"/>
+        <Class abbreviatedIRI="mvco:Action"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ExploitationCondition"/>
+        <Class abbreviatedIRI="mvco:Fact"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fixate"/>
+        <Class IRI="#ExploitIPRights"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FreeOfCharge"/>
+        <Class IRI="#AccessPolicy"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IPEntityContext"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IPNetwork"/>
+        <Class IRI="#BroadcastTechnology"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Internet"/>
+        <Class IRI="#Means"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Language"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Length"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Limited"/>
+        <Class IRI="#UserTimeAccess"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Linear"/>
+        <Class IRI="#DeliveryModality"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MakeCutAndEdit"/>
+        <Class IRI="#Transform"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MakeExcerpt"/>
+        <Class IRI="#Transform"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Means"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MobileBroadcastDevice"/>
+        <Class IRI="#MobileDevice"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MobileBroadcastTechnology"/>
+        <Class IRI="#BroadcastTechnology"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MobileBroadcastTechnology"/>
+        <Class IRI="#MobileTechnology"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MobileDevice"/>
+        <Class IRI="#Device"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MobileTechnology"/>
+        <Class IRI="#Means"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MobileTelecommunicationDevice"/>
+        <Class IRI="#MobileDevice"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MobileTelecommunicationTechnology"/>
+        <Class IRI="#MobileTechnology"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NonLinear"/>
+        <Class IRI="#DeliveryModality"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OnDemandBasis"/>
+        <Class IRI="#NonLinear"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OnDemandDownload"/>
+        <Class IRI="#OnDemandBasis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#OnDemandStreaming"/>
+        <Class IRI="#OnDemandBasis"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Open"/>
+        <Class IRI="#ServiceAccessPolicy"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Pay"/>
+        <Class IRI="#AccessPolicy"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PayPerView"/>
+        <Class IRI="#Pay"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PublicPerformance"/>
+        <Class abbreviatedIRI="mvco:PublicCommunication"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PublicPerformance"/>
+        <Class IRI="#ExploitIPRights"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Radio"/>
+        <Class IRI="#Means"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Remix"/>
+        <Class IRI="#Transform"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Restricted"/>
+        <Class IRI="#ServiceAccessPolicy"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RobotDevice"/>
+        <Class IRI="#Device"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Run"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Satellite"/>
+        <Class IRI="#BroadcastTechnology"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ServiceAccessPolicy"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpatialContext"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#StorageDevice"/>
+        <Class IRI="#Device"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Subscription"/>
+        <Class IRI="#Pay"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TelevisionDevice"/>
+        <Class IRI="#Device"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TelevisionSet"/>
+        <Class IRI="#TelevisionDevice"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TemporalContext"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Terrestrial"/>
+        <Class IRI="#BroadcastTechnology"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Transform"/>
+        <Class IRI="#ExploitIPRights"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Translate"/>
+        <Class abbreviatedIRI="mvco:ModifyCopy"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Unlimited"/>
+        <Class IRI="#UserTimeAccess"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Upload"/>
+        <Class IRI="#Internet"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#UserTimeAccess"/>
+        <Class IRI="#ExploitationCondition"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Videogram"/>
+        <Class IRI="#Means"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Webcasting"/>
+        <Class IRI="#Linear"/>
+    </SubClassOf>
+    <ClassAssertion>
+        <Class abbreviatedIRI="mvco:MakeAdaptation"/>
+        <NamedIndividual IRI="#MakeAdaptation001"/>
+    </ClassAssertion>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#partOf"/>
+        <Class IRI="#IPEntityContext"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#partOf"/>
+        <Class abbreviatedIRI="mvco:IPEntity"/>
+    </ObjectPropertyRange>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#afterDate"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#beforeDate"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#hasIncomePercentage"/>
+        <DataProperty abbreviatedIRI="mco-core:deonticProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#hasLanguage"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#hasMaxLength"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#hasNumberOfRepetitions"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#hasNumberOfRuns"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#hasPropertyPercentage"/>
+        <DataProperty abbreviatedIRI="mco-core:deonticProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#hasSublicenseRight"/>
+        <DataProperty abbreviatedIRI="mco-core:deonticProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#hasValidity"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#inCountry"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#isExclusive"/>
+        <DataProperty abbreviatedIRI="mco-core:deonticProperty"/>
+    </SubDataPropertyOf>
+    <SubDataPropertyOf>
+        <DataProperty IRI="#withDelay"/>
+        <DataProperty abbreviatedIRI="mco-core:factProperty"/>
+    </SubDataPropertyOf>
+    <DataPropertyDomain>
+        <DataProperty abbreviatedIRI="mco-core:deonticProperty"/>
+        <Class abbreviatedIRI="mco-core:DeonticExpression"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#afterDate"/>
+        <Class IRI="#TemporalContext"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#beforeDate"/>
+        <Class IRI="#TemporalContext"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasIncomePercentage"/>
+        <Class abbreviatedIRI="mvco:Permission"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasLanguage"/>
+        <Class IRI="#Language"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasMaxLength"/>
+        <Class IRI="#Length"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasNumberOfRepetitions"/>
+        <Class IRI="#Run"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasNumberOfRuns"/>
+        <Class IRI="#Run"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasPropertyPercentage"/>
+        <Class abbreviatedIRI="mvco:Permission"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasSublicenseRight"/>
+        <Class abbreviatedIRI="mvco:Permission"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#inCountry"/>
+        <Class IRI="#SpatialContext"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#isExclusive"/>
+        <Class abbreviatedIRI="mvco:Permission"/>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#afterDate"/>
+        <Datatype abbreviatedIRI="xsd:date"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#beforeDate"/>
+        <Datatype abbreviatedIRI="xsd:date"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasIncomePercentage"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasIncomePercentage"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasLanguage"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasMaxLength"/>
+        <Datatype abbreviatedIRI="xsd:duration"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasNumberOfRepetitions"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasNumberOfRuns"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasPropertyPercentage"/>
+        <Datatype abbreviatedIRI="xsd:float"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasPropertyPercentage"/>
+        <Datatype abbreviatedIRI="xsd:nonNegativeInteger"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasSublicenseRight"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasValidity"/>
+        <Datatype abbreviatedIRI="xsd:duration"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#inCountry"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#isExclusive"/>
+        <Datatype abbreviatedIRI="xsd:boolean"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#withDelay"/>
+        <Datatype abbreviatedIRI="xsd:duration"/>
+    </DataPropertyRange>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#AccessPolicy</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact about the modality attributable to a content access or media service according to the management of the access by the media provider, being either of open or of restricted access.
+It can be used for modelling restriction on the way the final user is charged (or not) for the content fruition.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#AccessPolicy</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">AccessPolicy</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#BroadcastTechnology</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is point-to-multipoint.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Broadcasting</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the linear delivery modality is made by means of any point-to-multipoint technology (such as DTH Delivery , Cable TV Delivery, Satellite Delivery, IPTV Delivery , Analogue , Mobile Broadcast Technology), for which many simultaneous viewers access the content.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Cable</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on television set is co-axial and/or fiber optic cable. It excludes the use of DSL, ADSL, Internet or other IP-based networks.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#CommunicationToThePublic</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling a PublicCommunication in which the public is not present in the place where the communication is originated. Also subclass of mvco:PublicCommunication.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Computer</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the device used by the final user for the fruition of content is a computer equipment.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#DeliveryModality</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact about the way the content is delivered to the viewer/user according to the control over the selection of the content and over their organization in a chronological schedule or in a catalogue: Linear vs Non-Linear.
+It can be used for modelling restrictions based on who (and how) has the control on the time (and place) of fruition of the communication to the public</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#DeliveryModality</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">DeliveryModality</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Device</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact about the Device which has been used to execute a certain Action, used for modelling the restrictions on the type of equipment used by the final user for the fruition of content.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Device</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Device</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Download</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Use of the HTTP protocol or equivalent to retrieve content from a network.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Duplicate</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">the Action of duplicating the physical materials (including preprint materials, internegatives, interpositives, prints, soundtrack and still photos) in any medium now or hereafter known for the purpose of fully exploiting the Distribution rights.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Excerpt</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling this particular derivative work which cannot be made without the authorisation of the original author</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ExploitIPRights</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Action of exploiting the IP rights in some way</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ExploitationCondition</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact used as Condition for the Exploitation of an IP Entity</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ExploitationCondition</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">ExploitationCondition</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Fixate</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">the action by which a work or a performance is materially recorded</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#FreeOfCharge</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact on the modality of access to a certain Content, where no payment has been made to execute an Action.
+For modelling the restriction that no charge is due other than fees levied by government agencies.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#FreeOfCharge</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">FreeOfCharge</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#IPEntityContext</IRI>
+        <Literal datatypeIRI="&xsd;string">modeling the restriction on the IPEntity, over which a deontic expression is applied, to belong to a particular editorial context, e.g. being a part of another IPEntity. The Fact to hold, requires that between the two IPEntities there is a relationship such as mvco:isMadeUpOf</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#IPNetwork</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is DSL or ADSL or any IP-based network via a dedicated private (or virtual private) network, but excluding Internet</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Internet</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is based on TCP/IP software protocols or any equivalent protocol.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Language</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the language for communication to the public, such as that for dubbing and/or that for subtitles.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Language</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Language</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Length</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact defining restrictions about the length, i.e. duration, of the content materilal resulting from the Action.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Limited</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For expressing a limited availability over time of the content for the access by the end user (e.g. rental)</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Linear</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the delivery modality is made by a media service provider simultaneously to many end users, on the basis of a programme schedule</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MakeCutAndEdit</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling cut, translation, editing, and what else alter the audiovisual content for customary exploitation purposes</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MakeExcerpt</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling the use and exploitation of excerpts separate from the source audiovisual content</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Means</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact for modelling restrictions on the way in which the content is delivered to the public</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Means</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Means</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MobileBroadcastDevice</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the device used by the final user for the fruition of content is a mobile device capable of receiving transmission by means of wireless standard or technology for the point to multi-point broadcast of audio-visual contents to portable devices. It is a subclass of both mcowl:TelevisionDevice and mcowl:MobileDevice.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MobileBroadcastTechnology</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on portable device is point-to-multi-point.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MobileDevice</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the device used by the final user for the fruition of content is a any portable equipment capable of receiving transmissions while the user is in motion.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MobileTechnology</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is for reception while the user is in motion for viewing on a mobile device.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MobileTelecommunicationDevice</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the device used by the final user for the fruition of content is a mobile device capable of receiving transmission by means of technologies used in point-to-point mobile telecommunications (such as GSM, UMTS, W-CDMA, DCS-1800, HSDPA, HSUPA, and their derivative systems).</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#MobileTelecommunicationTechnology</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on portable device is point-to-point.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#NonLinear</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the delivery modality is made by a media service provider for the view at the moment chosen by the end user and at his individual request on the basis of a catalogue of programmes selected by the media service provider. This delivery modality is also known as “makeAvailable”</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#OnDemandBasis</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the delivery of the of the non-linear modality is made in response to a user request</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#OnDemandDownload</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the on demand basis delivery is made of the reception of data to the user’s system from a remote system for viewing for limited time or perpetuity.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#OnDemandStreaming</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the on demand basis delivery is made in streaming modality.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Open</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the service is provided to all consumers without the need for approval by the media service provider. This condition is independent from the policy of access that could be free of charge or pay.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Pay</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact on the modality of access to a certain Content, where a payment in any form has been made to execute an Action.
+For modelling the restriction that the content is accessible to the viewer through payment.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Pay</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Pay</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#PayPerView</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the acces requires a payment by the final user on a per-exhibition basis, at the time scheduled by the media service provider by continous exhibition.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#PublicPerformance</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling a PublicCommunication in which the work is showed or played in public</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#PublicPerformance</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">PublicPerformance</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="owl:versionInfo"/>
+        <IRI>#PublicPerformance</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">1.1</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Radio</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is Radio.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Remix</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling the to recombine audio tracks or channels from a recording to produce a new or modified audio recording</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Restricted</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the service is provided only to customers who have obtained an approval by the media service provider. The provider knows and manages the consumer. The restricted policy service access is often linked to the concept of subscription (payment of service) but free forms of restricted access are also possible.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#RobotDevice</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the device used by the final user for the fruition of content is any equipment capable of performing automated tasks without human interaction.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Run</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling restrictions on maximum number of runs, that is the number of times which an Action can be executed.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#Run</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Run</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Satellite</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users makes use of a geostationary satellite system.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#ServiceAccessPolicy</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact about the service access policy. It can be used for modelling restrictions on how the access of the final users to the services delivery the content object of the communication to the public is established (i.e. open or restricted).</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#ServiceAccessPolicy</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">ServiceAccessPolicy</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#SpatialContext</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact describing the location of a User at the moment of his execution of an Action.
+For modelling restrictions on the Territory when an Action can be executed.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#StorageDevice</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the device used by the final user for the fruition of content is any device with storage capabilities, allowing the user to keep and reuse the content saved locally.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Subscription</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the access requires a payment of a subscription fee by the final user.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#TelevisionDevice</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the device used by the final user for the fruition of content is any equipment with television functionalities.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#TelevisionSet</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the Television device used by the final user for the fruition of content is not a mobile broadcast device.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#TemporalContext</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact describing the time of a User at the moment of his execution of an Action. 
+For modelling the “licence period”, that the time when an Action can be executed.
+</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Terrestrial</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users makes use of a terrestrial television transmitter.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Transform</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling all forms of modifications. </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Unlimited</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For expressing unlimited availability over time of the content for the access by the end user</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Upload</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Use of the HTTP protocol or equivalent to store content in a network.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#UserTimeAccess</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fact about the user time access. It can be used for modelling restrictions based on the possibility to establish expiration of the time of availability of the content for the fruition of the final user (e.g. rental).</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#UserTimeAccess</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">UserTimeAccess</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Videogram</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is the creation of a container in any format (such as videocassets, DVD, DVD-RIM, internet access ready DVD, CDi, CD, CD-ROM, UMD, VCD).</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#Webcasting</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">For modelling the restriction that the linear delivery modality is made by streaming via Internet.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#afterDate</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">the date after which the TemporalContext is defined to be valid.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#beforeDate</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">the date before which the TemporalContext is defined to be valid</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasIncomePercentage</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling the cases when the income of exploitation of the Permission has to be shared.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasLanguage</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for attributing which languages are permitted, when language is constrained.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasMaxLength</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">the maximum length, as duration of canonical play, of material resulting from an action.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasNumberOfRepetitions</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">if given, it attributes  the number of repetitions that,  within a validity window, have to be considered as a single run.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasNumberOfRuns</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">attributing the number of permitted Runs, when they are constrained.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasPropertyPercentage</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for modelling the cases when the permission to use is shared with other actors (not 100%) and thus the permission cannot be actually exploited.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasPropertyPercentage</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">hasUsePercentage</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasSublicenseRight</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for explicitly modelling the permission to sublicense a granted right. (a permission on the permission).</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#hasSublicenseRight</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">hasSublicenseRight</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#hasValidity</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for attributing the period of validity of the context expressed by the fact. When domain is mco-ipre:Limited, it attributes how long the end user can access the content after having got access. When domain is mco-ipre:Run, it attributes the period during which an unlimited or specified  number of repetitions have to be considered as a single run. When domain is mco-core:ActionDone, it attributes how long  the context of the fact has to be considered valid, i.e. true.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#inCountry</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">the countries in which the SpatialContext is valid, according to the country codes in ISO3166.</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#isExclusive</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">a Boolean value which tells if this exploitation might be granted by the issuer to multiple licensees in the same context or not. </Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <IRI>#isExclusive</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">isExclusive</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#partOf</IRI>
+        <Literal datatypeIRI="&xsd;string">for attributing which IPEntity is required to be the parent context by an IPEntityContext restriction</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
+        <IRI>#withDelay</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">for attributing the elapsed time, following to the achievement of a related action,after which  the context of the fact has to be considered valid, i.e. true</Literal>
+    </AnnotationAssertion>
+    <AnnotationPropertyDomain>
+        <AnnotationProperty IRI="#hasValidity"/>
+        <IRI>urn:mpeg:mpeg21:cel:owl:2012#ActionRelatedFact</IRI>
+    </AnnotationPropertyDomain>
+    <AnnotationPropertyDomain>
+        <AnnotationProperty IRI="#hasValidity"/>
+        <AbbreviatedIRI>mco-core:ActionRelatedFact</AbbreviatedIRI>
+    </AnnotationPropertyDomain>
+    <AnnotationPropertyDomain>
+        <AnnotationProperty IRI="#hasValidity"/>
+        <IRI>#Limited</IRI>
+    </AnnotationPropertyDomain>
+    <AnnotationPropertyDomain>
+        <AnnotationProperty IRI="#hasValidity"/>
+        <IRI>#Run</IRI>
+    </AnnotationPropertyDomain>
+    <AnnotationPropertyDomain>
+        <AnnotationProperty IRI="#withDelay"/>
+        <IRI>urn:mpeg:mpeg21:cel:owl:2012#ActionRelatedFact</IRI>
+    </AnnotationPropertyDomain>
+    <AnnotationPropertyDomain>
+        <AnnotationProperty IRI="#withDelay"/>
+        <AbbreviatedIRI>mco-core:ActionRelatedFact</AbbreviatedIRI>
+    </AnnotationPropertyDomain>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
+

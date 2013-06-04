@@ -1,0 +1,165 @@
+<html>
+<head>
+<link href="/rightsdraw2/css/query.css" type="text/css" rel="stylesheet"/>
+<script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
+<script src="/rightsdraw2/js/putrunproperties"></script>
+</head>
+<body>
+<h4>This module searches for an MCO document  containing the given entities matching the query in input</h4>
+<div name="search" style="float:left;background:#f0f0f0"><form id="pform" action="dosearch" method="get" target="query_view">
+<div>
+<script id="jscal1x">var cal1x = new CalendarPopup(); </script>
+<input type="submit" value="Do Search ">
+with IRI: <input name="ind" value="null" size="8"> of
+<select name="class">
+<option value="null">any Class</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#Contract">Contract</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#Organization">Organization</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#User">User</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#IPEntity">IPEntity</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#TextualClause">TextualClause</option>
+<optgroup label="Deontic Expression">
+	<option value="http://purl.oclc.org/NET/mvco.owl#Permission">Permission</option>
+	<option value="urn:mpeg:mpeg21:mco:core:2012#Prohibition">Prohibition</option>
+	<option value="urn:mpeg:mpeg21:mco:core:2012#Obligation">Obligation</option>
+</optgroup>
+<optgroup label="Actions">
+	<option value="urn:mpeg:mpeg21:mco:ipre:2012#ExploitIPRights">ExploitIPRights</option>
+	<optgroup label="Exploit IP Rights">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#CommunicationToThePublic">CommunicationToThePublic</option>
+		<option value="http://purl.oclc.org/NET/mvco.owl#Distribute">Distribute</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#PublicPerformance">PublicPerformance</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Duplicate">Duplicate</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Fixate">Fixate</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Transform">Transform</option>
+	</optgroup>
+	<optgroup label="Transform">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MakeCutAndEdit">MakeCutAndEdit</option>
+	<option value="urn:mpeg:mpeg21:mco:ipre:2012#MakeExcerpt">MakeExcerpt</option>
+	</optgroup>
+</optgroup>
+<optgroup label="Facts">
+	<optgroup label="AccessPolicy">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#FreeOfCharge">Free of Charge</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Pay">Pay</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#PayPerView">Pay: PayPerView</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Subscription">Pay: Subscription</option>
+	</optgroup>
+	<optgroup label="ServiceAccessPolicy">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Open">Open</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Restricted">Restricted</option>
+	</optgroup>
+	<optgroup label="DeliveryModality">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Linear">Linear</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#NonLinear">Non Linear</option>
+		<optgroup label="DeliveryModality: Linear">
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#Broadcasting">Broadcasting</option>
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#Webcasting">Webcasting</option>
+		</optgroup>
+		<optgroup label="DeliveryModality: Non Linear">
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandBasis">OnDemand Basis</option>
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandDownload">OnDemand Basis: Download</option>
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandStreaming">OnDemand Streaming</option>
+		</optgroup>
+	</optgroup>
+	<optgroup label="Means">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#BroadcastTechnology">Broadcast Technology</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileTechnology">Mobile Technology</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Internet">Internet</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Radio">Radio</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Videogram">Videogram</option>
+		<optgroup label="Means: Broadcast Technology">
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#Cable">Cable</option>
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#IPNetwork">IPNetwork</option>
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#Satellite">Satellite</option>
+			<option value="urn:mpeg:mpeg21:mco:ipre:2012#Terrestrial">Terrestrial</option>
+		</optgroup>
+	</optgroup>
+	<optgroup label="Device">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Computer">Computer</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileDevice">Mobile Device</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileBroadcastDevice">Mobile Broadcast Device</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileTelecommunicationDevice">Mobile Telecommunication Device</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#StorageDevice">Storage Device</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#TelevisionDevice">Television Device</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#TelevisionSet">Television Set</option>
+	</optgroup>
+	<optgroup label="UserTimeAccess">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Limited">Limited</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Unlimited">Unlimited</option>
+	</optgroup>
+	<optgroup label="RelatedAction">
+		<option value="urn:mpeg:mpeg21:mco:core:2012#ActionDone">Done</option>
+		<option value="urn:mpeg:mpeg21:mco:core:2012#ActionStarted">Started</option>
+	</optgroup>
+</select> 
+</div>
+<div style="clear:both"/>
+</blockquote>
+<div style="float:left">
+with metadata:
+<input name="md" value="null" size="20">
+<br/>
+with
+<select name="key">
+<option value="null">any Data Property</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#TextVersion">TextVersion</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Text">Text</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#Address">Address</option>
+<option value="urn:mpeg:mpeg21:2002:01-DII-NS#Identifier">Identifier</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#afterDate">afterDate</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#beforeDate">beforeDate</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#hasLanguage">hasLanguage</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRuns">hasNumberOfRuns</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRepetitions">hasNumberOfRepetitions</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#hasValidity">hasValidity</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#withDelay">withDelay</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#inCountry">inCountry</option>
+<option value="urn:mpeg:mpeg21:mco:ipre:2012#hasMaxLength">hasMaxLength</option>
+</select> 
+<input name="value" value="null" size="14">
+<br/>
+with
+<select name="obj">
+<option value="null">any Object Property</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#issuedBy">issuedBy</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#actedOver">actedOver</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#actedBy">actedBy</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#hasRequired">hasRequired</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#resultsIn">resultsIn</option>
+<option value="http://purl.oclc.org/NET/mvco.owl#permitsAction">permitsAction</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#obligatesAction">obligatesAction</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#forbidsAction">forbidsAction</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#issuedIn">issuedIn</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#implements">implements</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#cancels">cancels</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#isAmendmentOf">isAmendmentOf</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#prevailsOver">prevailsOver</option>
+<option value="urn:mpeg:mpeg21:mco:core:2012#supersedes">supersedes</option>
+</select> 
+<select name="objtype"> 
+	<option>domain</option>
+	<option>range</option>
+</select> 
+</div>
+<div style="float:left">
+<input type="checkbox" name="mdexact"> exact <br/>
+<input type="checkbox" name="valueexact"> exact <br/>
+<input type="checkbox" name="negative"> negative <br/>
+</div>
+</form>
+</div>
+</blockquote>
+<div name="helpfill"  style="clear:both;background:#f0f0f0">
+<blockquote>
+Help to fill <br>
+<a HREF="#" onClick="cal1x.select(document.forms['pform'].value,'anchor1x','yyyyMMdd'); return false;" TITLE="cal1x.select(document.forms['pform'].value,'anchor1x','yyyyMMdd'); return false;" NAME="anchor1x" ID="anchor1x">date</a>
+
+<a href="#" onclick="window.open('/rightsdraw2/territoriesOptionsValue.html','','top=100,left=300,width=400,height=400,scrollbars')">country codes</a>
+<a href="#" onclick="window.open('/rightsdraw2/languagesOptionsValue.html','','top=100,left=300,width=400,height=400,scrollbars')">language codes</a>
+<a href="#" onclick="window.open('/rightsdraw2/durationFormValue.html','','top=100,left=300,width=400,height=400,scrollbars')">duration</a>
+runs:<a href="javascript:decrun('pform','value')">-</a> / <a href="javascript:incrun('pform','value')">+</a>
+</blockquote>
+</div>
+</body>
+</html>

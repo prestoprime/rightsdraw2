@@ -1,0 +1,131 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.1
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/html\n"
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set repo = $pdir/users/$puser/repo/$mcomode
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+
+set class = "null"
+set ind = "null"
+set md = "null"
+set mdexact = "false"
+set key = "null"
+set value = "null"
+set valueexact = "false"
+set obj = "null"
+set objtype = "range"
+set negative = "false"
+set output = "html"
+#false or no ??
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "class" ) then
+                @ i++
+                set class = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "ind" ) then
+                @ i++
+                set ind = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "md" ) then
+                @ i++
+                set md = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "mdexact" ) then
+                @ i++
+                set mdexact = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "key" ) then
+                @ i++
+                set key = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "value" ) then
+                @ i++
+                set value = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "valueexact" ) then
+                @ i++
+                set valueexact = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "obj" ) then
+                @ i++
+                set obj = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "objtype" ) then
+                @ i++
+                set objtype = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negative" ) then
+                @ i++
+                set negative = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "output" ) then
+                @ i++
+                set output = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+#
+set lista = `ls -1 $repo`
+touch  $pdir/logs/.tmp.$this.$$.search.out
+foreach instance ( $lista )
+	xsltproc --stringparam class "$class" --stringparam ind "$ind" \
+		 --stringparam key "$key" --stringparam value "$value" --stringparam valuexact "$valueexact" \
+		 --stringparam md "$md" --stringparam mdexact "$mdexact" \
+		 --stringparam obj "$obj" --stringparam objtype "$objtype" --stringparam negative "$negative" \
+		$pdir/xsl/search.xsl $repo/$instance > $pdir/logs/.tmp.$this.$$.$instance.search
+	set ret = $?
+	if ( $ret ) then
+	        echo "500"
+	        echo "Server Error"
+		echo "$this got $ret from search on $instance"
+		exit 3
+	endif
+	set result = `cat $pdir/logs/.tmp.$this.$$.$instance.search`
+	if ( "$result" == "true" ) then
+		echo $instance >> $pdir/logs/.tmp.$this.$$.search.out
+	endif
+end
+#
+set listaout = `cat $pdir/logs/.tmp.$this.$$.search.out`
+if ( "$output" == 'html' ) then
+	echo '<html><body>'\
+	'200\n' \
+	'Success\n'\
+	'<b>Found '$#listaout' items matching your search</b><hr/>'
+	foreach localinstance ( $listaout )
+		$pdir/bin/mco.dosvg $localinstance
+		echo '<div style="clear:both"><div style="float:left">'$localinstance'<br/><iframe src="/rightsdraw2/mco/'$localinstance.png'" height="144"></iframe></div>' \
+		'<div style="float:left"><p><form target="rightsdraw2_main" action="../mco/viewedit"><input type="submit" value="viewedit"><input type="hidden" name="instance" value="'$localinstance'"></form>' \
+		'<input type="button" value="Graph" onClick="javascript:window.open('"'"/rightsdraw2/mco/$localinstance.png"'","'"RightsGraph"'","'"width=960,height=800,scrollbars=yes"'"');">' \
+		'</div></div>'
+	end
+	echo '</body></html>'
+else
+	echo "200\nSuccess\n$listaout"
+endif
+exit 0
