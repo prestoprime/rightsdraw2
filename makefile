@@ -35,6 +35,7 @@ build:	clean
 	rm -rf build_root
 	mkdir -p build_root/rightsdraw2/users
 	mkdir -p build_root/rightsdraw2/logs
+	echo $(VERSION) > build_root/rightsdraw2/VERSION
 	rsync -av configure build_root/rightsdraw2/	
 	rsync -av makefile build_root/rightsdraw2/	
 	rsync -av LICENSE build_root/rightsdraw2/	
@@ -46,6 +47,7 @@ build:	clean
 	rsync -avC --exclude *.bak share/ build_root/rightsdraw2/share/	
 	rsync -avC --exclude *.bak  www/ build_root/rightsdraw2/www/	
 	rsync -avC --exclude *.bak users/default/ build_root/rightsdraw2/users/default
+	cat www/html/rightsdraw2_main.html | sed -e s/+++VERSION+++/$(VERSION)/ > build_root/rightsdraw2/www/html/rightsdraw2_main.html
 	rm -f build_root/rightsdraw2/users/default/repo/*/*
 	rm -f build_root/rightsdraw2/www/html/kpr/*/.pictures/*
 	rm -f build_root/rightsdraw2/users/default/repo/*/.aipids/*

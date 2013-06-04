@@ -84,7 +84,7 @@ endif
 # making a bak copy
 cp $repo/$instance $repo/.tmp/$instance.$$.bak
 # Just doing it
-xsltproc  --stringparam owner $handle --stringparam key $mdkey --stringparam value $mdvalue --stringparam datatype $mddatatype $pdir/xsl/addAnnotationProperty.xsl $repo/$instance > $repo/.tmp/$instance
+xsltproc  --stringparam owner $handle --stringparam key $mdkey --stringparam value "$mdvalue" --stringparam datatype $mddatatype $pdir/xsl/addAnnotationProperty.xsl $repo/$instance > $repo/.tmp/$instance
 set ret = $?
 if ( $ret ) then
 	echo "500"

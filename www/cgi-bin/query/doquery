@@ -64,6 +64,7 @@ set languanges = "null"
 set negativelanguages = "no"
 set numruns = "null"
 set runduration = "null"
+set numreps = "null"
 set i = 1
 while ( $i < $#inquery )
         if ( "$inquery[$i]" == "kp" ) then
@@ -111,6 +112,9 @@ while ( $i < $#inquery )
         else if ( "$inquery[$i]" == "numruns" ) then
                 @ i++
                 set numruns = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "numreps" ) then
+                @ i++
+                set numreps = "$inquery[$i]"
         else if ( "$inquery[$i]" == "runduration" ) then
                 @ i++
                 set runduration = "$inquery[$i]"

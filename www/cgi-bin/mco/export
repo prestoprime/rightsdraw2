@@ -42,7 +42,7 @@ while ( $i < $#inquery )
         else
 		echo "400"
 		echo "Bad request "
-		echo "$this $QUERY_STRING"
+		echo "$this Unknown input parameter: $inquery[$i]"
                 exit 1
         endif
         @ i++

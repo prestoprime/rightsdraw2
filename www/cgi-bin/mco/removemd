@@ -34,17 +34,11 @@ endif
 	
 
 set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
 set instance = "null"
 set mdkey = "null"
 set mdvalue = "null"
 set handle = "null"
-set i = 1
-while ( $i <= $#inquery )
-	set tmpstring = `echo "$inquery[$i]" | sed -e s/'%3A'/':'/g | sed -e s/'%2F'/'\/'/g | sed -e s/'%23'/'#'/g | sed -e s/'%2C'/','/g|sed -e s/'%3B'/';'/g| sed -e s/'+'/'_'/g| sed -e s/'%3D'/'='/g`
-	echo "src: $inquery[$i]	tmpstring: $tmpstring" >> /tmp/hallo.$$
-	set inquery[$i] = "$tmpstring"
-	@ i++
-end
 set i = 1
 while ( $i < $#inquery )
         if ( "$inquery[$i]" == "instance" ) then
@@ -62,7 +56,7 @@ while ( $i < $#inquery )
         else
 		echo "400"
 		echo "Bad request "
-		echo "$this $QUERY_STRING"
+		echo "$this Unknown input parameter: $inquery[$i]"
                 exit 1
         endif
         @ i++

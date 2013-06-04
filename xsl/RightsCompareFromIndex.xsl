@@ -66,10 +66,21 @@ going on:
 	<xsl:for-each select="ri:Record">
 		<xsl:variable name="owneritemcontext"><xsl:if test="ri:Owner"><xsl:value-of select="ri:Owner/text()"/>; </xsl:if><xsl:value-of select="ri:AVname/text()"/>; <xsl:value-of select="ri:Identifier/text()"/>; </xsl:variable>
 		<xsl:variable name="match">
-			<xsl:call-template name="compare">
-				<xsl:with-param name="target"><xsl:value-of select="$owneritemcontext"/><xsl:value-of select="ri:Pdetails/text()"/></xsl:with-param>
-				<xsl:with-param name="qlist"><xsl:value-of select="$query"/></xsl:with-param>
-			</xsl:call-template>
+			<xsl:variable name="temporalcontextmatch">
+				<xsl:call-template name="comparetemporal">
+					<xsl:with-param name="target"><xsl:value-of select="ri:Pdetails/text()"/></xsl:with-param>
+					<xsl:with-param name="qlist"><xsl:value-of select="$query"/></xsl:with-param>
+				</xsl:call-template>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="$temporalcontextmatch='false'">false</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="compare">
+						<xsl:with-param name="target"><xsl:value-of select="$owneritemcontext"/><xsl:value-of select="ri:Pdetails/text()"/></xsl:with-param>
+						<xsl:with-param name="qlist"><xsl:value-of select="$query"/></xsl:with-param>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:variable>
 <xsl:text>
 </xsl:text>
@@ -77,9 +88,13 @@ going on:
 	</xsl:for-each>
 </xsl:template>
 
+<!-- ************************************************************************ -->
+
 <xsl:template match="owl:Ontology">
 	<xsl:apply-templates select="owl:ClassAssertion[substring-after(owl:Class/@IRI,'#')='Permission']" />
 </xsl:template>
+
+<!-- ************************************************************************ -->
 
 <xsl:template match="owl:ClassAssertion">
 <xsl:variable name="ind"><xsl:value-of select="substring-after(owl:NamedIndividual/@IRI,'#')"/></xsl:variable>
@@ -108,6 +123,8 @@ going on:
 <xsl:text>
 </xsl:text>
 </xsl:template>
+
+<!-- ************************************************************************ -->
 
 <xsl:template name="getRecords">
 	<xsl:param name="permid"/>
@@ -144,6 +161,9 @@ going on:
 				<xsl:with-param name="permid"><xsl:value-of select="$permid"/></xsl:with-param>
 			</xsl:call-template>
 			<xsl:call-template name="getLanguageContext">
+				<xsl:with-param name="permid"><xsl:value-of select="$permid"/></xsl:with-param>
+			</xsl:call-template>
+			<xsl:call-template name="getRunContext">
 				<xsl:with-param name="permid"><xsl:value-of select="$permid"/></xsl:with-param>
 			</xsl:call-template>
 		</xsl:if>
@@ -184,6 +204,8 @@ going on:
 </xsl:text>
 </xsl:template>
 
+<!-- ************************************************************************ -->
+
 <xsl:template name="getOwnerItemContext">
 	<xsl:param name="permid"/>
 	<xsl:for-each select="../owl:ObjectPropertyAssertion[substring-after(owl:NamedIndividual[position()=1]/@IRI,'#')=$permid and substring-after(owl:ObjectProperty/@IRI,'#')='permitsAction']">
@@ -199,6 +221,8 @@ going on:
 		</xsl:for-each>
 	</xsl:for-each>
 </xsl:template>
+
+<!-- ************************************************************************ -->
 
 <xsl:template name="getInstances">
 	<xsl:param name="instances"/>
@@ -246,35 +270,117 @@ going on:
 	</xsl:if>
 </xsl:template>
 
+<!-- ************************************************************************ -->
+
+<xsl:template name="comparetemporal">
+	<xsl:param name="target"/>
+	<xsl:param name="qlist"/>
+	<xsl:variable name="qafter"><xsl:value-of select="substring-before(substring-after($qlist,'#TemporalContext.afterDate='),';')"/></xsl:variable>
+	<xsl:variable name="qbefore"><xsl:value-of select="substring-before(substring-after($qlist,'#TemporalContext.beforeDate='),';')"/></xsl:variable>
+	<xsl:variable name="tafter"><xsl:value-of select="substring-before(substring-after($target,'#TemporalContext.afterDate='),';')"/></xsl:variable>
+	<xsl:variable name="tbefore"><xsl:value-of select="substring-before(substring-after($target,'#TemporalContext.beforeDate='),';')"/></xsl:variable>
+	<xsl:choose>
+		<xsl:when test="$qafter &lt; $tafter">false</xsl:when>
+		<xsl:when test="$qbefore &gt; $tbefore">false</xsl:when>
+		<xsl:when test="$qbefore &lt; $qafter">false</xsl:when>
+		<xsl:otherwise>
+			<!-- check the target negative intervals -->
+			<xsl:call-template name="comparenegativetemporal">
+				<xsl:with-param name="target"><xsl:value-of select="$target"/></xsl:with-param>
+				<xsl:with-param name="qafter"><xsl:value-of select="$qafter"/></xsl:with-param>
+				<xsl:with-param name="qbefore"><xsl:value-of select="$qbefore"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+<!-- ************************************************************************ -->
+
+<xsl:template name="comparenegativetemporal">
+	<xsl:param name="target"/>
+	<xsl:param name="qafter"/>
+	<xsl:param name="qbefore"/>
+<!-- wip WIP cannot run -->
+	<xsl:variable name="negtin"><xsl:value-of select="substring-before(substring-after($target,'#NegativeTemporalContext.In='),'Out=')"/></xsl:variable>
+	<xsl:variable name="negtout"><xsl:value-of select="substring-before(substring-after(substring-after($target,'#NegativeTemporalContext.In='),'Out='),';')"/></xsl:variable>
+	<xsl:variable name="tail"><xsl:value-of select="substring-after(substring-after($target,'#NegativeTemporalContext.In='),';')"/></xsl:variable>
+	<xsl:variable name="nextnegtin"><xsl:value-of select="substring-after(substring-after($tail,'#NegativeTemporalContext.In='),';')"/></xsl:variable>
+	<xsl:choose>
+		<xsl:when test="$qbefore &gt; $negtin and $qafter &lt; $negtout">false</xsl:when>
+		<xsl:otherwise>
+			<xsl:choose>
+				<xsl:when test="$nextnegtin = ''">true</xsl:when>
+				<xsl:otherwise>
+					<!-- check the remaining target negative intervals -->
+					<xsl:call-template name="comparenegativetemporal">
+						<xsl:with-param name="target"><xsl:value-of select="$tail"/></xsl:with-param>
+						<xsl:with-param name="qafter"><xsl:value-of select="$qafter"/></xsl:with-param>
+						<xsl:with-param name="qbefore"><xsl:value-of select="$qbefore"/></xsl:with-param>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:otherwise>
+	</xsl:choose>
+<!-- wip WIP cannot run -->
+</xsl:template>
+
+<!-- ************************************************************************ -->
+<xsl:template name="compareruncontext">
+	<!-- numruns, val, numreps -->
+	<xsl:param name="trun"/>
+	<xsl:param name="qrun"/>
+	<xsl:variable name="qnumruns"><xsl:value-of select="substring-before(substring-after($qrun,'numruns='),'.val=')"/></xsl:variable>
+	<xsl:variable name="tnumruns"><xsl:value-of select="substring-before(substring-after($trun,'numruns='),'.val=')"/></xsl:variable>
+	<xsl:choose>
+		<xsl:when test="$tnumruns != 'unbounded' and $qnumruns != 'unbounded' and $tnumruns &lt; $qnumruns">false</xsl:when>
+		<xsl:when test="$tnumruns != 'unbounded' and $qnumruns = 'unbounded'">false</xsl:when>
+		<xsl:otherwise>
+			<xsl:variable name="qval"><xsl:value-of select="substring-before(substring-after($qrun,'val='),'.numreps=')"/></xsl:variable>
+			<xsl:variable name="tval"><xsl:value-of select="substring-before(substring-after($trun,'val='),'.numreps=')"/></xsl:variable>
+			<xsl:choose>
+				<xsl:when test="$tval &lt; $qval">false</xsl:when>
+				<xsl:otherwise>
+					<xsl:variable name="qnumreps"><xsl:value-of select="substring-after($qrun,'.numreps=')"/></xsl:variable>
+					<xsl:variable name="tnumreps"><xsl:value-of select="substring-after($trun,'.numreps=')"/></xsl:variable>
+					<xsl:choose>
+						<xsl:when test="$tnumreps != 'unbounded' and $qnumreps != 'unbounded' and $tnumreps &lt; $qnumreps">false</xsl:when>
+						<xsl:when test="$tnumreps != 'unbounded' and $qnumreps = 'unbounded'">false</xsl:when>
+						<xsl:otherwise>true</xsl:otherwise>
+					</xsl:choose>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+<!-- ************************************************************************ -->
+
 <xsl:template name="compare">
 <!-- compare target rights with qlist. If any element of qlist doesn't find a match in target it returns false, otherwise it will return true when reaching the end of qlist-->
+<!-- temporal context facts are ignored here as considered separately -->
 	<xsl:param name="target"/>
 	<xsl:param name="qlist"/>
 	<xsl:variable name="qitem"><xsl:value-of select="substring-before($qlist,';')"/>;</xsl:variable>
 	<xsl:variable name="tail"><xsl:value-of select="substring-after($qlist,'; ')"/></xsl:variable>
-	<xsl:variable name="qbeforedate"><xsl:value-of select="substring-after($qitem,'#TemporalContext.beforeDate=')"/></xsl:variable>
-	<xsl:variable name="qafterdate"><xsl:value-of select="substring-after($qitem,'#TemporalContext.afterDate=')"/></xsl:variable>
 	<xsl:variable name="qitemok">
 		<xsl:choose>
-			<xsl:when test="$qbeforedate != ''">
-				<xsl:variable name="targetdate"><xsl:value-of select="substring-after($target,'#TemporalContext.beforeDate=')"/></xsl:variable>
-				<xsl:choose>
-					<xsl:when test="substring-before($qbeforedate,';') &lt;= substring-before($targetdate,';')">true</xsl:when>
-					<xsl:otherwise>false</xsl:otherwise>
-				</xsl:choose>
+			<xsl:when test="substring-after($qitem,'#TemporalContext.')!= ''">true</xsl:when>
+			<xsl:when test="substring-after($qitem,'#NegativeTemporalContext.')!= ''">true</xsl:when>
+			<xsl:when test="substring-after($qitem,'#RunContext.')!= ''">
+				<xsl:call-template name="compareruncontext">
+					<xsl:with-param name="trun"><xsl:value-of select="substring-after($target,'#RunContext.')"/></xsl:with-param>
+					<xsl:with-param name="qrun"><xsl:value-of select="substring-after($qitem,'#RunContext.')"/></xsl:with-param>
+				</xsl:call-template>
 			</xsl:when>
-			<xsl:when test="$qafterdate != ''">
-				<xsl:variable name="targetdate"><xsl:value-of select="substring-after($target,'#TemporalContext.afterDate=')"/></xsl:variable>
+			<xsl:otherwise>
 				<xsl:choose>
-					<xsl:when test="substring-before($qafterdate,';') &gt;= substring-before($targetdate,';')">true</xsl:when>
-					<xsl:otherwise>false</xsl:otherwise>
+					<xsl:when test="contains($target,$qitem)=false">false</xsl:when>
+					<xsl:otherwise>true</xsl:otherwise>
 				</xsl:choose>
-			</xsl:when>
-			<xsl:when test="contains($target,$qitem)=false">false</xsl:when>
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:variable>
 	<xsl:choose>
-		<xsl:when test="$qitemok='false'">false</xsl:when>
+		<!--xsl:when test="$qitemok='false'">false</xsl:when-->
+		<xsl:when test="$qitemok!='true'"><xsl:value-of select="$qitemok"/></xsl:when>
 		<xsl:otherwise>
 			<xsl:choose>
 				<xsl:when test="$tail = ''">true</xsl:when>
@@ -397,6 +503,44 @@ going on:
 	</xsl:choose>
 </xsl:template>
 <!-- ************************************************************-->
+<xsl:template name="getRunContext">
+	<!-- WIP not to be used yet-->
+	<xsl:param name="permid"/>
+	<xsl:variable name="runcontext">
+	<xsl:for-each select="../owl:ObjectPropertyAssertion[substring-after(owl:NamedIndividual[position()=1]/@IRI,'#')=$permid and substring-after(owl:ObjectProperty/@IRI,'#')='hasRequired']">
+		<xsl:variable name="aname"><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
+		<xsl:variable name="aclass"><xsl:value-of select="../owl:ClassAssertion[substring-after(owl:NamedIndividual/@IRI,'#')=substring-after($aname,'#')]/owl:Class/@IRI"/></xsl:variable>
+		<xsl:variable name="theclass">#<xsl:value-of select="substring-after($aclass,'#')"/>;</xsl:variable>
+		<xsl:if test="substring-after($aclass,'#')='Run'">#RunContext.numruns=<xsl:choose>
+				<xsl:when test="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasNumberOfRuns']">
+					<xsl:value-of select="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasNumberOfRuns']/owl:Literal/text()"/>.val=<xsl:choose>
+						<xsl:when test="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasValidity']">
+							<xsl:call-template name="iso-duration-to-minutes">
+								<xsl:with-param name="duration">
+							<xsl:value-of select="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasValidity']/owl:Literal/text()"/>
+								</xsl:with-param>
+							</xsl:call-template>.numreps=<xsl:choose>
+								<xsl:when test="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasNumberOfRepetitions']">
+									<xsl:value-of select="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasNumberOfRepetitions']/owl:Literal/text()"/>
+								</xsl:when>
+								<xsl:otherwise>unbounded</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>0.numreps=na</xsl:otherwise>
+					</xsl:choose	>
+				</xsl:when>
+				<xsl:otherwise>unbounded.val=na.numreps=na</xsl:otherwise>
+			</xsl:choose><xsl:text>; </xsl:text>
+		</xsl:if>
+	</xsl:for-each>
+	</xsl:variable>
+	<!-- in index default context must be written also if not given explicitly -->
+	<xsl:choose>
+		<xsl:when test="$runcontext != ''"><xsl:value-of select="$runcontext"/></xsl:when>
+		<xsl:otherwise>#RunContext.numruns=unbounded.val=na.numreps=na; </xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+<!-- ************************************************************-->
 
 <xsl:template name="getSpatialContext">
 	<xsl:param name="permid"/>
@@ -514,6 +658,7 @@ going on:
 		</xsl:call-template>
 	</xsl:if>
 </xsl:template>
+<!-- ************************************************************-->
 
 <xsl:template name="getSubClasses">
 	<xsl:param name="class" select="null"/>
@@ -536,6 +681,7 @@ going on:
 		</xsl:if>
 </xsl:for-each>
 </xsl:template>
+<!-- ************************************************************-->
 
 
 <xsl:template match="owl:ObjectPropertyAssertion">
@@ -545,6 +691,7 @@ going on:
 	<xsl:value-of select="$arc"/>:<xsl:value-of select="$second"/> 
 	<xsl:apply-templates select="../owl:ClassAssertion[substring-after(owl:NamedIndividual/@IRI,'#')=$second]" />
 </xsl:template>
+<!-- ************************************************************-->
 
 <xsl:template match="owl:DataPropertyAssertion">
 	<xsl:variable name="key"><xsl:value-of select="substring-after(owl:DataProperty/@IRI,'#')"/></xsl:variable>
@@ -555,7 +702,23 @@ going on:
 		<xsl:value-of select="$owner"/>:<xsl:value-of select="$key"/>=<xsl:value-of select="$value"/>
 </xsl:if>
 </xsl:template>
+<!-- ************************************************************-->
 
+<xsl:template name="iso-duration-to-minutes">
+	<!-- BUGS:
+		- in case of missing field it will fail
+		- month is averaged to 30 days  (which is reasonable but...)
+		- year is averaged to 365 days (which almost correct :-)) 
+	-->
+    <xsl:param name="duration"/>
+    <xsl:variable name="nummins" select = "substring-before(substring-after($duration,'H'),'M')"/>
+    <xsl:variable name="numhours" select = "substring-after(substring-before($duration,'H'),'DT')*60"/>
+    <xsl:variable name="numdays" select = "substring-after(substring-before($duration,'DT'),'M')*24*60"/>
+    <xsl:variable name="nummonths" select = "substring-after(substring-before($duration,'M'),'Y')*30*24*60"/>
+    <xsl:variable name="numyears" select = "substring-after(substring-before($duration,'Y'),'P')*365*24*60"/>
+    <xsl:value-of select="number($nummins + $numhours + $numdays + $nummonths + $numyears)"/>
+</xsl:template>
+<!-- ************************************************************-->
 
 <xsl:template match="@*|node()">
   <xsl:copy>

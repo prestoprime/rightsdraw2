@@ -69,9 +69,7 @@ if ( !( -e "$repo/contracts/$contract" ) ) then
 endif
 # making a bak copy
 cp $repo/pprights/$instance $repo/pprights/.tmp/$instance.$$.bak
-echo "ALERT this is still to be implemented"
-echo "200"
-echo "Success"
+echo "ALERT this is still EXPERIMENTAL"
 #exit 0
 ################################################################
 # TO BE IMPLEMENTED - BEGIN                                    #
@@ -90,7 +88,7 @@ if ( $#avidentifier != 1 ) then
 	exit 3
 endif
 ############### must have a Principal, only if it ends to be a SALE
-set principals = `xsltproc --stringparam objname actedBy $pdir/xsl/getRangeIndividualsFromObjectProperty.xsl $repo/pprights/$instance`
+set principals = `xsltproc --stringparam objname actedBy $pdir/xsl/getRangeIndividualsFromObjectProperty.xsl $repo/pprights/$instance | sort -u`
 ####### contract
 ############### must be one contract
 #set contractiri = `xsltproc --stringparam classname Contract $pdir/xsl/getIndividualsOfClass.xsl $repo/contracts/$contract | sort -u`
@@ -187,54 +185,293 @@ else
 		end
 	end
 endif
-exit 0
+#exit 0
 
 
 ############### If SALE must have permissions issued by the Principal above
+echo "<p>$this going to try sale case from contract $contract to instance $instance"
 set sales = ""
 if ( "$principals" != "" ) then
 	foreach issuer ( $issuers )
 		foreach principal ( $principals )
 			if ( $principal == $issuer ) then
-				set sales = "$sales" $principal
+				set sales = "$sales $principal"
 			endif
 		end
 	end
 endif
 if ( "$sales" == "" ) then
 	echo "No sales found"
-endif
+else
+#	echo DEBUG1
 ### SALE CASE
+#
+##  Creating index of our instance
+	$pdir/bin/rightsindexinstance $repo/pprights/$instance >  $repo/pprights/.tmp/$this.$$.$instance.index
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on indexing instance ($instance)"
+		cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+		exit 5
+	endif
+#  Creating Intersection bypassed version of it (shoule already been done in previous step but we lost that temporary output)
+	xsltproc $pdir/xsl/ByPassIntrsctns.xsl $repo/pprights/$instance > $repo/pprights/.tmp/$instance.ByPassIntrsctns
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on ByPassIntrsctns instance ($instance)"
+		cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+		exit 5
+	endif
+	set numloops = 1
+#	echo "DEBUG1.1 ($#contractprincipals,$#sales)[$contractprincipals],[$sales]"
+	foreach principaliri ( $contractprincipals ) 
+		foreach issueriri ( $sales ) 
+			if ( $issueriri != $principaliri ) then
+				xsltproc --stringparam contractiri $contractiri \
+					--stringparam avidentifier $avidentifier \
+					--stringparam issueriri $issueriri \
+					--stringparam principaliri $principaliri \
+					$pdir/xsl/getSalesFromContract.xsl $repo/contracts/$contract > $repo/pprights/.tmp/$contract.ptransfered.$$
+				set ret = $?
+#	echo "DEBUG2.1 ($contractiri,$avidentifier,$issueriri,$principaliri,$numloops)"
+				@ numloops ++
+				if ( $ret ) then
+					echo "500"
+					echo "Server Error"
+					echo "$this failed on sale case with $contract  ($contractiri, $avidentifier, $issueriri, $principaliri ) "
+					cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+					exit 5
+				endif
+				set ptransfered = `cat $repo/pprights/.tmp/$contract.ptransfered.$$`
+				set ploop = 1
+				foreach ptransf ( $ptransfered )
+#	echo "DEBUG3.1 ($ptransf,$ploop of $#ptransfered)"
+#					Check if transfer is possible (issuer must have the rights)
+#					1. extract Permission from Contract (without principal and object)
+					xsltproc --stringparam perm $ptransf  $pdir/xsl/extractPermission.xsl $repo/contracts/$contract > $repo/pprights/.tmp/$contract.ptransf.$ploop.$$
+					set ret = $?
+					if ( $ret ) then
+						echo "500"
+						echo "Server Error"
+						echo "$this failed on extracting $ptransf  from $contract"
+						cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+						exit 5
+					endif
+#					1.1 get about exclusivity
+					xsltproc --stringparam perm $ptransf  $pdir/xsl/getPermissionFlags.xsl $repo/contracts/$contract > $repo/pprights/.tmp/$contract.ptransf.$ploop.$$.pflags
+					set ret = $?
+					if ( $ret ) then
+						echo "500"
+						echo "Server Error"
+						echo "$this failed on getting flags of $ptransf  from $contract"
+						cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+						exit 5
+					endif
+					set istargetexclusive = `grep -c "isexclusive:true" $repo/pprights/.tmp/$contract.ptransf.$ploop.$$.pflags`
+#					2. compare with index of instance
+					$pdir/bin/rightscompare -all $repo/pprights/.tmp/$contract.ptransf.$ploop.$$ $repo/pprights/.tmp/$this.$$.$instance.index > $repo/pprights/.tmp/$contract.ptransf.$ploop.$$.rpout
+					set ret = $?
+					if ( $ret ) then
+        					echo "500"
+        					echo "Server Error"
+						echo "$this got $ret from rightscompare working on ($repo/pprights/.tmp/$contract.ptransf.$ploop.$$,$repo/pprights/.tmp/$this.$$.$instance.index)"
+						cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+						exit 5
+					endif
+#  					Creating Intersection bypassed version of it (should have already been done in previous step but we lost that temporary output)
+					xsltproc $pdir/xsl/ByPassIntrsctns.xsl $repo/pprights/.tmp/$contract.ptransf.$ploop.$$ > $repo/pprights/.tmp/$contract.ptransf.$ploop.$$.ByPassIntrsctns
+					set ret = $?
+					if ( $ret ) then
+        					echo "500"
+        					echo "Server Error"
+						echo "$this got $ret from ByPassIntrsctns on $repo/pprights/.tmp/$contract.ptransf.$ploop.$$"
+						cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+						exit 5
+					endif
+
+#					These permissions are the sources of the transfer in sale
+					set psources = `cat  $repo/pprights/.tmp/$contract.ptransf.$ploop.$$.rpout |grep true |cut -d '|' -f5 `
+					if ( "$psources" == "" ) then
+						echo "No sources for sale"
+					else	
+						set sloop = 1
+						foreach psource ( $psources ) 
+#	echo "DEBUG4.1 ($psource,$sloop of $#psources)"
+#							0. get about exclusivity and sublicense
+							xsltproc --stringparam perm $psource  $pdir/xsl/getPermissionFlags.xsl $repo/pprights/$instance > $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$$.pflags
+							set ret = $?
+							if ( $ret ) then
+        							echo "500"
+        							echo "Server Error"
+								echo "$this failed on getting flags of $psource  from $instance"
+								cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+								exit 5
+							endif
+							set hassourcesublicense =  `grep -c "hassublicense:true" $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$$.pflags`
+							set issourceexclusive =  `grep -c "isexclusive:true" $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$$.pflags`
+							if  ( !($hassourcesublicense)) then
+								echo "Source $psource lacks sublicense right"
+								cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+								exit 6
+							endif
+							if ( $istargetexclusive && !($issourceexclusive) ) then
+								echo "Source $psource lacks required exclusivity"
+								cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+								exit 6
+							else if ( $issourceexclusive && !($istargetexclusive) ) then
+								echo "Source $psource should loose exclusivity"
+#								TO BE IMPLEMENTED ()
+								cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+								exit 6
+							else if ( $issourceexclusive && $istargetexclusive ) then
+#				PAY ATTENTION, INDENTATION MOVED TO LEFT TILL ENDIF
+#				Computing resulting after sale
+#				1. extract Permission from Holdings (keeping principal and object)
+				xsltproc --stringparam perm $psource  \
+					--stringparam excludeActedOver no --stringparam excludeActedBy no \
+					$pdir/xsl/extractPermission.xsl $repo/pprights/$instance > $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$$
+				set ret = $?
+				if ( $ret ) then
+        				echo "500"
+        				echo "Server Error"
+					echo "$this failed on extracting $psource  from $instance"
+					cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+					exit 5
+				endif
+#				2. Remove same permission from Holdings
+				xsltproc --stringparam perm $psource \
+					$pdir/xsl/removePermission.xsl $repo/pprights/$instance >  $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$
+				set ret = $?
+				if ( $ret ) then
+        				echo "500"
+        				echo "Server Error"
+					echo "$this failed on removing $psource  from $instance"
+					cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+					exit 5
+				endif
+						
+#				3. Get Difference Between Source and Transf (MUST HAVE BEEN IntrsctnsByPassed both)
+				xsltproc --stringparam minuend $psource \
+					--stringparam subtrahenddoc $repo/pprights/.tmp/$contract.ptransf.$ploop.$$.ByPassIntrsctns \
+					--stringparam subtrahend $ptransf \
+					$pdir/xsl/subtractPermission.xsl $repo/pprights/.tmp/$instance.ByPassIntrsctns > $repo/pprights/.tmp/diff.$ploop.$sloop.$$
+				set ret = $?
+				if ( $ret ) then
+        				echo "500"
+        				echo "Server Error"
+					echo "$this failed in getting difference between $psource and $ptransf for $instance and $contract"
+					cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+					exit 5
+				endif
+				set actionmismatch =  `grep -c "ActionMismatch:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$`
+				if ( $actionmismatch ) then
+					echo "500"
+					echo "Server Error"
+					echo "Unsupported Action mismatch between $psource and $ptransf for $instance and $contract"
+					grep "ActionMismatch:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ 
+					cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+					exit 55
+				endif
+				set numdiff = `grep -c "Fact:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$`
+				set diffFacts = `grep "Fact:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ | cut -f2` 
+#				4.A. If NO Difference. Source is sold without remaining
+#				4.B. If Difference. Make Foreach
+				set obj = "http://purl.oclc.org/NET/mvco.owl#hasRequired"
+				set dfact = 1
+				foreach diffFact ( $diffFacts )
+#					4.B.1	Rename Permission/Action individuals of Source
+#	echo "DEBUG4.B.1 ($diffFact,$dfact of $#diffFacts)"
+					xsltproc --stringparam perm $psource --stringparam newindbase df$dfact  \
+					$pdir/xsl/renamePermissionAction.xsl \
+					$repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$$ > $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$
+					set ret = $?
+					if ( $ret ) then
+        					echo "500"
+        					echo "Server Error"
+						echo "$this failed in renaming Permission/Action individuals ($psource,$ptransf,$dfact) for $instance and $contract"
+						cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+						exit 5
+					endif
+#					4.B.2	Add Negation of Fact (addObj) 
+					set handle = ${psource}df$dfact
+					set wasNegative = `grep "NegativeFact:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ | cut -f2|grep -c "$diffFact"`
+					if ( $wasNegative ) then
+						set negative = no
+					else
+						set negative = yes
+					endif
+					set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+					@ xnum ++
+					echo $xnum > $pdir/users/$puser/config/inumber
+					set ind = "#x$xnum"
+					xsltproc --stringparam obj $obj --stringparam one  $handle --stringparam negative $negative \
+					--stringparam twoclass $diffFact --stringparam twoname $ind \
+					$pdir/xsl/addObjProperty.xsl $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$ >  $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$.tmp
+					set ret = $?
+					if ( $ret ) then
+						echo "500"
+						echo "Server Error"
+						echo "$this failed on addObjProperty ($handle,$negative,$class, $ind) to $instance.psource.$ploop.$sloop.$dfact.$$"
+						cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+						exit 5
+					endif
+					mv $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$.tmp $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$
+#					4.B.3	if any, add Data Properties to that fact. Might be more than one
+					set dfowner = `grep "Fact:	$diffFact" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ | cut -f3`
+					set diffFactDataProperties = `grep "DataPropertyOf$dfowner" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ | cut -f2`
+#	echo "DEBUG4.B.3 (Found $#diffFactDataProperties of $dfowner)"
+#					Now owner is the newly created Fact
+					set owner = $ind
+					foreach key ( $diffFactDataProperties )
+						set value = `grep "DataPropertyOf$dfowner" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ | grep $key | cut -f3`
+#	echo "DEBUG4.B.3.inner (adding $key=$value)"
+						xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value \
+						$pdir/xsl/addDataProperty.xsl $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$ >  $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$.tmp
+						set ret = $?
+						if ( $ret ) then
+							echo "500"
+							echo "Server Error"
+							echo "$this failed on addDataProperty ($owner, $key, $value) to $instance.psource.$ploop.$sloop.$dfact.$$"
+							cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+							exit 5
+						endif
+						mv $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$.tmp $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$
+					end
+#					4.B.4	add result to temporary Holdings
+					xsltproc --stringparam extinstance $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$dfact.$$ \
+					$pdir/xsl/mergeWithInstance.xsl $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$ > $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$.tmp
+					set ret = $?
+					if ( $ret ) then
+						echo "500"
+						echo "Server Error"
+						echo "$this could not merge $instance.psource.$ploop.$sloop.$dfact.$$ into $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$"
+						cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+						exit 5
+					endif
+					mv $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$.tmp $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$
+					@ dfact ++
+				end
+#				5.	Consolidate remaining Holdings
+				cp $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$ $repo/pprights/$instance
+							else
+#								NO EXCLUSIVITY AND NOT REQUIRED => SOURCE STAYS UNCHANGED
+							endif
+							@ sloop ++
+						end
+					endif
+					@ ploop ++
+				end
+			endif
+		end
+	end
 ################################################################
 # TO BE IMPLEMENTED - END                                      #
 ################################################################
-exit 0
-
-
-# First adding deontic
-xsltproc --stringparam twoclass $class --stringparam twoname $ind $pdir/xsl/addIndividual.xsl $repo/$instance > $repo/.tmp/$instance
-set ret = $?
-if ( $ret ) then
-	echo "500"
-	echo "Server Error"
-	echo "$this failed on addIndividual ($class, $ind) to $instance"
-	cp $repo/.tmp/$instance.$$.bak $repo/$instance
-	exit 5
 endif
-mv $repo/.tmp/$instance $repo/$instance
-# Then adding obj
-set obj = "urn:mpeg:mpeg21:mco:core:2012#issuedIn"
-set class = "urn:mpeg:mpeg21:mco:core:2012#Contract"
-xsltproc --stringparam obj $obj --stringparam one $ind --stringparam twoclass $class --stringparam twoname $handle  $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp/$instance
-set ret = $?
-if ( $ret ) then
-	echo "500"
-	echo "Server Error"
-	echo "$this failed on addObjProperty ($obj, $ind, $class, $handle) to $instance"
-	cp $repo/.tmp/$instance.$$.bak $repo/$instance
-	exit 5
-endif
-mv $repo/.tmp/$instance $repo/$instance
 echo "200"
 echo "Success"
 exit 0

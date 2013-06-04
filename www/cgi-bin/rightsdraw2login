@@ -19,17 +19,53 @@ while ( $i < $#inquery )
         @ i++
 end
 if ( -er "$pdir/users/$username" ) then
+#	echo '<html><body style="text-align:center;width:80%">'
+	echo '<html><body style="width:95%">'
+	echo '	<head>'	\
+	'	  <link href="/rightsdraw2/css/mco.css" type="text/css" rel="stylesheet"/>'	\
+	'	</head>'
+	echo '<h2>Welcome user <i>'$username'</i></h2>'
+	echo '<div class="divleft20""><h3>View and Edit</h3>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/mco/guiadm"><input type="submit" value="holdings       "><input type="hidden" name="mcomode" value="pprights"></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/mco/guiadm"><input type="submit" value="contracts      "><input type="hidden" name="mcomode" value="contracts"></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/mkr/guiadm"><input type="submit" value="holdings /kp"></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/mco/guiadm"><input type="submit" value="key patterns"><input type="hidden" name="mcomode" value="kpr"></form>' \
+		'</div>'
+	echo '<div class="divleft20"><h3>CheckWith & Search</h3>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/query.local/guiadm"><input type="submit" value="on repo"></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/query/guiadm"><input type="submit" value="on   P4  "></form>' \
+		'</div>'
+	echo '<div class="divleft20"><h3>Purchases and Sales</h3>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/combine/guiadm"><input type="submit" value="combine"></form>' \
+		'</div>'
+	echo '<div class="divleft20"><h3>Tools</h3>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/pprights/guiadm"><input type="submit" value="load/deliver"></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/kpr/guiadm"><input type="submit" value="key pattern  "></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/config/guiadm"><input type="submit" value="settings         "></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/docs"><input type="submit" value="help                "></form>' \
+		'</div>'
+	echo '<div style="clear:both"><p></p>' \
+		'<p><img src="/rightsdraw2/Logo600x100.png"></p>' \
+		'</div>'
+	echo "</body></html>\n"
+else
+	echo "404"
+	echo "Not found"
+	echo "$this : User $username unknown"
+endif
+exit
+if ( -er "$pdir/users/$username" ) then
 	echo '<html><body style="text-align:center;width:80%">'
 	echo '<h2 style="color:#660000">Welcome user <i>'$username'</i></h2>'
 #	echo '<h3><a href="'"/rightsdraw2/docs"'"'">Help, info, and docs</a></h3>"
 	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/docs"'"'">Help, info, and docs</a></h3>"
-	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/mco/guiadm"'"'">Rights MCO services</a></h3>"
-	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/query/guiadm"'"'">Rights query services</a></h3>"
+	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/mco/guiadm"'"'">Rights MCO CRUD</a></h3>"
+	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/mkr/guiadm"'"'">View & Edit Rights by Key Patterns</a></h3>"
+	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/query.local/guiadm"'"'">CheckWith & Search on Repo</a></h3>"
+	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/combine/guiadm"'"'">Purchases and Sales</a></h3>"
+	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/kpr/guiadm"'"'">Key Pattern Rights Management</a></h3>"
+	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/query/guiadm"'"'">CheckWith on P4</a></h3>"
 	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/pprights/guiadm"'"'">PPRIGHTS repo</a></h3>"
-	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/mkr/guiadm"'"'">MKR services</a></h3>"
-	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/kpr/guiadm"'"'">KPR services</a></h3>"
-	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/combine/guiadm"'"'">Purchases and Sales services</a></h3>"
-	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/query.local/guiadm"'"'">Local search</a></h3>"
 	echo '<h3><a href="'"/cgi-bin/rightsdraw2/$username/config/guiadm"'"'">Settings</a></h3>"
 	echo '<p><img src="/rightsdraw2/Logo600x100.png"></p>'
 	echo "</body></html>\n"

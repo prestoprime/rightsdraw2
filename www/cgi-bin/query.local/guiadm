@@ -26,13 +26,14 @@ set mykpr = `cat $pdir/users/$puser/config/mykpr`
 set linelimit = 100
 set this = `basename $0`
 #  Header things
-cat $pdir/share/queryhead.html | sed -e s/'+++puser+++'/$puser/g | sed -e s/'+++kprfolder+++'/$mykpr/g
+cat $pdir/share/querylocalhead.html | sed -e s/'+++puser+++'/$puser/g | sed -e s/'+++kprfolder+++'/$mykpr/g
 
 echo '<div id="query-forms" style="float:left">'
 #echo ' <div id="query-form-1"><iframe id="query_finditems_form" name="query_finditems_form" src="showform?form=query-finditems-form.html" width="600" height="100" frameborder="0" scrolling="auto"></iframe></div>'
 echo ' <div id="query-form-1"><form method="get" action="rebuildindex" target="query_view"><input type="submit" value="Rebuild Index"></form></div>'
 echo ' <div id="query-form-2"><iframe id="query_free_form" name="query_free_form" src="showform?form=query-free-form.html" width="600" height="400" frameborder="0" scrolling="auto"></iframe></div>'
 echo ' <div id="query-form-3"><iframe id="query_kpr_form" name="query_kpr_form" src="showform?form=query-kpr-form.html" width="600" height="350" frameborder="0" scrolling="auto"></iframe></div>'
+echo ' <div id="query-form-4"><iframe id="search_form" name="search_form" src="showform?form=search-form.html" width="600" height="400" frameborder="0" scrolling="auto"></iframe></div>'
 echo '</div>'
 echo '<div id="query-results" style="float:left">'
 echo ' <div id="query-results-1"><iframe id="query_view" name="query_view" src="about:blank" width="800" height="450" frameborder="0" scrolling="auto"></iframe></div>'

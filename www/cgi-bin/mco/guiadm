@@ -22,9 +22,31 @@
 set echo_style = both
 echo "content-type: text/html\n"
 set mcomode = `cat $pdir/users/$puser/config/mcomode`
-set repo = $pdir/users/$puser/repo/$mcomode
 set linelimit = 100
 set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "mcomode" ) then
+                @ i++
+                set mcomode = "$inquery[$i]"
+		echo $mcomode > $pdir/users/$puser/config/mcomode
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this Unknown input parameter: $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+set repo = $pdir/users/$puser/repo/$mcomode
 
 #  Header things
 echo "<html>\n<head/>\n<body>"
@@ -79,10 +101,27 @@ foreach instance ( $lista )
 end
 echo '          </select>'
 echo '  </form>'
+# View Derived Text
+if ( $mcomode == "contracts" || $mcomode == "pprights" ) then
+	echo '	<form action="writederivedtext" method="get" style="margin:0px" target="mco_view">'
+	echo '		<input type="submit" value="Derived Text "/>'
+	if ( $mcomode == "contracts" ) then
+		echo '		<input type="hidden" name="startfrom" value="Contract"/>'
+	else if ( $mcomode == "pprights" ) then
+		echo '		<input type="hidden" name="startfrom" value="Holdings"/>'
+	endif
+	echo '          <select name="instance">'
+		echo '		<option/>'
+	foreach instance ( $lista )
+	        echo '          <option>'"$instance"'</option>'
+	end
+	echo '          </select>'
+	echo '  </form>'
+endif
 #### Third Row 
 # Delete
 echo '	<form action="delete" method="get" style="margin:0px" target="mco_view">'
-echo '		<input type="submit" value="delete              "/>'
+echo '		<input type="submit" value="Delete              "/>'
 echo '          <select name="instance">'
 	echo '		<option/>'
 foreach instance ( $lista )

@@ -3,11 +3,13 @@
 <link href="/rightsdraw2/css/mkr.css" type="text/css" rel="stylesheet"/>
 <script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
 <script src="/rightsdraw2/js/putrunproperties"></script>
+<script src="/rightsdraw2/js/putpercentages"></script>
 <script src="/rightsdraw2/js/jquery.js"></script>
 <script src="/rightsdraw2/js/showhidefields.js"></script>
 </head>
 <body>
-<div name="definepermission" style="float:left;background:#f0f0f0"><form id="pform" name="pform" action="addkp" method="get" target="+++kproptions+++">
+<!--div name="definepermission" style="float:left;background:#f0f0f0"><form id="pform" name="pform" action="addkp" method="get" target="+++kproptions+++"-->
+<div name="definepermission" style="float:left;background:#f0f0f0"><form id="pform" name="pform" action="addkp" method="get" target="mkr_log">
 <script id="jscal1x">var cal1x = new CalendarPopup(); </script>
 <div style="float:left">
 <input type="submit" value="Add +++kproptions+++">
@@ -18,6 +20,12 @@
 exclusive: <input type="checkbox" name="isexclusive">
 <br/>
 sublicense: <input type="checkbox" checked="checked" name="hassublicense">
+<div class="button_percentages">Percentages</div>
+<div class="hidden_percentages">
+	use % <input name="usepercentage" size="3" value="null"> <a href="javascript:decperc('pform','usepercentage')">-</a> / <a href="javascript:incperc('pform','usepercentage')">+</a>
+	<br/>
+	income % <input name="incomepercentage" size="3" value="null"> <a href="javascript:decperc('pform','incomepercentage')">-</a> / <a href="javascript:incperc('pform','incomepercentage')">+</a>
+</div>
 <br>issued in 
 <a href="#" onclick="window.open('selectindividual?instance=+++instance+++&fieldname=contract&classname=Contract','','top=100,left=300,width=400,height=400,scrollbars')">contract</a>
 <input name="contract" type="text" size="8" value="null">
@@ -66,8 +74,21 @@ sublicense: <input type="checkbox" checked="checked" name="hassublicense">
 <td><a href="#" onclick="window.open('/rightsdraw2/durationForm.html','','top=100,left=300,width=400,height=400,scrollbars')">run validity</a></td>
 <td><input type="text" size="8" value="null" name="runduration"></td>
 </tr>
+<tr>
+<td>number of reps</td>
+<td><input type="text" size="4" value="null" name="numreps"></td>
+<td>
+<a href="javascript:decrun('pform','numreps')">-</a> / <a href="javascript:incrun('pform','numreps')">+</a>
+</td>
+</tr>
+<tr>
+<td><a href="#" onclick="window.open('/rightsdraw2/channelsOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">over channels</a></td>
+<td><input type="text" size="8" value="null" name="channels"></td>
+<td><input type="checkbox" name="negativechannels" selected></td>
+</tr>
 </table>
-<hr/></div>
+</div>
+<hr/>
 <div class="button">As Secondary Permission</div>
 <div class="nascosto">
 Cancel <input type="radio" name="relatedaction" value="null" checked>

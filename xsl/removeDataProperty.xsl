@@ -40,7 +40,8 @@
 
 
 <xsl:template match="owl:DataPropertyAssertion">
-	<xsl:variable name="okey"><xsl:value-of select="substring-after(owl:DataProperty/@IRI,'#')"/></xsl:variable>
+	<!--xsl:variable name="okey"><xsl:value-of select="substring-after(owl:DataProperty/@IRI,'#')"/></xsl:variable> -->
+	<xsl:variable name="okey"><xsl:value-of select="owl:DataProperty/@IRI"/></xsl:variable>
 	<xsl:variable name="oowner"><xsl:value-of select="owl:NamedIndividual/@IRI"/></xsl:variable>
 	<xsl:variable name="ovalue"><xsl:value-of select="owl:Literal/text()"/></xsl:variable>
 	<xsl:if test="$key != $okey or $owner != $oowner or ( $value != $ovalue and $value != 'null')">

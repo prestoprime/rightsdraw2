@@ -22,6 +22,7 @@
 set echo_style = both
 echo "content-type: text/html\n"
 set repo = $pdir/users/$puser/repo/pprights
+set p4enable = `cat $pdir/users/$puser/config/p4enable`
 set linelimit = 100
 set this = `basename $0`
 
@@ -30,9 +31,12 @@ echo "<html>\n<head/>\n<body>"
 #echo '<table border="0"><tr><td><img src="/rightsdraw2/Logo33.JPG" width="75%"></td>'
 #echo '<td style="color:#660000"><h2>RightsDraw2 -  Welcome to the KPR admin page </h2></td></tr></table>'
 echo '<table border="0"><tr>'
-echo '<td><h3 style="color:#660000"">Welcome <i>'$puser'</i> to your PPRIGHTS Repo admin page</h3></td>'
+echo '<td><h3 style="color:#660000">Welcome <i>'$puser'</i> to your PPRIGHTS Repo admin page</h3></td>'
 echo '<td width="150px"/>'
 echo '<td><form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px"><input type="hidden" name="username" value="'$puser'"/><input type="submit" value="Quit"/></form></td></tr>'
+if ( $p4enable == off ) then
+	echo '<tr><td style="color:#660000">'"You haven't enabled connections to P4 services in your settings.</td></tr>"
+endif
 
 set lista = `ls -1 $repo`
 echo '<tr><td><h4 style="color:#660000">You have '$#lista' items in your repo</h4></td>'
@@ -51,14 +55,16 @@ end
 echo '          </select>'
 echo '          </form></td></tr>'
 #Submit
-echo '		<tr><td><form action="submit" method="get" style="margin:0px" target="pprights_view"><input type="submit" value="Submit Ingest"/>'
-echo '          <select name="instance">'
-	echo '		<option/>'
-foreach instance ( $lista )
-        echo '          <option>'"$instance"'</option>'
-end
-echo '          </select>'
-echo '          </form></td></tr>'
+if ( $p4enable == on ) then
+	echo '		<tr><td><form action="submit" method="get" style="margin:0px" target="pprights_view"><input type="submit" value="Submit Ingest"/>'
+	echo '          <select name="instance">'
+		echo '		<option/>'
+	foreach instance ( $lista )
+	        echo '          <option>'"$instance"'</option>'
+	end
+	echo '          </select>'
+	echo '          </form></td></tr>'
+endif
 #Delete
 echo '		<tr><td><form action="delete" method="get" style="margin:0px" target="pprights_view"><input type="submit" value="Delete              "/>'
 echo '          <select name="instance">'
@@ -72,9 +78,11 @@ echo '	</table></td>'
 #### SECOND COLUMN
 echo '	<td style="vertical-align:top"><table border="0">'
 #Import
-echo '		<tr><td><form action="import" method="get" style="margin:0px"><input type="submit" value="Import"/>'
-echo '			<input type="text" name="identifier" size="24"/>'
-echo '          </form></td></tr>'
+if ( $p4enable == on ) then
+	echo '		<tr><td><form action="import" method="get" style="margin:0px"><input type="submit" value="Import"/>'
+	echo '			<input type="text" name="identifier" size="24"/>'
+	echo '          </form></td></tr>'
+endif
 #Load
 echo '		<tr><td><form action="load" method="post" style="margin:0px" ENCTYPE="multipart/form-data" target="pprights_view"><input type="submit" value="Load"/>'
 echo '          	<input type="file" name="instance"/>'

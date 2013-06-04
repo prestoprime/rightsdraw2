@@ -44,6 +44,8 @@ set means = "null"
 set device = "null"
 set usertimeaccess = "null"
 set relatedaction = "null"
+set channels = "null"
+set negativechannels = "no"
 set negativeaccesspolicy = "no"
 set negativeserviceaccesspolicy = "no" 
 set negativedeliverymodality = "no"
@@ -59,6 +61,7 @@ set negativespatialcontext = "no"
 set languanges = "null"
 set negativelanguages = "no"
 set numruns = "null"
+set numreps = "null"
 set runduration = "null"
 set i = 1
 while ( $i < $#inquery )
@@ -104,9 +107,18 @@ while ( $i < $#inquery )
         else if ( "$inquery[$i]" == "numruns" ) then
                 @ i++
                 set numruns = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "numreps" ) then
+                @ i++
+                set numreps = "$inquery[$i]"
         else if ( "$inquery[$i]" == "runduration" ) then
                 @ i++
                 set runduration = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "channels" ) then
+                @ i++
+                set channels = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativechannels" ) then
+                @ i++
+                set negativechannels = "$inquery[$i]"
         else if ( "$inquery[$i]" == "negativeaccesspolicy" ) then
                 @ i++
                 set negativeaccesspolicy = "$inquery[$i]"
@@ -214,7 +226,7 @@ if ( $afterdate != null || $beforedate != null ) then
 	@ xnum ++
 	echo $xnum > $pdir/users/$puser/config/inumber
 	set twoname = "#x$xnum"
-	set twoclass = "urn:mpeg:mpeg21:mco-ipre:owl:2012#TemporalContext"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#TemporalContext"
 	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative $negativetemporalcontext $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
 	set ret = $?
 	if ( $ret ) then
@@ -228,7 +240,7 @@ if ( $afterdate != null || $beforedate != null ) then
 #	add Data Properties
 	if ( $afterdate != null ) then
 		set owner = $twoname
-		set key = "urn:mpeg:mpeg21:mco-ipre:owl:2012#afterDate"
+		set key = "urn:mpeg:mpeg21:mco:ipre:2012#afterDate"
 		set value = $afterdate
 		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
 		set ret = $?
@@ -243,7 +255,7 @@ if ( $afterdate != null || $beforedate != null ) then
 	endif
 	if ( $beforedate != null ) then
 		set owner = $twoname
-		set key = "urn:mpeg:mpeg21:mco-ipre:owl:2012#beforeDate"
+		set key = "urn:mpeg:mpeg21:mco:ipre:2012#beforeDate"
 		set value = $beforedate
 		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
 		set ret = $?
@@ -257,13 +269,13 @@ if ( $afterdate != null || $beforedate != null ) then
 		mv $repo/.tmp.$instance $repo/$instance
 	endif
 endif
-if ( $numruns != null || $runduration != null ) then
+if ( $numruns != null ) then
 #	create Run
 	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
 	@ xnum ++
 	echo $xnum > $pdir/users/$puser/config/inumber
 	set twoname = "#x$xnum"
-	set twoclass = "urn:mpeg:mpeg21:mco-ipre:owl:2012#Run"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#Run"
 	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative $negative $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
 	set ret = $?
 	if ( $ret ) then
@@ -275,24 +287,22 @@ if ( $numruns != null || $runduration != null ) then
 	endif
 	mv $repo/.tmp.$instance $repo/$instance
 #	add Data Properties
-	if ( $numruns != null ) then
-		set owner = $twoname
-		set key = "urn:mpeg:mpeg21:mco-ipre:owl:2012#hasNumberOfRuns"
-		set value = $numruns
-		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
-		set ret = $?
-		if ( $ret ) then
-			echo "500"
-			echo "Server Error"
-			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
-			cp $repo/.tmp/$instance.$$.bak $repo/$instance
-			exit 8
-		endif
-		mv $repo/.tmp.$instance $repo/$instance
+	set owner = $twoname
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRuns"
+	set value = $numruns
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
 	endif
+	mv $repo/.tmp.$instance $repo/$instance
 	if ( $runduration != null ) then
 		set owner = $twoname
-		set key = "urn:mpeg:mpeg21:mco-ipre:owl:2012#hasValidity"
+		set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasValidity"
 		set value = $runduration
 		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
 		set ret = $?
@@ -304,6 +314,21 @@ if ( $numruns != null || $runduration != null ) then
 			exit 8
 		endif
 		mv $repo/.tmp.$instance $repo/$instance
+		if ( $numreps != null ) then
+			set owner = $twoname
+				set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRepetitions"
+			set value = $numruns
+			xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+			set ret = $?
+			if ( $ret ) then
+				echo "500"
+				echo "Server Error"
+				echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+				cp $repo/.tmp/$instance.$$.bak $repo/$instance
+				exit 8
+			endif
+			mv $repo/.tmp.$instance $repo/$instance
+		endif
 	endif
 endif
 if ( $languages != null ) then
@@ -312,7 +337,7 @@ if ( $languages != null ) then
 	@ xnum ++
 	echo $xnum > $pdir/users/$puser/config/inumber
 	set twoname = "#x$xnum"
-	set twoclass = "urn:mpeg:mpeg21:mco-ipre:owl:2012#Language"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#Language"
 	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname  --stringparam negative $negativelanguages $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
 	set ret = $?
 	if ( $ret ) then
@@ -325,7 +350,7 @@ if ( $languages != null ) then
 	mv $repo/.tmp.$instance $repo/$instance
 #	add Data Properties
 	set owner = $twoname
-	set key = "urn:mpeg:mpeg21:mco-ipre:owl:2012#hasLanguage"
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasLanguage"
 	set value = $languages
 	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
 	set ret = $?
@@ -344,7 +369,7 @@ if ( $territories != null ) then
 	@ xnum ++
 	echo $xnum > $pdir/users/$puser/config/inumber
 	set twoname = "#x$xnum"
-	set twoclass = "urn:mpeg:mpeg21:mco-ipre:owl:2012#SpatialContext"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#SpatialContext"
 	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative $negativespatialcontext $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
 	set ret = $?
 	if ( $ret ) then
@@ -357,8 +382,40 @@ if ( $territories != null ) then
 	mv $repo/.tmp.$instance $repo/$instance
 #	add Data Properties
 	set owner = $twoname
-	set key = "urn:mpeg:mpeg21:mco-ipre:owl:2012#inCountry"
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#inCountry"
 	set value = $territories
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+endif
+if ( $channels != null ) then
+#	create Channels 
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:rai:2013#NetworkContext"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname  --stringparam negative $negativechannels $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+#	add Data Properties
+	set owner = $twoname
+	set key = "urn:mpeg:mpeg21:mco:rai:2013#hasChannel"
+	set value = $channels
 	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
 	set ret = $?
 	if ( $ret ) then

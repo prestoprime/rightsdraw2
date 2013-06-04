@@ -26,6 +26,7 @@
 #	users/default/config/ 
 #		p4serverurl
 #		p4account
+#		p4enable
 #		owliriprefix
 #		inumber
 #		rankdir
@@ -121,6 +122,11 @@ if ( -ersf users/default/config/owliriprefix ) then
 else
 	set owliriprefix = "http://www.prestoprime.eu/ppavro/2012/"
 endif
+if ( -ersf users/default/config/p4enable ) then
+	set p4enable = `cat users/default/config/p4enable`
+else
+	set p4enable = off
+endif
 if ( -ersf users/default/config/p4account ) then
 	set p4account = `cat users/default/config/p4account`
 else
@@ -199,6 +205,7 @@ while ( $i <= $#argv )
 		echo "\t\t--omitdata ($omitdata)"
 		echo "\t\t--owliriprefix ($owliriprefix)"
 		echo "\t\t--p4account ($p4account)"
+		echo "\t\t--p4enable ($p4enable)"
 		echo "\t\t--p4serverurl ($p4serverurl)"
 		echo "\t\t--rankdir LR|RL|BT|TB ($rankdir)"
 		echo "\t\t--rightsdraw2user ($rightsdraw2user)"
@@ -288,6 +295,9 @@ while ( $i <= $#argv )
         else if ( "$argv[$i]" == "--inumber" ) then
                 @ i++
                 set inumber  = `echo "a=$argv[$i];a*(a>0)"|bc`
+        else if ( "$argv[$i]" == "--p4enable" ) then
+                @ i++
+                set p4enable = "$argv[$i]"
         else if ( "$argv[$i]" == "--p4account" ) then
                 @ i++
                 set p4account = "$argv[$i]"
@@ -333,10 +343,15 @@ if ( $? ) then
 	echo "\n${this}: apachehtpasswdcmd $apachehtpasswdcmd not found"
 	exit 
 endif
+if ( "$p4enable" != "on" && "$p4enable" != "off" ) then
+	echo "\n${this}: wrong value for p4enable ($p4enable), setting back to off"
+	set p4enable = off
+endif
 
 # Write config somewhere
 echo $p4serverurl > users/default/config/p4serverurl
 echo $p4account > users/default/config/p4account
+echo $p4enable > users/default/config/p4enable
 echo $owliriprefix > users/default/config/owliriprefix
 echo $inumber >  users/default/config/inumber
 echo $rankdir >  users/default/config/rankdir
@@ -352,7 +367,7 @@ echo $size  >  users/default/config/size
 echo "<Directory $apachecgibindir/rightsdraw2>" > rightsdraw2-http.conf
 echo "SetEnv pdir $rightsdraw2dir" >> rightsdraw2-http.conf
 echo "SetEnv securesize $securesize"  >> rightsdraw2-http.conf
-echo 'SetEnv useroptions "colors=on|off;rankdir=RL|LR|BT|TB;mykpr=actual|test;omitdata='$omitdata';size='$size';p4account='$p4account';p4serverurl='$p4serverurl';mcomode=pprights|contracts|kpr;datanamepos=box|edge;owliriprefix='$owliriprefix';"' >> rightsdraw2-http.conf
+echo 'SetEnv useroptions "colors=on|off;rankdir=RL|LR|BT|TB;mykpr=actual|test;omitdata='$omitdata';size='$size';p4enable=off|on;p4account='$p4account';p4serverurl='$p4serverurl';mcomode=pprights|contracts|kpr;datanamepos=box|edge;owliriprefix='$owliriprefix';"' >> rightsdraw2-http.conf
 echo "</Directory>" >> rightsdraw2-http.conf
 echo "<Directory $apachecgibindir/rightsdraw2/default>" >> rightsdraw2-http.conf
 echo "AuthType Basic" >> rightsdraw2-http.conf

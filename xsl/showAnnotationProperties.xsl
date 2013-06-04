@@ -44,7 +44,7 @@
 <div style="clear:both">
 	<div style="float:left">
 		<xsl:value-of select="owl:AnnotationProperty/@IRI"/><br/>
-		<b><xsl:value-of select="owl:Literal/text()"/></b>
+		<b><xsl:value-of select="owl:Literal/text()" disable-output-escaping="yes"/></b>
 	</div>
 	<div style="float:right">
 		<form action="removemd" method="get">
@@ -67,7 +67,7 @@
 	<xsl:element name="input">
 		<xsl:attribute name="type">hidden</xsl:attribute>
 		<xsl:attribute name="name">mdvalue</xsl:attribute>
-		<xsl:attribute name="value"><xsl:value-of select="owl:Literal/text()"/></xsl:attribute>
+		<xsl:attribute name="value" disable-output-escaping="yes"><xsl:value-of select="owl:Literal/text()" disable-output-escaping="yes"/></xsl:attribute>
 	</xsl:element>
 		</form>
 	</div>

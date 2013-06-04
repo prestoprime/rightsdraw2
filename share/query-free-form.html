@@ -23,7 +23,16 @@
 <option value="urn:mpeg:mpeg21:mco:ipre:2012#MakeExcerpt">MakeExcerpt</option>
 </optgroup>
 </optgroup></select> 
-		exclusive: <input type="checkbox" selected name="isexclusive"><br><div name="conditions" style="float:left"><table border="0">
+		exclusive: <input type="checkbox" selected name="isexclusive"><br>
+<div name="owneritemcontext" style="float:left">
+<p>
+	User: <input type="text" name="owner" size="8" value="null">
+	IPEntity: IRI <input type="text" name="ipentity" size="8" value="null">
+		 identifier <input type="text" name="relid" size="8" value="null">
+</p>
+</div>
+<div style="clear:both"/>
+<div name="conditions" style="float:left"><table border="0">
 <tr>
 <td>Conditions</td>
 <td style="color:#ff0000;font-size:8pt;text-align:center">negative<br>flag</td>
@@ -144,6 +153,13 @@
 <tr>
 <td><a href="#" onclick="window.open('/rightsdraw2/durationForm.html','','top=100,left=300,width=400,height=400,scrollbars')">run validity</a></td>
 <td><input type="text" size="8" value="null" name="runduration"></td>
+</tr>
+<tr>
+<td>number of reps</td>
+<td><input type="text" size="4" value="null" name="numreps"></td>
+<td>
+<a href="javascript:decrun('pform','numreps')">-</a> / <a href="javascript:incrun('pform','numreps')">+</a>
+</td>
 </tr>
 </table></div>
 </form></div>

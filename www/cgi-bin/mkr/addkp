@@ -49,13 +49,18 @@ set territories = "null"
 set negativespatialcontext = "no"
 set languanges = "null"
 set negativelanguages = "no"
+set channels = "null"
+set negativechannels = "no"
 set numruns = "null"
+set numreps = "null"
 set runduration = "null"
 set relatedaction = "null"
 set negativerelatedaction = "no"
 set relatedactionperm = "null"
 set relatedactiondelay = "null"
 set relatedactionvalidity = "null"
+set usepercentage = "null"
+set incomepercentage = "null"
 set i = 1
 while ( $i < $#inquery )
         if ( "$inquery[$i]" == "instance" ) then
@@ -85,9 +90,15 @@ while ( $i < $#inquery )
         else if ( "$inquery[$i]" == "languages" ) then
                 @ i++
                 set languages = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "channels" ) then
+                @ i++
+                set channels = "$inquery[$i]"
         else if ( "$inquery[$i]" == "numruns" ) then
                 @ i++
                 set numruns = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "numreps" ) then
+                @ i++
+                set numreps = "$inquery[$i]"
         else if ( "$inquery[$i]" == "runduration" ) then
                 @ i++
                 set runduration = "$inquery[$i]"
@@ -100,6 +111,9 @@ while ( $i < $#inquery )
         else if ( "$inquery[$i]" == "negativelanguages" ) then
                 @ i++
                 set negativelanguages = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativechannels" ) then
+                @ i++
+                set negativechannels = "$inquery[$i]"
         else if ( "$inquery[$i]" == "relatedaction" ) then
                 @ i++
                 set relatedaction = "$inquery[$i]"
@@ -118,6 +132,12 @@ while ( $i < $#inquery )
         else if ( "$inquery[$i]" == "actedby" ) then
                 @ i++
                 set actedby = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "usepercentage" ) then
+                @ i++
+                set usepercentage = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "incomepercentage" ) then
+                @ i++
+                set incomepercentage = "$inquery[$i]"
         else
 		echo "400"
 		echo "Bad request "
@@ -254,20 +274,54 @@ if ( $isexclusive == "on" ) then
 	end
 endif
 # adding sublicense if given
-if ( $hassublicense == "off" ) then
-	set owner = $handle
+if ( $hassublicense != "on" ) then
 	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasSublicenseRight"
 	set value = false
-	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
-	set ret = $?
-	if ( $ret ) then
-		echo "500"
-		echo "Server Error"
-		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
-		cp $repo/.tmp/$instance.$$.bak $repo/$instance
-		exit 6
-	endif
-	mv $repo/.tmp.$instance $repo/$instance
+	foreach owner ( $kppermissions )
+		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+		set ret = $?
+		if ( $ret ) then
+			echo "500"
+			echo "Server Error"
+			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+			cp $repo/.tmp/$instance.$$.bak $repo/$instance
+			exit 6
+		endif
+		mv $repo/.tmp.$instance $repo/$instance
+	end
+endif
+# adding percentages if given
+if ( $usepercentage != null ) then
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasUsePercentage"
+	set value = $usepercentage
+	foreach owner ( $kppermissions )
+		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+		set ret = $?
+		if ( $ret ) then
+			echo "500"
+			echo "Server Error"
+			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+			cp $repo/.tmp/$instance.$$.bak $repo/$instance
+			exit 6
+		endif
+		mv $repo/.tmp.$instance $repo/$instance
+	end
+endif
+if ( $incomepercentage != null ) then
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasIncomePercentage"
+	set value = $incomepercentage
+	foreach owner ( $kppermissions )
+		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+		set ret = $?
+		if ( $ret ) then
+			echo "500"
+			echo "Server Error"
+			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+			cp $repo/.tmp/$instance.$$.bak $repo/$instance
+			exit 6
+		endif
+		mv $repo/.tmp.$instance $repo/$instance
+	end
 endif
 # adding contract in which permission is/are issued in 
 if ( "$contract" != null ) then
@@ -289,7 +343,7 @@ if ( "$contract" != null ) then
 endif
 ########################999
 #	create Fact Intersection 
-if ( $afterdate != null || $beforedate != null || $numruns != null || $runduration != null || $languages != null || $territories != null  || $relatedaction != null ) then
+if ( $afterdate != null || $beforedate != null || $numruns != null || $languages != null || $territories != null  || $relatedaction != null || $channels != null ) then
 	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
 	@ xnum ++
 	echo $xnum > $pdir/users/$puser/config/inumber
@@ -363,7 +417,7 @@ if ( $afterdate != null || $beforedate != null ) then
 		mv $repo/.tmp/$instance $repo/$instance
 	endif
 endif
-if ( $numruns != null || $runduration != null ) then
+if ( $numruns != null ) then
 #	create Run
 	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
 	@ xnum ++
@@ -381,21 +435,19 @@ if ( $numruns != null || $runduration != null ) then
 	endif
 	mv $repo/.tmp/$instance $repo/$instance
 #	add Data Properties
-	if ( $numruns != null ) then
-		set owner = $twoname
-		set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRuns"
-		set value = $numruns
-		xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp/$instance
-		set ret = $?
-		if ( $ret ) then
-			echo "500"
-			echo "Server Error"
-			echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
-			cp $repo/.tmp/$instance.$$.bak $repo/$instance
-			exit 8
-		endif
-		mv $repo/.tmp/$instance $repo/$instance
+	set owner = $twoname
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRuns"
+	set value = $numruns
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp/$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
 	endif
+	mv $repo/.tmp/$instance $repo/$instance
 	if ( $runduration != null ) then
 		set owner = $twoname
 		set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasValidity"
@@ -410,6 +462,21 @@ if ( $numruns != null || $runduration != null ) then
 			exit 8
 		endif
 		mv $repo/.tmp/$instance $repo/$instance
+		if ( $numreps != null ) then
+			set owner = $twoname
+			set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRepetitions"
+			set value = $numreps
+			xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp/$instance
+			set ret = $?
+			if ( $ret ) then
+				echo "500"
+				echo "Server Error"
+				echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+				cp $repo/.tmp/$instance.$$.bak $repo/$instance
+				exit 8
+			endif
+			mv $repo/.tmp/$instance $repo/$instance
+		endif
 	endif
 endif
 if ( $languages != null ) then
@@ -541,6 +608,38 @@ if ( $relatedaction != null && $relatedactionperm != null ) then
 		echo "500"
 		echo "Server Error"
 		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp/$instance $repo/$instance
+endif
+if ( $channels != null ) then
+#	create Channels
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:rai:2013#NetworkContext"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname  --stringparam negative $negativechannels $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp/$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp/$instance $repo/$instance
+#	add Data Properties
+	set owner = $twoname
+	set key = "urn:mpeg:mpeg21:mco:rai:2013#hasChannel"
+	set value = $channels
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp/$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
 		cp $repo/.tmp/$instance.$$.bak $repo/$instance
 		exit 8
 	endif

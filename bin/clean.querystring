@@ -3,7 +3,7 @@
 #  Version: 2.0.1
 #  Authors: L. Boch
 #
-#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -20,7 +20,8 @@
 
 set i = 1
 while ( $i <= $#argv )
-	echo "$argv[$i]" | sed -e s/'%3A'/':'/g | sed -e s/'%2F'/'\/'/g | sed -e s/'%23'/'#'/g | sed -e s/'%2C'/','/g|sed -e s/'%3B'/';'/g| sed -e s/'+'/'\&nbsp;'/g| sed -e s/'%3D'/'='/g| sed -e s/'%0D%0A'/'\\n'/g|sed -e s/'%28'/'('/g|sed -e s/'%29'/')'/g
+	echo "$argv[$i]" | sed -e s/'%3A'/':'/g | sed -e s/'%2F'/'\/'/g | sed -e s/'%23'/'#'/g | sed -e s/'%2C'/','/g|sed -e s/'%3B'/';'/g| sed -e s/'+'/'\&nbsp;'/g| sed -e s/'%3D'/'='/g| sed -e s/'%0D%0A'/'\\n'/g|sed -e s/'%28'/'('/g|sed -e s/'%29'/')'/g|sed -e s/'%26'/'\&'/g
+#	echo "$argv[$i]" | sed -e s/'%3A'/':'/g | sed -e s/'%2F'/'\/'/g | sed -e s/'%23'/'#'/g | sed -e s/'%2C'/','/g|sed -e s/'%3B'/';'/g| sed -e s/'+'/' '/g| sed -e s/'%3D'/'='/g| sed -e s/'%0D%0A'/'\\n'/g|sed -e s/'%28'/'('/g|sed -e s/'%29'/')'/g
 	@ i++
 end
 exit 0

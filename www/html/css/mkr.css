@@ -24,6 +24,11 @@ h3 {
 	color: #660000;
 }
 
+.bgdetails {
+	background: #f0f0f0;
+	clear: both;
+}
+
 .button {
 	background: #f0f0f0;
 	clear: both;
@@ -47,35 +52,45 @@ h3 {
 	display: none;
 }
 
+.odd {
+	background: #efefcf;
+	margin: 0 20px;
+	z-index:1;
+	position: relative;
+}
+
+.even {
+	background: #d8efef;
+	margin: 0 20px;
+	z-index:1;
+	position: relative;
+}
+
 .spatial {
 	background: #efefcf;
-	margin: 0 10px;
-	width: 150px;
-	z-index:-1;
+	margin: 0 20px;
+	z-index:1;
 	position: relative;
 }
 
 .temporal {
 	background: #e8e8e8;
-	margin: 0 10px;
-	width: 150px;
-	z-index:-1;
+	margin: 0 20px;
+	z-index:1;
 	position: relative;
 }
 
 .languages {
 	background: #d8efef;
-	margin: 0 10px;
-	width: 150px;
-	z-index:-1;
+	margin: 0 20px;
+	z-index:1;
 	position: relative;
 }
 
 .runs {
 	background: #efefd8;
-	margin: 0 10px;
-	width: 150px;
-	z-index:-1;
+	margin: 0 20px;
+	z-index:1;
 	position: relative;
 }
 
@@ -93,8 +108,7 @@ h3 {
 
 .yesbut {
 	background: #f0f0f0;
-	text-align: center;
-	width: 674px;
+	margin: 0 50px;
 }
 
 .yep {
@@ -136,6 +150,10 @@ h3 {
 .indent {
 	background: #f0f0f0;
 	width: 64px;
+}
+
+.div {
+	background: #f0f0f0;
 }
 
 form {

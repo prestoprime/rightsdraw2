@@ -20,12 +20,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+h2 {
+	color: #660000;
+}
+
 h3 {
 	color: #660000;
 }
 
 h4 {
 	clear: both;
+}
+
+.divleft20 {
+	float:left;
+	width:24%;
 }
 
 .button {

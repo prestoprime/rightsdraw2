@@ -23,8 +23,13 @@ set echo_style = both
 echo "content-type: text/html\n"
 set repo = $pdir/users/$puser/repo/pprights
 set mykpr = `cat $pdir/users/$puser/config/mykpr`
+set p4enable = `cat $pdir/users/$puser/config/p4enable`
 set linelimit = 100
 set this = `basename $0`
+if ( $p4enable == "off" ) then
+	cat $pdir/share/message.p4notenabled.html |  sed -e s/'+++puser+++'/$puser/g
+	exit 0
+endif
 #  Header things
 cat $pdir/share/queryhead.html | sed -e s/'+++puser+++'/$puser/g | sed -e s/'+++kprfolder+++'/$mykpr/g
 

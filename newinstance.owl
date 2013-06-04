@@ -24,6 +24,6 @@
     <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
     <Prefix name="mco-core" IRI="urn:mpeg:mpeg21:mco:core:2012#"/>
     <Prefix name="mco-ipre" IRI="urn:mpeg:mpeg21:mco:ipre:2012#"/>
-    <Import>urn:mpeg:mpeg21:mco:ipre:2012#</Import>
+    <Import>urn:mpeg:mpeg21:mco:ipre:2012</Import>
 </Ontology>
 

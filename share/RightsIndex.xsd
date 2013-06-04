@@ -31,6 +31,7 @@ under Creative Commons Attribution-ShareAlike 3.0 Unported license.
         <xsd:element name="Record" minOccurs="0" maxOccurs="unbounded">
           <xsd:complexType>
             <xsd:sequence>
+              <xsd:element name="Owner" minOccurs="0" maxOccurs="1" type="xsd:string"/>
               <xsd:element name="Identifier" minOccurs="1" maxOccurs="1" type="xsd:string"/>
               <xsd:element name="AVname" minOccurs="1" maxOccurs="1" type="xsd:string"/>
               <xsd:element name="Pname" minOccurs="1" maxOccurs="1" type="xsd:string"/>

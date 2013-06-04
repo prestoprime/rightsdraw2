@@ -42,6 +42,7 @@
 <link href="/rightsdraw2/css/mco.css" type="text/css" rel="stylesheet"/>
 <script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
 <script src="/rightsdraw2/js/putrunproperties"></script>
+<script src="/rightsdraw2/js/putpercentages"></script>
 </head>
 <body>	
 	<h3><xsl:value-of select="$class"/>:<xsl:value-of select="$ind"/></h3>
@@ -525,8 +526,14 @@
 		<textarea name="clausetext" rows="3" cols="18"/>
 	</form>
 </div>	
-<div name="addfactcomposition" style="float:right">
+<div  style="float:right">
 	<xsl:call-template name="insertfactcomposition"/>
+	<xsl:call-template name="insertpercentages">
+		<xsl:with-param name="percentage">urn:mpeg:mpeg21:mco:ipre:2012#hasUsePercentage</xsl:with-param>
+	</xsl:call-template>
+	<xsl:call-template name="insertpercentages">
+		<xsl:with-param name="percentage">urn:mpeg:mpeg21:mco:ipre:2012#hasIncomePercentage</xsl:with-param>
+	</xsl:call-template>
 </div>
 	<xsl:call-template name="addfacts"/>
 	</xsl:when>
@@ -534,6 +541,64 @@
 		<xsl:call-template name="definepermission"/>
 	</xsl:otherwise>
 </xsl:choose>
+</xsl:template>
+<!-- ************************************************************-->
+<xsl:template name="insertpercentages">
+	<xsl:param name="percentage"/>
+	<xsl:variable name="short"><xsl:value-of select="substring-before(substring-after($percentage,'#has'),'Percentage')"/></xsl:variable>
+<div style="clear:both">
+	<xsl:choose>
+		<xsl:when test="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI = $ind and owl:DataProperty/@IRI=$percentage]">
+			<!-- remove form -->
+<form action="removedataproperty" method="get" target="mco_log">
+	<xsl:call-template name="inserthiddeninput"/>
+	<xsl:element name="input">
+		<xsl:attribute name="type">submit</xsl:attribute>
+		<xsl:attribute name="value">Remove % of <xsl:value-of select="$short"/></xsl:attribute>
+	</xsl:element>
+	<xsl:element name="input">
+		<xsl:attribute name="type">hidden</xsl:attribute>
+		<xsl:attribute name="name">key</xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="$percentage"/></xsl:attribute>
+	</xsl:element>
+	<xsl:element name="input">
+		<xsl:attribute name="type">hidden</xsl:attribute>
+		<xsl:attribute name="name">value</xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI = $ind and owl:DataProperty/@IRI=$percentage]/owl:Literal/text()"/></xsl:attribute>
+	</xsl:element>
+</form>
+		</xsl:when>
+		<xsl:otherwise>
+			<!-- add form -->
+<xsl:element name="form">
+<!--form action="adddataproperty" method="get" target="mco_log"-->
+	<xsl:attribute name="action">adddataproperty</xsl:attribute>
+	<xsl:attribute name="method">get</xsl:attribute>
+	<xsl:attribute name="target">mco_log</xsl:attribute>
+	<xsl:attribute name="id">perc_<xsl:value-of select="$short"/></xsl:attribute>
+	<xsl:call-template name="inserthiddeninput"/>
+	<xsl:element name="input">
+		<xsl:attribute name="type">submit</xsl:attribute>
+		<xsl:attribute name="value">% of <xsl:value-of select="$short"/></xsl:attribute>
+	</xsl:element>
+	<xsl:element name="input">
+		<xsl:attribute name="type">hidden</xsl:attribute>
+		<xsl:attribute name="name">key</xsl:attribute>
+		<xsl:attribute name="value"><xsl:value-of select="$percentage"/></xsl:attribute>
+	</xsl:element>
+	<input name="value" size="3"/>
+	<xsl:element name="a">
+		<xsl:attribute name="href">javascript:decperc('perc_<xsl:value-of select="$short"/>','value')</xsl:attribute>
+		<xsl:text>-</xsl:text>
+	</xsl:element> /
+	<xsl:element name="a">
+		<xsl:attribute name="href">javascript:incperc('perc_<xsl:value-of select="$short"/>','value')</xsl:attribute>
+		<xsl:text>+</xsl:text>
+	</xsl:element>
+</xsl:element>
+		</xsl:otherwise>
+	</xsl:choose>
+</div>
 </xsl:template>
 <!-- ************************************************************-->
 <xsl:template name="insertfactcomposition">
@@ -613,7 +678,7 @@
 	<optgroup label="DeliveryModality: Non Linear">
 		<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandBasis">OnDemand Basis</option>
 		<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandDownload">OnDemand Basis: Download</option>
-		<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandStreaming">OnDemand Streaming</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandStreaming">OnDemand Basis: Streaming</option>
 	</optgroup>
 </optgroup>
 </xsl:template>
@@ -622,12 +687,21 @@
 <optgroup label="Means">
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#BroadcastTechnology">Broadcast Technology</option>
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileTechnology">Mobile Technology</option>
+	<optgroup label="Means: Mobile Technology">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileBroadcastTechnology">Mobile Broadcast Technology</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileTelecommunicationTechnology">Mobile Telecom. Technology</option>
+	</optgroup>
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#Internet">Internet</option>
+	<optgroup label="Means: Internet">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Download">Download</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Upload">Upload</option>
+	</optgroup>
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#Radio">Radio</option>
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#Videogram">Videogram</option>
 	<optgroup label="Means: Broadcast Technology">
 		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Cable">Cable</option>
 		<option value="urn:mpeg:mpeg21:mco:ipre:2012#IPNetwork">IPNetwork</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileBroadcastTechnology">Mobile Broadcast Technology</option>
 		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Satellite">Satellite</option>
 		<option value="urn:mpeg:mpeg21:mco:ipre:2012#Terrestrial">Terrestrial</option>
 	</optgroup>
@@ -638,11 +712,16 @@
 <optgroup label="Device">
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#Computer">Computer</option>
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileDevice">Mobile Device</option>
-	<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileBroadcastDevice">Mobile Broadcast Device</option>
-	<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileTelecommunicationDevice">Mobile Telecommunication Device</option>
+	<optgroup label="Device: Mobile Device">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileBroadcastDevice">Mobile Broadcast Device</option>
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#MobileTelecommunicationDevice">Mobile Telecom. Device</option>
+	</optgroup>
+	<option value="urn:mpeg:mpeg21:mco:ipre:2012#Robotevice">Robot Device</option>
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#StorageDevice">Storage Device</option>
 	<option value="urn:mpeg:mpeg21:mco:ipre:2012#TelevisionDevice">Television Device</option>
-	<option value="urn:mpeg:mpeg21:mco:ipre:2012#TelevisionSet">Television Set</option>
+	<optgroup label="Device: Television Device">
+		<option value="urn:mpeg:mpeg21:mco:ipre:2012#TelevisionSet">Television Set</option>
+	</optgroup>
 </optgroup>
 </xsl:template>
 <!-- ************************************************************************* -->
@@ -785,6 +864,8 @@
 				<!-- tr><td colspan="2"><small>e.g. #xx;#xy;#xz;</small></td></tr-->
 				<tr><td>number of runs</td><td><input type="text" size="4" value="null" name="numruns"/></td><td><a href="javascript:decrun('pform','numruns')">-</a> / <a href="javascript:incrun('pform','numruns')">+</a> </td></tr>
 				<tr><td><a href="#" onclick="window.open('/rightsdraw2/durationForm.html','','top=100,left=300,width=400,height=400,scrollbars')">run validity</a></td><td><input type="text" size="8" value="null" name="runduration"/> </td></tr>
+				<tr><td>number of reps</td><td><input type="text" size="4" value="null" name="numreps"/></td><td><a href="javascript:decrun('pform','numreps')">-</a> / <a href="javascript:incrun('pform','numreps')">+</a> </td></tr>
+				<tr><td><a href="#" onclick="window.open('/rightsdraw2/channelsOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">over channels</a></td><td><input type="text" size="8" value="null" name="channels"/></td><td><input type="checkbox" name="negativechannels" selected="false"/></td></tr>
 			</table>
 		</div>
 </xsl:template>

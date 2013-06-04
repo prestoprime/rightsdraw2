@@ -107,6 +107,10 @@
 			<xsl:call-template name="getIssuedInContract">
 				<xsl:with-param name="permid"><xsl:value-of select="$permission"/></xsl:with-param>
 			</xsl:call-template>
+			<br/>
+			<xsl:call-template name="getPercentages">
+				<xsl:with-param name="permid"><xsl:value-of select="$permission"/></xsl:with-param>
+			</xsl:call-template>
 		</div>
 		<div class="yes" style="float:left;margin-right:10px">
 			<xsl:call-template name="getExclusivityFlag">
@@ -318,6 +322,9 @@
 	<xsl:choose>
 		<xsl:when test="$mytemporalcontext !=''">
 			<xsl:value-of select="$mytemporalcontext"/>
+			<xsl:if test="$mynegativetemporalcontext !=''">
+				except<br/> <xsl:value-of select="$mynegativetemporalcontext"/>
+			</xsl:if>
 		</xsl:when>
 		<xsl:otherwise>any time
 			<xsl:if test="$mynegativetemporalcontext !=''">
@@ -341,13 +348,22 @@
 			<xsl:variable name="runvalidity">
 			<xsl:value-of select="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasValidity']/owl:Literal/text()"/>
 			</xsl:variable>
+			<xsl:variable name="numreps">
+			<xsl:value-of select="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasNumberOfRepetitions']/owl:Literal/text()"/>
+			</xsl:variable>
 			<xsl:choose>
-				<xsl:when test="$numruns != ''">runs: <xsl:value-of select="$numruns"/>; </xsl:when>
-				<xsl:otherwise> </xsl:otherwise>
-			</xsl:choose>
-			<xsl:choose>
-				<xsl:when test="$runvalidity != ''">run validity: <xsl:value-of select="$runvalidity"/>; </xsl:when>
-				<xsl:otherwise> </xsl:otherwise>
+				<xsl:when test="$numruns != ''">runs: <xsl:value-of select="$numruns"/>; 
+					<xsl:choose>
+						<xsl:when test="$runvalidity != ''">run validity: <xsl:value-of select="$runvalidity"/>; 
+							<xsl:choose>
+								<xsl:when test="$numreps != ''">repetitions : <xsl:value-of select="$numreps"/>; </xsl:when>
+								<xsl:otherwise>unbounded repetitions</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise> </xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:otherwise>unspecified runs</xsl:otherwise>
 			</xsl:choose>
 		</xsl:if>
 	</xsl:for-each>
@@ -458,6 +474,20 @@ Excepted when action permitted by <xsl:value-of select="$relatedpermission"/> is
 			</xsl:if>
 		</xsl:for-each>
 	</xsl:for-each>
+</xsl:template>
+
+<!-- ************************************************************-->
+
+<xsl:template name="getPercentages">
+	<xsl:param name="permid"/>
+	<xsl:variable name="use">
+		<xsl:value-of select="owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$permid and substring-after(owl:DataProperty/@IRI,'#')='hasUsePercentage']/owl:Literal/text()"/>
+	</xsl:variable>
+	<xsl:variable name="income">
+		<xsl:value-of select="owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$permid and substring-after(owl:DataProperty/@IRI,'#')='hasIncomePercentage']/owl:Literal/text()"/>
+	</xsl:variable>
+	<xsl:if test="$use != ''">use: <xsl:value-of select="$use"/>% </xsl:if>
+	<xsl:if test="$income != ''">income: <xsl:value-of select="$income"/>% </xsl:if>
 </xsl:template>
 
 <!-- ************************************************************-->

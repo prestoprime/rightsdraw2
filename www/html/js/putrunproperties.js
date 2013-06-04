@@ -46,13 +46,3 @@ function decrun(fn,en){
 		document.forms[fn].elements[en].value=parseInt(b);
 	}
 }
-function incrunval(fn,en){
-	var a;
-	a=document.forms[fn].elements[en].value;
-	p=a.indexOf('P');
-	y=a.indexOf('Y');
-	m=a.indexOf('M');
-	d=a.indexOf('D');
-	t=a.indexOf('T');
-	h=a.indexOf('H');
-}
