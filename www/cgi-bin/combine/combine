@@ -358,7 +358,7 @@ else
 				xsltproc --stringparam minuend $psource \
 					--stringparam subtrahenddoc $repo/pprights/.tmp/$contract.ptransf.$ploop.$$.ByPassIntrsctns \
 					--stringparam subtrahend $ptransf \
-					$pdir/xsl/subtractPermission.xsl $repo/pprights/.tmp/$instance.ByPassIntrsctns > $repo/pprights/.tmp/diff.$ploop.$sloop.$$
+					$pdir/xsl/subtractPermission.xsl $repo/pprights/.tmp/$instance.ByPassIntrsctns | grep -v "FactIntersection" > $repo/pprights/.tmp/diff.$ploop.$sloop.$$
 				set ret = $?
 				if ( $ret ) then
         				echo "500"
