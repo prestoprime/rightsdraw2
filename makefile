@@ -1,9 +1,9 @@
 
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
-#  Copyright (C) 2010-2012 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -46,6 +46,7 @@ build:	clean
 	rsync -avC --exclude *.bak xsl/ build_root/rightsdraw2/xsl/	
 	rsync -avC --exclude *.bak share/ build_root/rightsdraw2/share/	
 	rsync -avC --exclude *.bak  www/ build_root/rightsdraw2/www/	
+	rsync -avC --exclude *.bak --exclude owlapi*.jar lib/ build_root/rightsdraw2/lib/	
 	rsync -avC --exclude *.bak users/default/ build_root/rightsdraw2/users/default
 	cat www/html/rightsdraw2_main.html | sed -e s/+++VERSION+++/$(VERSION)/ > build_root/rightsdraw2/www/html/rightsdraw2_main.html
 	rm -f build_root/rightsdraw2/users/default/repo/*/*
@@ -53,3 +54,8 @@ build:	clean
 	rm -f build_root/rightsdraw2/users/default/repo/*/.aipids/*
 	rm -f build_root/rightsdraw2/www/html/js/CalendarPopup.js
 	cd build_root/rightsdraw2/ ; make clean ; cd .. ; tar -cvzf ../rightsdraw2.$(VERSION).tar.gz --exclude-vcs .
+
+plugins:
+	mkdir -p build_root/rightsdraw2.plugins
+	rsync -av lib/ build_root/rightsdraw2.plugins/lib/
+	cd build_root/rightsdraw2.plugins ; tar -cvzf ../../rightsdraw2.plugins.$(VERSION).tar.gz --exclude-vcs .

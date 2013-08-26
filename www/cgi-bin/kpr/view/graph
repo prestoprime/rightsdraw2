@@ -66,5 +66,13 @@ if ( $ret ) then
 	exit 3
 endif
 #echo '<img src="'http://$HTTP_HOST/rightsdraw2/kpr/$folder/.pictures/$instance.png'">'
-echo '<img src="'http://$HTTP_HOST/rightsdraw2/kpr/$instance.png'">'
+if ( $?HTTPS ) then
+	if ( $HTTPS == on ) then
+		echo '<img src="'https://$HTTP_HOST/rightsdraw2/kpr/$instance.png'">'
+	else
+		echo '<img src="'http://$HTTP_HOST/rightsdraw2/kpr/$instance.png'">'
+	endif
+else
+	echo '<img src="'http://$HTTP_HOST/rightsdraw2/kpr/$instance.png'">'
+endif
 exit 0

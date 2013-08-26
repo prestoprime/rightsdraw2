@@ -1,0 +1,186 @@
+#!/bin/tcsh -f
+#  rightsdraw
+#  Version: 2.0.2
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set echo_style = both
+echo "content-type: text/plain\n"
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set repo = $pdir/users/$puser/repo/$mcomode
+set this = `basename $0`
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
+endif
+	
+
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set ind = "null"
+set instance = "null"
+set handle = "null"
+set start = 0
+set end = 0
+set track = "null"
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "instance" ) then
+                @ i++
+                set instance = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "ind" ) then
+                @ i++
+                set ind = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "handle" ) then
+                @ i++
+                set handle = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "start" ) then
+                @ i++
+                set start = `echo "$inquery[$i]" | bc`
+        else if ( "$inquery[$i]" == "end" ) then
+                @ i++
+                set end = `echo "$inquery[$i]" | bc`
+        else if ( "$inquery[$i]" == "track" ) then
+                @ i++
+                set track = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this Unknown input parameter: $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+#Sanity check
+if ( !( -e "$repo/$instance" ) ) then
+	echo "404"
+	echo "Not Found "
+	echo "$this $repo/$instance"
+	exit 2
+endif
+if (  "$handle" == "null" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this instance=$instance, missing handle"
+	exit 3
+endif
+set classofhandle = `xsltproc --stringparam ind $handle $pdir/xsl/getClassOfIndividual.xsl $repo/$instance`
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this failed on getClassOfIndividual ($handle) in $instance"
+	exit 4
+endif
+if ( $classofhandle != "IPEntity" && $classofhandle != "Instance" && $classofhandle != "Work" && $classofhandle != "Manifestation" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this bad $handle is not IPEntity"
+	exit 3
+endif
+set key = "urn:mpeg:mpeg21:2002:01-DII-NS#Identifier"
+set identifier = `xsltproc --stringparam owner $handle --stringparam key $key $pdir/xsl/getDataProperty.xsl "$repo/$instance"`
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this failed on getDataProperty ($handle,$key) in $instance"
+	exit 4
+endif
+if ( "$identifier" == "" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this missing identifier for $handle"
+	exit 3
+endif
+set suffix = `echo $identifier | cut -d'#' -s -f2-`
+if ( "$suffix" != "" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this identifier $identifier has already fragment suffix $suffix"
+	exit 3
+endif
+if ( $start == 0 && $end == 0 && $track == "null" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this missing fragment dimension input for $handle"
+	exit 3
+endif
+if ( ( $end <= $start && $end != 0 ) || $start < 0 ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this invalid fragment interval ($start,$end)"
+	exit 3
+endif
+
+# making a bak copy
+cp $repo/$instance $repo/.tmp/$instance.$$.bak
+
+########################
+
+# creation of IPEntity fragment individual
+set obj = "http://purl.oclc.org/NET/mvco.owl#isMadeUpOf"
+if ( "$ind" == "null" ) then
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set ind = "#x$xnum"
+endif
+xsltproc --stringparam obj $obj --stringparam one $handle --stringparam twoclass "http://purl.oclc.org/NET/mvco.owl#$classofhandle" --stringparam twoname $ind $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp/$instance
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this failed on addObjProperty ($handle,$permittedaction, $ind) to $instance"
+	cp $repo/.tmp/$instance.$$.bak $repo/$instance
+	exit 5
+endif
+mv $repo/.tmp/$instance $repo/$instance
+# adding identifier with suffix (W3C MediaFragment way) (TODO the mpeg21-part 17 way)
+set owner = $ind
+if ( $start != 0 && $end != 0 ) then
+	set value = "${identifier}#t=$start,$end"
+else if ( $start == 0 && $end != 0 ) then
+	set value = "${identifier}#t=,$end"
+else if ( $start != 0 && $end == 0 ) then
+	set value = "${identifier}#t=$start"
+endif
+if ( $start == 0 && $end == 0 ) then
+	set value = "${identifier}#track=$track"
+else if ( $track != "null" ) then 
+	set value = "${value}&track=$track"
+endif
+xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp/$instance
+set ret = $?
+if ( $ret ) then
+	echo "500"
+	echo "Server Error"
+	echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+	cp $repo/.tmp/$instance.$$.bak $repo/$instance
+	exit 6
+endif
+mv $repo/.tmp/$instance $repo/$instance
+echo "200"
+echo "Success"
+exit 0
+
+
+
+
+

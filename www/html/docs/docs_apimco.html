@@ -5,7 +5,7 @@
 	<body>
 		<h2>MCO Context interfaces</h2>
 		<p>
-The MCO context, with prefix <i>/cgi-bin/rightsdraw2/mco</i>, provides the following Interfaces:
+The MCO context, with prefix <i>/cgi-bin/rightsdraw2/&lt;user&gt;/mco</i>, provides the following Interfaces:
 		</p>
 <hr/>
 <a href="#adddataproperty">adddataproperty</a>
@@ -15,11 +15,15 @@ The MCO context, with prefix <i>/cgi-bin/rightsdraw2/mco</i>, provides the follo
 <a href="#addobj">addobj</a>
 <a href="#addtextualclause">addtextualclause</a>
 <a href="#create">create</a>
+<a href="#definefragment">definefragment</a>
 <a href="#definepermission">definepermission</a>
 <a href="#delete">delete</a>
 <a href="#doform">doform</a>
 <a href="#export">export</a>
 <a href="#guiadm">guiadm</a>
+<a href="#import">import</a>
+<a href="#list">list</a>
+<a href="#load">load</a>
 <a href="#loadtextversion">loadtextversion</a>
 <a href="#mergein">mergein</a>
 <a href="#remove">remove</a>
@@ -27,7 +31,9 @@ The MCO context, with prefix <i>/cgi-bin/rightsdraw2/mco</i>, provides the follo
 <a href="#removemd">removemd</a>
 <a href="#showmd">showmd</a>
 <a href="#showtextversion">showtextversion</a>
+<a href="#submit">submit</a>
 <a href="#viewedit">viewedit</a>
+<a href="#writederivedtext">writederivedtext</a>
 
 <hr/>
 		<a name="adddataproperty">
@@ -48,6 +54,7 @@ Adds a DataProperty, with value, to an Individual of a given OWL instance
 			<li><b>key</b> - IRI of the DataProperty
 			<li><b>value</b> - value to be assigned 
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="adddeontic">
@@ -69,6 +76,7 @@ Adds the ObjectProperty mco-core:issuedIn to the Individual of Contract <i>handl
 			<li><b>ind</b> - IRI of the Deonticexpression
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
@@ -97,10 +105,12 @@ Adds a number of Media Contract Facts, together with their DataProperties, to ei
 			<li><b>usertimeaccess</b> - IRI of a SubClassOf mco-ipre:UserTimeAccess
 			<li>Flags for setting Facts to Negative
 			<li><b>negativeaccesspolicy</b> 
+			<li><b>negativechannels</b> 
 			<li><b>negativedeliverymodality</b>
 			<li><b>negativedevice</b>
 			<li><b>negativelanguages</b>
 			<li><b>negativemeans</b>
+			<li><b>negativepartofipentitycontext</b>
 			<li><b>negativerelatedaction</b>
 			<li><b>negativeserviceaccesspolicy</b>
 			<li><b>negativespatialcontext</b>
@@ -109,11 +119,17 @@ Adds a number of Media Contract Facts, together with their DataProperties, to ei
 			<li>DataProperties implying related Facts
 			<li><b>afterdate</b> - value of mco-ipre:afterDate for a mco-ipre:TemporalContext - format: YYYYMMDD
 			<li><b>beforedate</b> - value of mco-ipre:beforeDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>channels</b> - value of mco-rai2013:hasChannel for a mco-rai2013:NetworkContext - format: list of channel URIs
 			<li><b>languages</b> - value of mco-ipre:hasLanguage for a mco-ipre:Language - format: list of ISO 639-1 language codes (each as '#&lt;code&gt;;') 
+			<li><b>maxlength</b> - value of mco-ipre:hasMaxLength for a mco-ipre:Length - ISO 8601 Duration
 			<li><b>numruns</b> - value of mco-ipre:hasNumberOfRuns for a mco-ipre:Run - format: positiveInteger
 			<li><b>runduration</b> - value of mco-ipre:hasValidity for a mco-ipre:Run - ISO 8601 Duration
+			<li><b>numreps</b> - value of mco-ipre:hasNumberOfRepetitions for a mco-ipre:Run - format: positiveInteger
 			<li><b>territories</b> - value of mco-ipre:hasCountry for a mco-ipre:SpatialContext - format: list of ISO 3166 country codes (each as '#&lt;CODE&gt;;') 
+			<li>Other inputs implying related Facts
+			<li><b>partofipentitycontext</b> - IRI of IPEntity to be used as range for a mco-ipre:IPEntityContext fact through ObjectProperty mco-ipre:partOf
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 		<p>
 		<b>See also:</b> <a href="#definepermission">definepermission</a>
 		</p>
@@ -138,6 +154,7 @@ Add Dublin Core metadata to an Individual of the given OWL instance, as Annotati
 			<li><b>mdkey</b> - metadata field to add
 			<li><b>mdvalue</b> - value of the metadata field
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="addobj">
@@ -160,6 +177,7 @@ If <i>ind</i> doesn't exist or is not given, it will be created as member of Cla
 			<li><b>instance</b> - name of OWL file
 			<li><b>obj</b> - IRI of the Object Property to be added
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="addtextualclause">
@@ -181,6 +199,7 @@ If <i>ind</i> doesn't exist or is not given, it is created.
 			<li><b>ind</b> - IRI of Individual of mco-core:TextualClause acting as range
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="create">
@@ -202,6 +221,32 @@ After creation the OWL document is immediately open for editing, by re-direction
 			<li><b>description</b> - value of Dublin Core AnnotationProperty
 			<li><b>title</b> - value of Dublin Core AnnotationProperty
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="definefragment">
+		<h4>Name: definefragment</h4>
+		<p>
+		<b>Description</b>
+Creates an IPEntity individual as fragment of <i>handle</i>, which must have a <i>DII:Identifier</i>.
+The created IPEntity will have a <i>DII:Identifier</i> with fragment identification as suffix.
+The fragment can be defined as time-interval and/or a track identifier.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>end</b> - fragment outpoint (in seconds)
+			<li><b>handle</b> - IRI of Individual of IPEntity for which definition of new fragment is requested
+			<li><b>ind</b> - IRI of Individual for the new fragment (optional)
+			<li><b>instance</b> - name of OWL file
+			<li><b>start</b> - fragment inpoint (in seconds)
+			<li><b>track</b> - fragment track identifier (e.g. "audio" or "video")
+		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="definepermission">
@@ -234,10 +279,12 @@ If the given <i>handle</i> is of Class mvco:IPEntity (or its SubClasses), both t
 			<li><b>usertimeaccess</b> - IRI of a SubClassOf mco-ipre:UserTimeAccess
 			<li>Flags for setting Facts to Negative
 			<li><b>negativeaccesspolicy</b> 
+			<li><b>negativechannels</b> 
 			<li><b>negativedeliverymodality</b>
 			<li><b>negativedevice</b>
 			<li><b>negativelanguages</b>
 			<li><b>negativemeans</b>
+			<li><b>negativepartofipentitycontext</b>
 			<li><b>negativerelatedaction</b>
 			<li><b>negativeserviceaccesspolicy</b>
 			<li><b>negativespatialcontext</b>
@@ -246,11 +293,17 @@ If the given <i>handle</i> is of Class mvco:IPEntity (or its SubClasses), both t
 			<li>DataProperties implying related Facts
 			<li><b>afterdate</b> - value of mco-ipre:afterDate for a mco-ipre:TemporalContext - format: YYYYMMDD
 			<li><b>beforedate</b> - value of mco-ipre:beforeDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>channels</b> - value of mco-rai2013:hasChannel for a mco-rai2013:NetworkContext - format: list of channel URIs
 			<li><b>languages</b> - value of mco-ipre:hasLanguage for a mco-ipre:Language - format: list of ISO 639-1 language codes (each as '#&lt;code&gt;;') 
+			<li><b>maxlength</b> - value of mco-ipre:hasMaxLength for a mco-ipre:Length - ISO 8601 Duration
 			<li><b>numruns</b> - value of mco-ipre:hasNumberOfRuns for a mco-ipre:Run - format: positiveInteger
 			<li><b>runduration</b> - value of mco-ipre:hasValidity for a mco-ipre:Run - ISO 8601 Duration
+			<li><b>numreps</b> - value of mco-ipre:hasNumberOfRepetitions for a mco-ipre:Run - format: positiveInteger
 			<li><b>territories</b> - value of mco-ipre:hasCountry for a mco-ipre:SpatialContext - format: list of ISO 3166 country codes (each as '#&lt;CODE&gt;;') 
+			<li>Other inputs implying related Facts
+			<li><b>partofipentitycontext</b> - IRI of IPEntity to be used as range for a mco-ipre:IPEntityContext fact through ObjectProperty mco-ipre:partOf
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 		<p>
 		<b>See also:</b> <a href="#addfacts">addfacts</a>
 		</p>
@@ -271,6 +324,7 @@ Deletes the given OWL file from the User's repository
 		<ul>
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="doform">
@@ -289,6 +343,7 @@ Provides a number of html forms for requesting services related to the current c
 			<li><b>ind</b> - IRI of Individual about which forms are served
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="export">
@@ -303,8 +358,10 @@ Serves the requested OWL file to User
 		<b>Parameters:</b>
 		</p>
 		<ul>
+			<li><b>exportserialization</b> - default is <i class="cmd">OWL/XML</i>. If converter is available <i class="cmd">RDF/XML</i> is also accepted.
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/xml or text/plain</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="guiadm">
@@ -319,8 +376,67 @@ and a form for requesting the creation of a new OWL file.
 		</p>
 		<p>
 		<b>Parameters:</b>
-None
 		</p>
+		<ul>
+			<li><b>mcomode</b> - if given, the mco context is changed accordingly before serving request
+		</ul>
+		<p> <b>Returned content-type:</b> text/html</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="import">
+		<h4>Name: import</h4>
+		<p>
+		<b>Description</b>
+Given the identifier of a P4 AIP, it imports the rights part of it into User's repository and makes it available for viewing/editing.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>identifier</b> - ID of a P4 AIP
+		</ul>
+		<p> <b>Returned content-type:</b> text/plain</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="list">
+		<h4>Name: list</h4>
+		<p>
+		<b>Description</b>
+Lists the names of <i>MCO documents</i> present in <i>repo</i>, if given, or in repo set in mcomode, otherwise.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>repo</b> - name of repo for <i>MCO documents</i>. Default is value of <i>mcomode</i>.
+		</ul>
+		<p> <b>Returned content-type:</b> text/plain</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="load">
+		<h4>Name: load</h4>
+		<p>
+		<b>Description</b>
+Uploads an OWL file to the User's repository. It is expected to be in OWL/XML serialization; RDF/XML serialization is also accepted only if the suitable MCO serialization converter is available.
+After successfull load, the OWL document is immediately open for editing, by re-direction to <a href="#viewedit">viewedit</a>, unless <i>goedit</i> is set to false.
+		</p>
+		<p>
+		<b>Method:</b> POST
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+			<li><b>goedit</b> - boolean, if "true" (default), re-direction to <a href="#viewedit">viewedit</a> will follow on success.
+		</ul>
+		<p> <b>Returned content-type:</b> text/html</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="loadtextversion">
@@ -340,6 +456,7 @@ Uploads the textual version of a Contract to be attached as DataProperty to the 
 			<li><b>handle</b> - IRI of Individual of Contract 
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="mergein">
@@ -361,6 +478,7 @@ This service can be used when it is recognised that two distinct Individuals of 
 			<li><b>instance</b> - name of OWL file
 			<li><b>mergetarget</b> - IRI of the Individual target of the merge
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="remove">
@@ -379,6 +497,7 @@ Removes the given Individual, all its Properties (Object and Data), and any rema
 			<li><b>handle</b> - IRI of Individual to be removed
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain</p>
 		<p>
 		<b>Caveat:</b>
 It may leave the OWL file completely empty, when the graph of the OWL file is not yet defined enough.
@@ -403,6 +522,7 @@ Removes the  DataProperty, identified by its IRI, its value, and its owner, from
 			<li><b>key</b> - IRI of the DataProperty to be removed
 			<li><b>value</b> - value of the DataProperty to be removed
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="removemd">
@@ -423,6 +543,7 @@ Removes the  AnnotationProperty, identified by its IRI, its value, and its owner
 			<li><b>mdkey</b> - IRI of the AnnotationProperty to be removed
 			<li><b>mdvalue</b> - value of the AnnotationProperty to be removed
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="showmd">
@@ -442,6 +563,7 @@ Foreach AnnotationProperties a form for requesting its removal is also served.
 			<li><b>handle</b> - IRI of Individual the AnnotationProperties of which are showed
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/html</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="showtextversion">
@@ -461,6 +583,26 @@ A form for requesting its removal is also served.
 			<li><b>handle</b> - IRI of Individual of mco-core:Contract the TextualVersion of which is showed
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/html</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="submit">
+		<h4>Name: submit</h4>
+		<p>
+		<b>Description</b>
+Submits the given <i>instance</i> to P4. If an AIP identifier is already known for this instance, the update interface will be used. Otherwise a new SIP is created, containing a Descriptive Metadata section (DMD secion in Mets) filled with the Dublin Core Metadata associated to the main IPEntity as AnnotationProperties, and submitted to the P4 ingest interface for rights-only SIPs.
+The jobid received from P4 is returned.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+		</ul>
+		<p> <b>Returned content-type:</b> text/plain</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="viewedit">
@@ -478,6 +620,26 @@ Draws the SVG Diagram representing the given OWL file and presents an html outpu
 		<ul>
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/html</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="writederivedtext">
+		<h4>Name: writederivedtext</h4>
+		<p>
+		<b>Description</b>
+Provides a narrative text of the contract automatically derived from the <i>MCO document</i> entities and properties.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>instance</b> - name of OWL file
+			<li><b>startfrom</b> - option from selection between 'Contract', in which the text is structured around the contract entities, and 'Holdings', in which the text is structured the objects of the rights and their associated permissions.
+		</ul>
+		<p> <b>Returned content-type:</b> text/html</p>
 <hr/>
 	</body>
 </html>

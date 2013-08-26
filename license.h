@@ -1,5 +1,5 @@
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
 #  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>

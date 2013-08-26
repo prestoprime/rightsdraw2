@@ -92,8 +92,8 @@ set dctitle = `urlencode $dctitle`
 set dcdescription = `urlencode $dcdescription`
 set mcocreateurl = "/cgi-bin/rightsdraw2/$puser/mco/create?identifier=$dcidentifier&title=$dctitle&description=$dcdescription"
 set mkrcreateurl = "/cgi-bin/rightsdraw2/$puser/mkr/create?identifier=$dcidentifier&title=$dctitle&description=$dcdescription"
-echo 200
-echo Success
+echo "200"
+echo "Success"
 echo '<br/><a href="'$mcocreateurl'" target="rightsdraw_main">Edit in <b>MCO</b> context</a>'
 echo '<br/><a href="'$mkrcreateurl'" target="rightsdraw_main">Edit in <b>MKR</b> context</a>'
 exit 0

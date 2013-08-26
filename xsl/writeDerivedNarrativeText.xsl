@@ -360,6 +360,21 @@
 			<xsl:if test="$ad != ''"> after: <xsl:value-of select="$ad"/> <br/> </xsl:if>
 			<xsl:if test="$bd != ''"> before: <xsl:value-of select="$bd"/> </xsl:if> </p>
 		</xsl:when>
+		<xsl:when test="$class = 'urn:mpeg:mpeg21:mco:ipre:2012#Length'">
+	<p>The exploitation is constrained to  <b><xsl:value-of select="substring-after($class,'#')"/></b>, that is the maximum length, as duration of canonical play, of material resulting from the action is bounded to <xsl:value-of select="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$fact and owl:DataProperty/@IRI='urn:mpeg:mpeg21:mco:ipre:2012#hasMaxLength']/owl:Literal/text()"/>.  </p>
+		</xsl:when>
+		<xsl:when test="$class = 'urn:mpeg:mpeg21:mco:ipre:2012#IPEntityContext'">
+			<xsl:variable name="partofipentitycontext"><xsl:value-of select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=1]/@IRI=$fact and owl:ObjectProperty/@IRI='urn:mpeg:mpeg21:mco:ipre:2012#partOf']/owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
+	<p>The exploitation is constraided to <b><xsl:value-of select="substring-after($class,'#')"/></b>, that is <xsl:if test="$isnegative='yes'">NOT</xsl:if> to belong to the editorial context of <xsl:value-of select="$partofipentitycontext"/>.
+	</p>
+		</xsl:when>
+		<xsl:when test="$class = 'urn:mpeg:mpeg21:mco:core:2012#ActionDone' or $class = 'urn:mpeg:mpeg21:mco:core:2012#ActionStarted'">
+			<xsl:variable name="relatedaction"><xsl:value-of select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=2]/@IRI=$fact and owl:ObjectProperty/@IRI='urn:mpeg:mpeg21:mco:core:2012#makesTrue']/owl:NamedIndividual[position()=1]/@IRI"/></xsl:variable>
+			<xsl:variable name="relatedpermission"><xsl:value-of select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=2]/@IRI=$relatedaction and owl:ObjectProperty/@IRI='http://purl.oclc.org/NET/mvco.owl#permitsAction']/owl:NamedIndividual[position()=1]/@IRI"/></xsl:variable>
+			<xsl:variable name="validity"><xsl:value-of select="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$fact and owl:DataProperty/@IRI='urn:mpeg:mpeg21:mco:ipre:2012#hasValidity']/owl:Literal/text()"/></xsl:variable>
+			<xsl:variable name="delay"><xsl:value-of select="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$fact and owl:DataProperty/@IRI='urn:mpeg:mpeg21:mco:ipre:2012#withDelay']/owl:Literal/text()"/></xsl:variable>
+	 <p>The exploitation is constrained to  <b><xsl:value-of select="substring-after($class,'#')"/></b>, that is the action <xsl:value-of select="$relatedaction"/> (permitted by <xsl:value-of select="$relatedpermission"/>) must <xsl:if test="$isnegative='yes'"> NOT </xsl:if>be <xsl:choose> <xsl:when test="$class = 'urn:mpeg:mpeg21:mco:core:2012#ActionDone'">accomplished</xsl:when> <xsl:when test="$class = 'urn:mpeg:mpeg21:mco:core:2012#ActionStarted'">started</xsl:when> <xsl:otherwise/> </xsl:choose> <xsl:if test="$delay!=''">, with a delay of <xsl:value-of select="$delay"/></xsl:if><xsl:if test="$validity!=''">, for the following <xsl:value-of select="$validity"/></xsl:if>. </p>
+		</xsl:when>
 		<xsl:otherwise> unsupported text conversion for <xsl:value-of select="substring-after($class,'#')"/> </xsl:otherwise>
 	</xsl:choose>
 </xsl:template>
@@ -367,8 +382,17 @@
 <xsl:template name="WriteContractRef">
 	<xsl:param name="contract">null</xsl:param>
 	<xsl:param name="refcontract">null</xsl:param>
-	<xsl:param name="reftyp">null</xsl:param>
-	<h3><xsl:value-of select="$contract"/> <xsl:value-of select="$reftype"/> <xsl:value-of select="/owl:Ontology/owl:ClassAssertion[owl:NamedIndividual/@IRI=$refcontract]/owl:Class/@IRI"/> <xsl:value-of select="$refcontract"/> </h3>
+	<xsl:param name="reftype">null</xsl:param>
+	<h3>
+		<xsl:value-of select="$contract"/>
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="$reftype"/> 
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="substring-after(/owl:Ontology/owl:ClassAssertion[owl:NamedIndividual/@IRI=$refcontract]/owl:Class/@IRI,'#')"/> 
+		<xsl:text> </xsl:text>
+		<xsl:value-of select="$refcontract"/> 
+	</h3>
+	<blockquote>
 	<p>TITLE: <xsl:value-of select="owl:AnnotationAssertion[owl:IRI=$refcontract and owl:AnnotationProperty/@IRI='http://purl.org/dc/elements/1.1/title']/owl:Literal/text()"/></p>
 	<p>DATE: <xsl:value-of select="owl:AnnotationAssertion[owl:IRI=$refcontract and owl:AnnotationProperty/@IRI='http://purl.org/dc/elements/1.1/date']/owl:Literal/text()"/></p>
 	<p>IDENTIFIER: <xsl:value-of select="owl:AnnotationAssertion[owl:IRI=$refcontract and owl:AnnotationProperty/@IRI='http://purl.org/dc/elements/1.1/identifier']/owl:Literal/text()"/></p>
@@ -377,22 +401,41 @@
 		<xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/>,
 	</xsl:for-each>]
 	</p>
+	</blockquote>
 </xsl:template>
 <!-- ******************************************************* -->
 <xsl:template name="WriteContractObjects">
 	<xsl:param name="contract">null</xsl:param>
+	<xsl:variable name="myobjects">
 	<xsl:for-each select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:ObjectProperty/@IRI='urn:mpeg:mpeg21:mco:core:2012#issuedIn' and owl:NamedIndividual[position()=2]/@IRI=$contract]">
 		<xsl:variable name="mydeontic"><xsl:value-of select="owl:NamedIndividual[position()=1]/@IRI"/></xsl:variable>
 		<xsl:for-each select="/owl:Ontology/owl:ObjectPropertyAssertion[(owl:ObjectProperty/@IRI='urn:mpeg:mpeg21:mco:core:2012#forbidsAction' or owl:ObjectProperty/@IRI='urn:mpeg:mpeg21:mco:core:2012#obligatesAction' or owl:ObjectProperty/@IRI='http://purl.oclc.org/NET/mvco.owl#permitsAction') and owl:NamedIndividual[position()=1]/@IRI=$mydeontic]">
 			<xsl:variable name="myaction"><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
 			<xsl:for-each select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:ObjectProperty/@IRI='http://purl.oclc.org/NET/mvco.owl#actedOver' and owl:NamedIndividual[position()=1]/@IRI=$myaction]">
-				<xsl:variable name="myobject"><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
-				<xsl:call-template name="WriteObjectDetails">
-					<xsl:with-param name="objectiri"><xsl:value-of select="$myobject"/></xsl:with-param>
-				</xsl:call-template>
+				(<xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/>),
 			</xsl:for-each>
 		</xsl:for-each>
 	</xsl:for-each>
+	</xsl:variable>
+	<xsl:call-template name="WriteDistinctObjects">
+		<xsl:with-param name="list"><xsl:value-of select="$myobjects"/></xsl:with-param>
+	</xsl:call-template>
+</xsl:template>
+<!-- ******************************************************* -->
+<xsl:template name="WriteDistinctObjects">
+	<xsl:param name="list">null</xsl:param>
+	<xsl:if test="$list != ''">
+		<xsl:variable name="target">(<xsl:value-of select="substring-before(substring-after($list,'('),'),')"/>),</xsl:variable>
+		<xsl:variable name="tail"><xsl:value-of select="substring-after($list,'),')"/></xsl:variable>
+		<xsl:if test="$target !='(),' and contains($tail,$target)=false">
+			<xsl:call-template name="WriteObjectDetails">
+				<xsl:with-param name="objectiri"><xsl:value-of select="substring-before(substring-after($target,'('),'),')"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:if>
+		<xsl:call-template name="WriteDistinctObjects">
+			<xsl:with-param name="list"><xsl:value-of select="$tail"/></xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
 </xsl:template>
 <!-- ******************************************************* -->
 <xsl:template name="WriteObjectDetails">

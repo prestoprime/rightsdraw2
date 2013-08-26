@@ -20,8 +20,8 @@
 
 set i = 1
 while ( $i <= $#argv )
-	echo "$argv[$i]" | sed -e s/'%3A'/':'/g | sed -e s/'%2F'/'\/'/g | sed -e s/'%23'/'#'/g | sed -e s/'%2C'/','/g|sed -e s/'%3B'/';'/g| sed -e s/'+'/'\&nbsp;'/g| sed -e s/'%3D'/'='/g| sed -e s/'%0D%0A'/'\\n'/g|sed -e s/'%28'/'('/g|sed -e s/'%29'/')'/g|sed -e s/'%26'/'\&'/g
-#	echo "$argv[$i]" | sed -e s/'%3A'/':'/g | sed -e s/'%2F'/'\/'/g | sed -e s/'%23'/'#'/g | sed -e s/'%2C'/','/g|sed -e s/'%3B'/';'/g| sed -e s/'+'/' '/g| sed -e s/'%3D'/'='/g| sed -e s/'%0D%0A'/'\\n'/g|sed -e s/'%28'/'('/g|sed -e s/'%29'/')'/g
+	echo "$argv[$i]" | sed -e s/'%3A'/':'/g | sed -e s/'%2F'/'\/'/g | sed -e s/'%23'/'#'/g | sed -e s/'%2C'/','/g|sed -e s/'%3B'/';'/g| sed -e s/'+'/'\&nbsp;'/g| sed -e s/'%3D'/'='/g| sed -e s/'%0D%0A'/'\\n'/g|sed -e s/'%28'/'('/g|sed -e s/'%29'/')'/g|sed -e s/'%26'/'\&'/g|sed -e s/'%3F'/'?'/g
+#	echo "$argv[$i]" | sed -e s/'%3A'/':'/g | sed -e s/'%2F'/'\/'/g | sed -e s/'%23'/'#'/g | sed -e s/'%2C'/','/g|sed -e s/'%3B'/';'/g| sed -e s/'+'/'\&nbsp;'/g| sed -e s/'%3D'/'='/g| sed -e s/'%0D%0A'/'\\n'/g|sed -e s/'%28'/'('/g|sed -e s/'%29'/')'/g|sed -e s/'%26'/'\&'/g
 	@ i++
 end
 exit 0

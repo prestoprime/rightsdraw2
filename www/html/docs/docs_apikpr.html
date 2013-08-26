@@ -5,7 +5,7 @@
 	<body>
 		<h2>KPR Context interfaces</h2>
 		<p>
-The KPR context, with prefix <i>/cgi-bin/rightsdraw2/kpr</i>, provides the following Interfaces:
+The KPR context, with prefix <i>/cgi-bin/rightsdraw2/&lt;user&gt;/kpr</i>, provides the following Interfaces:
 		</p>
 <hr/>
 <a href="#copy2folder">copy2folder</a>
@@ -37,6 +37,7 @@ It doesn't overwrite an existing document, but returns <i>403 Forbidden</i>.
 			<li><b>sourcefolder</b> - folder where the OWL file is
 			<li><b>targetfolder</b> - folder destination of the copy
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 		<p>
 		<b>See also:</b> <a href="#deploy">deploy</a>
 		</p>
@@ -59,6 +60,7 @@ It doesn't overwrite an existing document, but returns <i>403 Forbidden</i>.
 			<li><b>instance</b> - name of OWL file
 			<li><b>folder</b> - folder destination of the upload (<i>test</i> or <i>actual</i>)
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="guiadm">
@@ -70,10 +72,8 @@ Serves to the User, as html output, the lists of the Key Pattern in both <i>test
 		<p>
 		<b>Method:</b> GET
 		</p>
-		<p>
-		<b>Parameters:</b>
-None
-		</p>
+		<p> <b>Parameters:</b> None </p>
+		<p> <b>Returned content-type:</b> text/html </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="list">
@@ -91,7 +91,7 @@ List the names of Key Patterns deployed in the given folder
 		<ul>
 			<li><b>folder</b> - name of Key Pattern folder (<i>test</i> or <i>actual</i>)
 		</ul>
-		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="view/graph">
@@ -110,6 +110,7 @@ Provides a diagram of the graph of the given Key Pattern
 			<li><b>folder</b> - name of Key Pattern folder (<i>test</i> or <i>actual</i>)
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="view/text">
@@ -128,6 +129,7 @@ Provides a derived text describing the given Key Pattern
 			<li><b>folder</b> - name of Key Pattern folder (<i>test</i> or <i>actual</i>)
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="withdraw">
@@ -146,6 +148,7 @@ Removes the given instance of Key Pattern from the given Key Pattern deployment 
 			<li><b>folder</b> - name of Key Pattern folder (<i>test</i> or <i>actual</i>)
 			<li><b>instance</b> - name of OWL file
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <hr/>
 	</body>
 </html>

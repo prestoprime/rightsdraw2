@@ -32,7 +32,16 @@ h4 {
 	clear: both;
 }
 
+.divleft50p {
+	float:left;
+	width:50px;
+}
+
 .divleft20 {
+	float:left;
+}
+
+.divleft24 {
 	float:left;
 	width:24%;
 }

@@ -1,9 +1,9 @@
 #!/bin/tcsh -f
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
-#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -22,6 +22,7 @@
 set echo_style = both
 echo "content-type: text/html\n"
 set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set p4enable = `cat $pdir/users/$puser/config/p4enable`
 set linelimit = 100
 set this = `basename $0`
 if ( $REQUEST_METHOD != "GET" ) then
@@ -55,6 +56,9 @@ echo '<td><h3 style="color:#660000"">Welcome <i>'$puser'</i> to your <i>MCO</i> 
 echo '<td width="100px"/>'
 echo '<td><form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px"><input type="hidden" name="username" value="'$puser'"/><input type="submit" value="Quit"/></form></td></tr>'
 set lista = `ls -1 $repo`
+if ( $p4enable == off ) then
+	echo '<tr><td style="color:#660000">'"You haven't enabled connections to P4 services in your settings.</td></tr>"
+endif
 echo '<tr><td><h4 style="color:#660000">You have '$#lista' items in your repo, which is set to work with <i>'$mcomode'</i>.</h4></td>'
 #echo '<td width="100px"/>'
 echo '<td><form method="get" action="guiadm" style="margin:0px">'
@@ -69,31 +73,31 @@ if ( $mcomode == "contracts" ) then
 else if ( $mcomode == "pprights" ) then
 ##############
 	echo '<form method="get" action="create" target="rightsdraw2_main"><input type="submit" value="Create new MCO pprights document">'
-	echo '<b>What this is about</b> (IP Entity)<br/>Identifier <input type="text" name="identifier"> Title <input type="text" name="title"><br/>Description <textarea rows="2" cols="60" name="description"></textarea></form>'
+	echo '<b>What this is about</b> (IP Entity)<br/>Identifier <input type="text" name="identifier"> Title <input type="text" name="title"><br/>Description <br/><textarea rows="2" cols="60" name="description"></textarea></form>'
 ##############
 else if ( $mcomode == "kpr" ) then
 ##############
 	echo '<form method="get" action="create" target="rightsdraw2_main"><input type="submit" value="Create new MCO Key Pattern document">'
-	echo '<b>Key Pattern Name</b> <input type="text" name="identifier"> Title <input type="text" name="title"><br/>Description <textarea rows="2" cols="60" name="description"></textarea></form>'
+	echo '<br/><b>Key Pattern Name</b> <input type="text" name="identifier"> <br/>Title <input type="text" name="title"><br/>Description <br/><textarea rows="2" cols="50" name="description"></textarea></form>'
 ##############
 endif
+### load form
+	echo '<form action="load" method="post" style="margin:0px" ENCTYPE="multipart/form-data" target="rightsdraw2_main"><input type="submit" value="Load"/><input type="file" name="instance"/></form>'
+#Import from archive (P4)
+if ( $p4enable == on && $mcomode == "pprights" ) then
+	echo '<p></p>'
+	echo '		<form action="import" method="get" style="margin:0px"><input type="submit" value="Import from P4"/> archive ID'
+	echo '			<input type="text" name="identifier" size="24"/>'
+	echo '          </form>'
+endif
 echo '</div>'
+echo '<div style="float:left;width:50px"><p></p></div>'
 
 #### selection for view and edit
 echo '<div style="float:left;vertical-align:top">'
 #view and Edit
 echo '<form action="viewedit" method="get" style="margin:0px" target="rightsdraw2_main">'
 echo '	<input type="submit" value="View and Edit"/>'
-echo '          <select name="instance">'
-	echo '		<option/>'
-foreach instance ( $lista )
-        echo '          <option>'"$instance"'</option>'
-end
-echo '          </select>'
-echo '  </form>'
-# Export
-echo '	<form action="export" method="get" style="margin:0px" target="mco_view">'
-echo '		<input type="submit" value="Export              "/>'
 echo '          <select name="instance">'
 	echo '		<option/>'
 foreach instance ( $lista )
@@ -118,7 +122,32 @@ if ( $mcomode == "contracts" || $mcomode == "pprights" ) then
 	echo '          </select>'
 	echo '  </form>'
 endif
-#### Third Row 
+# Export
+echo '	<form action="export" method="get" style="margin:0px" target="mco_view">'
+echo '		<input type="submit" value="Export              "/>'
+echo '          <select name="instance">'
+	echo '		<option/>'
+foreach instance ( $lista )
+        echo '          <option>'"$instance"'</option>'
+end
+echo '          </select>'
+echo '          <select name="format">'
+echo '          	<option>OWL/XML</option>'
+echo '          	<option>RDF/XML</option>'
+#echo '          	<option>CEL/XML</option>'
+echo '          </select>'
+echo '  </form>'
+#Submit
+if ( $p4enable == on  && $mcomode == "pprights" ) then
+	echo '		<form action="submit" method="get" style="margin:0px" target="pprights_view"><input type="submit" value="Submit Ingest"/>'
+	echo '          <select name="instance">'
+		echo '		<option/>'
+	foreach instance ( $lista )
+	        echo '          <option>'"$instance"'</option>'
+	end
+	echo '          </select>'
+	echo '          </form>'
+endif
 # Delete
 echo '	<form action="delete" method="get" style="margin:0px" target="mco_view">'
 echo '		<input type="submit" value="Delete              "/>'
@@ -146,7 +175,7 @@ if ( $mcomode == kpr ) then
 endif
 echo '</div>'
 echo '<div style="float:left;vertical-align:top">'
-echo '          <iframe id="mco_view" name="mco_view" src="about:blank" frameborder="0" width="600" height="120"></iframe>'
+echo '          <iframe id="mco_view" name="mco_view" src="about:blank" frameborder="0" width="800" height="480"></iframe>'
 echo '</div>'
 echo '<div style="clear:both;vertical-align:top"/>'
 #echo "<p>End of the story</p>"

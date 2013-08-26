@@ -5,14 +5,13 @@
 	<body>
 		<h2>MKR Context interfaces</h2>
 		<p>
-The MKR context, with prefix <i>/cgi-bin/rightsdraw2/mkr</i>, provides the following Interfaces:
+The MKR context, with prefix <i>/cgi-bin/rightsdraw2/&lt;user&gt;/mkr</i>, provides the following Interfaces:
 		</p>
 <hr/>
 <a href="#addkp">addkp</a>
 <a href="#create">create</a>
 <a href="#guiadm">guiadm</a>
 <a href="#removekp">removekp</a>
-<a href="#selectindividual">selectindividual</a>
 <a href="#showform">showform</a>
 <a href="#viewedit">viewedit</a>
 
@@ -56,6 +55,7 @@ The required context Facts and the Permission properties can also be given. It i
 			<li><b>runduration</b> - value of mco-ipre:hasValidity for a mco-ipre:Run - ISO 8601 Duration
 			<li><b>territories</b> - value of mco-ipre:hasCountry for a mco-ipre:SpatialContext - format: list of ISO 3166 country codes (each as '#&lt;CODE&gt;;') 
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
 		<p>
 		<b>See also:</b> <a href="docs_apimco.html#definepermission">mco/definepermission</a>, <a href="docs_apiquery.html#doquery">query/doquery</a>
 		</p>
@@ -81,6 +81,7 @@ After creation the OWL document is immediately open for editing, by re-direction
 			<li><b>description</b> - value of Dublin Core AnnotationProperty
 			<li><b>title</b> - value of Dublin Core AnnotationProperty
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="guiadm">
@@ -93,10 +94,8 @@ and a form for requesting the creation of a new OWL file.
 		<p>
 		<b>Method:</b> GET
 		</p>
-		<p>
-		<b>Parameters:</b>
-None
-		</p>
+		<p> <b>Parameters:</b> None </p>
+		<p> <b>Returned content-type:</b> text/html </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="removekp">
@@ -115,6 +114,7 @@ Removes the given Individual of mvco:Permission, all its Properties (Object and 
 			<li><b>instance</b> - name of OWL file
 			<li><b>permission</b> - IRI of Individual of mvco:Permission to be removed
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
 		<p>
 		<b>Caveat:</b>
 It may leave the OWL file completely empty, when the graph of the OWL file is not yet defined enough.
@@ -122,26 +122,6 @@ It may leave the OWL file completely empty, when the graph of the OWL file is no
 		<p>
 		<b>See also:</b> <a href="docs_apimco.html#remove">mco/remove</a>
 		</p>
-<!-- //////////////////////////////////////////////////////////////-->
-<hr/>
-		<a name="selectindividual">
-		<h4>Name: selectindividual</h4>
-		<p>
-		<b>Description</b>
-Serves the list of Indivual of a given Class within an OWL file, as options for a select form in an htmlcontext.
-		</p>
-		<p>
-		<b>Method:</b> GET
-		</p>
-		<p>
-		<b>Parameters:</b>
-		</p>
-		<ul>
-			<li><b>classiri</b> - IRI of the target Class 
-			<li><b>classname</b> - alternatively: suffix IRI of the target Class
-			<li><b>fieldname</b> - name of the field of the form, which is the target of the selection
-			<li><b>instance</b> - name of OWL file
-		</ul>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="showform">
@@ -167,6 +147,7 @@ Serves a form to the User, as html output, for filling the required details abou
 			<li><b>kp</b> - name of a Key Pattern
 set kp = "null"
 		</ul>
+		<p> <b>Returned content-type:</b> text/html </p>
 		<p>
 		<b>See also:</b> <a href="docs_apiquery#showform">query/showform</a>, <a href="#addkp">addkp</a>
 		</p>

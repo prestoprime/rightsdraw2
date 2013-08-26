@@ -218,6 +218,16 @@
 		</xsl:call-template>
 	</div>
 	<div class="even">
+		<xsl:call-template name="getLengthContext">
+			<xsl:with-param name="permid"><xsl:value-of select="$permission"/></xsl:with-param>
+		</xsl:call-template>
+	</div>
+	<div class="odd">
+		<xsl:call-template name="getIPEntityContext">
+			<xsl:with-param name="permid"><xsl:value-of select="$permission"/></xsl:with-param>
+		</xsl:call-template>
+	</div>
+	<div class="even">
 		<xsl:call-template name="getNetworkContext">
 			<xsl:with-param name="permid"><xsl:value-of select="$permission"/></xsl:with-param>
 		</xsl:call-template>
@@ -409,6 +419,83 @@
 </xsl:template>
 
 <!-- ************************************************************-->
+
+<xsl:template name="getIPEntityContext">
+	<xsl:param name="permid"/>
+	<xsl:variable name="myipentitycontext">
+	<xsl:for-each select="owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=1]/@IRI=$permid and substring-after(owl:ObjectProperty/@IRI,'#')='hasRequired']">
+		<xsl:variable name="aname"><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
+		<xsl:variable name="aclass"><xsl:value-of select="../owl:ClassAssertion[substring-after(owl:NamedIndividual/@IRI,'#')=substring-after($aname,'#')]/owl:Class/@IRI"/></xsl:variable>
+		<xsl:if test="substring-after($aclass,'#')='IPEntityContext'">
+			<xsl:variable name="partof">
+			<xsl:value-of select="../owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=1]/@IRI=$aname and substring-after(owl:ObjectProperty/@IRI,'#')='partOf']/owl:NamedIndividual[position()=2]/@IRI"/>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="$partof != ''">as part of <xsl:value-of select="$partof"/></xsl:when>
+				<xsl:otherwise></xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+	</xsl:for-each>
+	</xsl:variable>
+	<xsl:variable name="mynegativeipentitycontext">
+	<xsl:for-each select="owl:NegativeObjectPropertyAssertion[owl:NamedIndividual[position()=1]/@IRI=$permid and substring-after(owl:ObjectProperty/@IRI,'#')='hasRequired']">
+		<xsl:variable name="aname"><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
+		<xsl:variable name="aclass"><xsl:value-of select="../owl:ClassAssertion[substring-after(owl:NamedIndividual/@IRI,'#')=substring-after($aname,'#')]/owl:Class/@IRI"/></xsl:variable>
+		<xsl:if test="substring-after($aclass,'#')='IPEntityContext'">
+			<xsl:variable name="partof">
+			<xsl:value-of select="../owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=1]/@IRI=$aname and substring-after(owl:ObjectProperty/@IRI,'#')='partOf']/owl:NamedIndividual[position()=2]/@IRI"/>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="$partof != ''">as part of <xsl:value-of select="$partof"/></xsl:when>
+				<xsl:otherwise></xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+	</xsl:for-each>
+	</xsl:variable>
+	<b>IP-Entity Context <br/></b>
+	<xsl:choose>
+		<xsl:when test="$myipentitycontext !=''">
+			<xsl:value-of select="$myipentitycontext"/>
+			<xsl:if test="$mynegativeipentitycontext !=''">
+				except<br/> <xsl:value-of select="$mynegativeipentitycontext"/>
+			</xsl:if>
+		</xsl:when>
+		<xsl:otherwise>any IP-Entity Context
+			<xsl:if test="$mynegativeipentitycontext !=''">
+				not <xsl:value-of select="$mynegativeipentitycontext"/>
+			</xsl:if>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- ************************************************************-->
+
+<xsl:template name="getLengthContext">
+	<xsl:param name="permid"/>
+	<xsl:variable name="mylengthcontext">
+	<xsl:for-each select="owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=1]/@IRI=$permid and substring-after(owl:ObjectProperty/@IRI,'#')='hasRequired']">
+		<xsl:variable name="aname"><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
+		<xsl:variable name="aclass"><xsl:value-of select="../owl:ClassAssertion[substring-after(owl:NamedIndividual/@IRI,'#')=substring-after($aname,'#')]/owl:Class/@IRI"/></xsl:variable>
+		<xsl:if test="substring-after($aclass,'#')='Length'">
+			<xsl:variable name="maxlength">
+			<xsl:value-of select="../owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$aname and substring-after(owl:DataProperty/@IRI,'#')='hasMaxLength']/owl:Literal/text()"/>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="$maxlength != ''">maximum length: <xsl:value-of select="$maxlength"/></xsl:when>
+				<xsl:otherwise></xsl:otherwise>
+			</xsl:choose>
+		</xsl:if>
+	</xsl:for-each>
+	</xsl:variable>
+	<b>Length <br/></b>
+	<xsl:choose>
+		<xsl:when test="$mylengthcontext=''">unbounded</xsl:when>
+		<xsl:otherwise><xsl:value-of select="$mylengthcontext"/></xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
+<!-- ************************************************************-->
+
 <xsl:template name="getRunContext">
 	<xsl:param name="permid"/>
 	<xsl:variable name="myruncontext">

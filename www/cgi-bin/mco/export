@@ -1,9 +1,9 @@
 #!/bin/tcsh -f
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
-#  Copyritght (C) 2012-2013 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -19,11 +19,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set echo_style = both
-echo "content-type: text/xml\n"
 set mcomode = `cat $pdir/users/$puser/config/mcomode`
 set repo = $pdir/users/$puser/repo/$mcomode
+set format = "OWL/XML"
 set this = `basename $0`
 if ( $REQUEST_METHOD != "GET" ) then
+	echo "content-type: text/plain\n"
 	echo "400"
 	echo "Bad request "
 	echo "$this accept only GET"
@@ -39,7 +40,13 @@ while ( $i < $#inquery )
         if ( "$inquery[$i]" == "instance" ) then
                 @ i++
                 set instance = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "format" ) then
+                @ i++
+                if ( "$inquery[$i]" == "OWL/XML" ||  "$inquery[$i]" == "RDF/XML" || "$inquery[$i]" == "CEL/XML" ) then
+			set format = "$inquery[$i]"
+		endif
         else
+		echo "content-type: text/plain\n"
 		echo "400"
 		echo "Bad request "
 		echo "$this Unknown input parameter: $inquery[$i]"
@@ -50,13 +57,56 @@ end
 set ret = 0
 #Sanity check
 if ( !( -ersf "$repo/$instance" ) ) then
+	echo "content-type: text/plain\n"
 	echo "404"
 	echo "Not Found "
 	echo "$this $repo/$instance"
 	exit 2
 endif
 #cp $repo/$instance $export/$instance
-cat $repo/$instance
+if ( "$format" == "OWL/XML" ) then
+	echo "content-type: text/xml\n"
+	cat $repo/$instance
+else if ( -ersf $pdir/lib/mcoserializationconverter ) then
+	set result = $pdir/logs/$this.$$.result
+	$pdir/lib/mcoserializationconverter $repo/$instance $result
+	set ret = $?
+	if ( $ret ) then
+		echo "content-type: text/plain\n"
+		echo "500"
+		echo "Server Error"
+		cat $result
+	else
+		if ( "$format" == "RDF/XML" ) then
+			echo "content-type: text/xml\n"
+			cat $result
+		else if ( -ersf $pdir/lib/mco2cel ) then
+			$pdir/lib/mco2cel $result $result.cel
+			set ret = $?
+			if ( $ret ) then
+				echo "content-type: text/plain\n"
+				echo "500"
+				echo "Server Error"
+				cat $result.cel
+			else
+				echo "content-type: text/xml\n"
+				cat $result.cel
+			endif
+		else
+			echo "content-type: text/plain\n"
+			echo "501"
+			echo "Not Implemented"
+			echo "mco2cel plugin not found"
+			exit 23
+		endif
+	endif
+else
+	echo "content-type: text/plain\n"
+	echo "501"
+	echo "Not Implemented"
+	echo "mcoserializationconverter plugin not found"
+	exit 22
+endif
 set ret = $?
 if ( $ret ) then
 	echo "500"
@@ -65,3 +115,4 @@ if ( $ret ) then
 	exit 3
 endif
 exit 0
+

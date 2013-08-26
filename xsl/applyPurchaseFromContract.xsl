@@ -42,7 +42,7 @@
 					<xsl:for-each select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:ObjectProperty/@IRI='http://purl.oclc.org/NET/mvco.owl#actedOver' and owl:NamedIndividual[position()=1]/@IRI=$action]">
 						<xsl:variable name="ipentity"><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></xsl:variable>
 <!-- permits ipentity match not to be exact -->
-						<xsl:for-each select="/owl:Ontology/owl:DataPropertyAssertion[owl:DataProperty/@IRI='urn:mpeg:mpeg21:2002:01-DII-NS#Identifier' and ( owl:NamedIndividual/@IRI=$ipentity and substring-before(owl:Literal/text(),'#')=$avidentifier )]">
+						<xsl:for-each select="/owl:Ontology/owl:DataPropertyAssertion[owl:DataProperty/@IRI='urn:mpeg:mpeg21:2002:01-DII-NS#Identifier' and ( owl:NamedIndividual/@IRI=$ipentity and owl:Literal/text()= $avidentifier )]">
 							(<xsl:value-of select="$perm"/>),
 							<xsl:call-template name="findrelated">
 								<xsl:with-param name="target"><xsl:value-of select="$perm"/></xsl:with-param>

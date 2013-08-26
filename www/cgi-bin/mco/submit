@@ -20,7 +20,7 @@
 
 
 set echo_style = both
-echo "content-type: text/html\n"
+echo "content-type: text/plain\n"
 set repo = $pdir/users/$puser/repo/pprights
 set curloptions = `cat $pdir/users/$puser/config/curloptions`
 set this = `basename $0`

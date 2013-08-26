@@ -23,12 +23,17 @@ The properties are:
 		</ul>
 		<li>Related to how to edit MCO documents
 		<ul>
-			<li>mcomode - specifies if the working area and mode are those of <i>contracts</i> or of <i>pprights</i>
+			<li>mcomode - specifies if the working area and mode are those of <i>contracts</i>,  <i>holdings (pprights)</i>, or <i>KPR</i>. The setting applies to <a href="docs_viewedit.html">editing</a> and <a href="docs_checkwith+search.html">check-with</a>
 			<li>mykpr - specififies which repository of <i>KPR</i> to use
 			<li>owliriprefix - specififies the prefix of the <i>ontology IRI</i> to be used when creating new MCO documents 
 		</ul>
+		<li>Related to export MCO documents
+		<ul>
+			<li>exportserialization - depends on plugin, specifies which serialization to use in export between OWL/XML and RDF/XML. Without plugin only OWL/XML (which is used internally) is possible
+		</ul>
 		<li>Related to interaction with <i>P4</i>
 		<ul>
+			<li>p4enable - specifies if interaction with <i>P4</i> is activated (must also be available) or not
 			<li>p4account - specifies the <i>UserID</i> for logging in with <i>P4</i> services
 			<li>p4serverurl - specififies the base URL of the <i>P4</i> services
 		</ul>

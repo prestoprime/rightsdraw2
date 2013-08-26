@@ -85,7 +85,7 @@ else if ( "$available" == "true" ) then
 	foreach aipid ( $gotlist ) 
 		echo '<div style="clear:both"><div style="float:left"><form method="get" target="query_log" action="showbasicmets">'$aipid '<input type="submit" value="Info"><input type="hidden" name="identifier" value="'$aipid'"></form></div>'
 		echo '<div style="float:left"><form method="get" target="query_log" action="getvideoplayer"><input type="submit" value="View"><input type="hidden" name="dipid" value="'$aipid'"></form></div>'
-		echo '<div style="float:left"><form method="get" target="query_log" action="../pprights/import"><input type="submit" value="Import"><input type="hidden" name="identifier" value="'$aipid'"></form></div></div>'
+		echo '<div style="float:left"><form method="get" target="query_log" action="../mco/import"><input type="submit" value="Import"><input type="hidden" name="identifier" value="'$aipid'"></form></div></div>'
 	#	echo '<form method="get" action="../pprights/import"><input type="submit" value="Import '$aipid'"><input type="hidden" name="identifier" value="'$aipid'"></form>'
 	end
 endif

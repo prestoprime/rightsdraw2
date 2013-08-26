@@ -5,7 +5,7 @@
 	<body>
 		<h2>MCO combine Context interfaces</h2>
 		<p>
-The MCO combine context, with prefix <i>/cgi-bin/rightsdraw2/combine</i>, provides the following Interfaces:
+The MCO combine context, with prefix <i>/cgi-bin/rightsdraw2/&lt;user&gt;/combine</i>, provides the following Interfaces:
 		</p>
 <hr/>
 <a href="#combine">combine</a>
@@ -28,8 +28,9 @@ In order to be effective the two OWL documents must be consistent.
 		</p>
 		<ul>
 			<li><b>contract</b> - name of OWL file in the contracts User's repository
-			<li><b>instance</b> - name of OWL file in the pprights User's repository
+			<li><b>instance</b> - name of OWL file in the holdings User's repository
 		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
 		<a name="guiadm">
@@ -41,10 +42,8 @@ Serves to the User, as html output, a form for selecting one Contract and one PP
 		<p>
 		<b>Method:</b> GET
 		</p>
-		<p>
-		<b>Parameters:</b>
-None
-		</p>
+		<p> <b>Parameters:</b> None </p>
+		<p> <b>Returned content-type:</b> text/plain </p>
 		<p>
 		<b>See also:</b> <a href="#combine">combine</a>
 		</p>

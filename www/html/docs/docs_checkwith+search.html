@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>Check with and Search</h2>
+<p>The Check-with and search context provides the means to make rights specific queries and examine their results.</p>
+		<a name="checkwith">
+		<h3>Check-with</h3>
+<p>
+With the check-with operation the <i>User</i> defines a query as a target permission and finds out which <i>MCO documents</i> contain <i>Permissions</i> compatible (i.e. same or wider) to the target one. This operation is typical of rights clearance activities.
+</p>
+<p>
+The comparison between two permissions must return a <i>boolean</i> result:
+</p>
+<ul>
+	<li><p>
+true - when the <i>candidate permission</i> is equal or wider (less restrictive) than the <i>target permission</i> 
+	</p></li>
+	<li><p>
+false - when the <i>candidate permission</i> is narrower (more restrictive) than the <i>target permission</i> 
+	</p></li>
+</ul>
+<p>
+For aim of efficiency the check-with is implemented in two steps:
+</p>
+<ul>
+	<li><p>
+rights indexing - performed on the set of <i>candidate permissions</i>, it doesn't need to be repeated until the <i>candidate permissions</i> are modified
+	</p></li>
+	<li><p>
+rights comparison - performed between the <i>target permission</i> and indexed <i>candidate permissions</i>
+	</p></li>
+</ul>
+<p>
+The check-with operation can be performed on the <i>MCO documents</i>  on the user's repository, or remotely on those saved on the connected preservation system, such as <i>P4</i>, provided that the <i class="rd">Rightsdraw</i> components for rights indexing and comparison are installed there.
+</p>
+<p>
+The <i<User</i> can create his/her <i>target permission</i> either making use of the defined <i>key patterns rights (KPR)</i>  or by means of the more general form.
+</p>
+		<a name="search">
+		<h3>Search</h3>
+<p>
+With the search operation the <i>User</i> looks for <i>MCO documents</i> containing elements, i.e. individuals and their properties, matching the input fields.
+</p>
+		<a name="availability">
+		<h3>Rights information availability in the archive</h3>
+<p>
+This operation is conceived for getting information from the connected preservation system, such as <i>P4</i>, about which archival items do have and which ones lack rights information associated. This is to support various archive ingestion scenarios, depending on when (before, during or after) rights information is ready with respect to the ingestion of the audiovisual material.
+</p>
+
+	</body>
+</html>

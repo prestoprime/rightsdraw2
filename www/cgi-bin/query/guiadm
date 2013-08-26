@@ -1,9 +1,9 @@
 #!/bin/tcsh -f
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
-#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -18,35 +18,89 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 set echo_style = both
 echo "content-type: text/html\n"
 set repo = $pdir/users/$puser/repo/pprights
-set mykpr = `cat $pdir/users/$puser/config/mykpr`
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
+set repo = $pdir/users/$puser/repo/$mcomode
 set p4enable = `cat $pdir/users/$puser/config/p4enable`
+set querymode = `cat $pdir/users/$puser/config/querymode`
+set p4serverurl = `cat $pdir/users/$puser/config/p4serverurl`
+set p4account = `cat $pdir/users/$puser/config/p4account`
+set curloptions = `cat $pdir/users/$puser/config/curloptions`
+set this = `basename $0`
+set mykpr = `cat $pdir/users/$puser/config/mykpr`
 set linelimit = 100
 set this = `basename $0`
-if ( $p4enable == "off" ) then
-	cat $pdir/share/message.p4notenabled.html |  sed -e s/'+++puser+++'/$puser/g
-	exit 0
+if ( $REQUEST_METHOD != "GET" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this accept only GET"
+	exit 99
 endif
+set inquery = `echo $QUERY_STRING | cut -d'&' -f1- --output-delimiter=' ' | cut -d'=' -f1- --output-delimiter=' '`
+set inquery = `$pdir/bin/clean.querystring $inquery`
+set i = 1
+while ( $i < $#inquery )
+        if ( "$inquery[$i]" == "querymode" ) then
+                @ i++
+                set querymode = "$inquery[$i]"
+        else
+		echo "400"
+		echo "Bad request "
+		echo "$this unknown $inquery[$i]"
+                exit 1
+        endif
+        @ i++
+end
+#Sanity check
+if ( $querymode == "p4" && $p4enable != on ) then
+	echo "400"
+	echo "Bad request "
+	cat $pdir/share/message.p4notenabled.html |  sed -e s/'+++puser+++'/$puser/g
+        exit 11
+else if ( $querymode != "p4" && $querymode != "local" ) then
+	echo "400"
+	echo "Bad request "
+	echo "$this unknown querymode $querymode"
+        exit 12
+endif
+echo $querymode > $pdir/users/$puser/config/querymode
 #  Header things
 cat $pdir/share/queryhead.html | sed -e s/'+++puser+++'/$puser/g | sed -e s/'+++kprfolder+++'/$mykpr/g
+if ( $p4enable == "on" && $querymode == "p4" ) then
+	echo '<div style="clear:both"><h3>Queries are going to be submitted to P4</h3></div>'
+else if ( $querymode == "local" ) then
+	echo '<div style="clear:both"><h3>Queries are going to be executed on your local repo</h3></div>'
+endif
+echo '<div style="clear:both"><p></p></div>'
 
-echo '<div id="query-forms" style="float:left">'
-echo ' <div id="query-form-1"><iframe id="query_finditems_form" name="query_finditems_form" src="showform?form=query-finditems-form.html" width="600" height="100" frameborder="0" scrolling="auto"></iframe></div>'
+#echo '<div id="query-forms" style="float:left">'
+echo '<div id="query-forms" style="float:left;width:650px;height:600px;overflow:auto">'
+if ( $p4enable == "on" && $querymode == "p4" ) then
+	echo ' <div id="query-form-1"><iframe id="query_finditems_form" name="query_finditems_form" src="showform?form=query-finditems-form.html" width="600" height="100" frameborder="0" scrolling="auto"></iframe></div>'
+endif
+echo ' <div id="query-form-1"><form method="get" action="rebuildindex" target="query_view"><input type="submit" value="Rebuild Index"></form></div>'
 echo ' <div id="query-form-2"><iframe id="query_free_form" name="query_free_form" src="showform?form=query-free-form.html" width="600" height="400" frameborder="0" scrolling="auto"></iframe></div>'
-echo ' <div id="query-form-3"><iframe id="query_kpr_form" name="query_kpr_form" src="showform?form=query-kpr-form.html" width="600" height="350" frameborder="0" scrolling="auto"></iframe></div>'
+echo ' <div id="query-form-3"><iframe id="query_kpr_form" name="query_kpr_form" src="showform?form=query-kpr-form.html" width="600" height="300" frameborder="0" scrolling="auto"></iframe></div>'
+if ( $querymode == "local" ) then
+	echo ' <div id="query-form-4"><iframe id="search_form" name="search_form" src="showform?form=search-form.html" width="600" height="250" frameborder="0" scrolling="auto"></iframe></div>'
+endif
 echo '</div>'
-echo '<div id="query-results" style="float:left">'
-echo ' <div id="query-results-1"><iframe id="query_view" name="query_view" src="about:blank" width="800" height="450" frameborder="0" scrolling="auto"></iframe></div>'
-echo ' <div id="query-results-2"><iframe id="query_log" name="query_log" src="about:blank" width="800" height="350" frameborder="0" scrolling="auto"></iframe></div>'
+echo '<div id="query-results" style="float:left;width:650px;height:600px;overflow:auto">'
+echo ' <div id="query-results-1"><iframe id="query_view" name="query_view" src="about:blank" width="600" height="350" frameborder="0" scrolling="auto"></iframe></div>'
+echo ' <div id="query-results-2"><iframe id="query_log" name="query_log" src="about:blank" width="600" height="250" frameborder="0" scrolling="auto"></iframe></div>'
 echo '</div>'
 
 echo '<div style="clear:both">'
 echo '<img src="/rightsdraw2/Logo600x100.png"></div>'
 echo "</body>\n</html>"
 exit 0
+
+
+
+
+
 
 
 

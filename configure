@@ -1,9 +1,9 @@
 #!/bin/tcsh -f
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
-#  Copyright (C) 2010-2012 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -42,8 +42,9 @@
 #
 # ./configure can be used for preparing the installion or for modifying an existing configuration
 #
-# DEPENDENCIES: tcsh, apache2, xsltproc, graphviz, imagemagick, curl, tofrodos (fromdos), gridsite-clients (urlencode), libxml2-utils
+# DEPENDENCIES: tcsh, apache2, xsltproc, graphviz, imagemagick, curl, tofrodos (fromdos), gridsite-clients (urlencode), libxml2-utils, java, owl-api(3.4.4)
 #	cannot solve tcsh as it's required for running the script (apt-get install tcsh)
+#	java and owl-api are only required for serialization conversion
 #
 # STEPS: checking dependencies, checking pre-existing configuration, parsing user inputs, creating or updating configuration
 #
@@ -120,7 +121,7 @@ endif
 if ( -ersf users/default/config/owliriprefix ) then
 	set owliriprefix = `cat users/default/config/owliriprefix`
 else
-	set owliriprefix = "http://www.prestoprime.eu/ppavro/2012/"
+	set owliriprefix = "urn:eu.prestoprime:mco-rights-"
 endif
 if ( -ersf users/default/config/p4enable ) then
 	set p4enable = `cat users/default/config/p4enable`
@@ -205,7 +206,7 @@ while ( $i <= $#argv )
 		echo "\t\t--omitdata ($omitdata)"
 		echo "\t\t--owliriprefix ($owliriprefix)"
 		echo "\t\t--p4account ($p4account)"
-		echo "\t\t--p4enable ($p4enable)"
+		echo "\t\t--p4enable on|off ($p4enable)"
 		echo "\t\t--p4serverurl ($p4serverurl)"
 		echo "\t\t--rankdir LR|RL|BT|TB ($rankdir)"
 		echo "\t\t--rightsdraw2user ($rightsdraw2user)"
@@ -311,6 +312,7 @@ while ( $i <= $#argv )
                 @ i++
                 set size = "$argv[$i]"
         else
+        else
 		echo "$this syntax error"
 		echo "$0 -h for help on usage"
 		exit 1
@@ -397,6 +399,11 @@ echo "echo insert the password for user default" >> install
 echo "$apachehtpasswdcmd -c rightsdraw2-htpasswords default" >> install
 echo "echo going to get third parties js" >> install
 echo "curl http://www.mattkruse.com/javascript/calendarpopup/combined/CalendarPopup.js -o $rightsdraw2dir/www/html/js/CalendarPopup.js" >> install
+echo "echo going to get third parties CS" >> install
+echo "curl   http://www.ebu.ch/metadata/cs/ebu_Iso3166CountryCodeCS.xml -o $rightsdraw2dir/share/ebu_Iso3166CountryCodeCS.xml" >> install
+echo "curl   http://www.ebu.ch/metadata/cs/ebu_Iso639_1LanguageCodeCS.xml -o $rightsdraw2dir/share/ebu_Iso639_1LanguageCodeCS.xml" >> install
+echo "echo going to get third parties java libraries" >> install
+echo "curl -L http://sourceforge.net/projects/owlapi/files/OWL%20API%20%28for%20OWL%202.0%29/3.4.4/owlapi-distribution-3.4.4-bin.jar/download > $rightsdraw2dir/lib/lib/owlapi-distribution-3.4.4-bin.jar" >> install
 echo "service apache2 reload" >> install
 echo ""
 chmod +x install

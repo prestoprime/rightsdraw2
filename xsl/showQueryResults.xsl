@@ -84,9 +84,9 @@
 	<xsl:attribute name="src"><xsl:value-of select="@icon"/></xsl:attribute>
 	<xsl:attribute name="height">144</xsl:attribute>
 	<!--xsl:attribute name="onClick">javascript:window.open('<xsl:value-of select="$dipservice"/>/access/dip/<xsl:value-of select="@eeIdentifier"/>/preview/player','AV Access','width=372,height=300,scrollbars=no');</xsl:attribute>
-		echo '<div style="float:left"><form method="get" target="query_log" action="getvideoplayer"><input type="submit" value="View"><input type="hidden" name="dipid" value="'$aipid'"></form></div>'
+		echo '<div style="float:left"><form method="get" target="query_log" action="p4/getvideoplayer"><input type="submit" value="View"><input type="hidden" name="dipid" value="'$aipid'"></form></div>'
 	-->
-	<xsl:attribute name="onClick">javascript:window.open('getvideoplayer?dipid=<xsl:value-of select="@eeIdentifier"/>','AV Access','width=372,height=300,scrollbars=no');</xsl:attribute>
+	<xsl:attribute name="onClick">javascript:window.open('p4/getvideoplayer?dipid=<xsl:value-of select="@eeIdentifier"/>','AV Access','width=372,height=300,scrollbars=no');</xsl:attribute>
 </xsl:element>
 		</td>
 		<td width="20%">
@@ -117,7 +117,7 @@
 </xsl:element>
 		</td>
 		<td>
-	<form action="showbasicmets" target="query_log" method="get" style="margin:0px">
+	<form action="p4/showbasicmets" target="query_log" method="get" style="margin:0px">
 		<input type="submit" value="Info"/>
 		<xsl:element name="input">
 			<xsl:attribute name="type">hidden</xsl:attribute>
@@ -127,7 +127,7 @@
 	</form>
 		</td>
 		<td>
-	<form action="../pprights/import" method="get" style="margin:0px">
+	<form action="../mco/import" method="get" style="margin:0px">
 		<input type="submit" value="Import"/>
 		<xsl:element name="input">
 			<xsl:attribute name="type">hidden</xsl:attribute>

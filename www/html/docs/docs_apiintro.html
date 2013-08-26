@@ -1,0 +1,34 @@
+<html>
+	<head>
+		<link href="/rightsdraw2/css/docs.css" type="text/css" rel="stylesheet"/>
+	</head>
+	<body>
+		<h2>Introduction to <i class="rd">Rightsdraw</i> APIs definition</h2>
+<p>This chapter provides the details on the <i class="rd">Rightsdraw</i> APIs definition. <i class="rd">Rightsdraw</i> services are deployed on an http service (Apache) with CGI-BIN interfaces.</p>
+<p>The HTML/GUI of <i class="rd">Rightsdraw</i> provides to the <i>User</i> the means to interact with the services.
+The requests to <i class="rd">Rightsdraw</i> services can been divided between those for which an impact on the <i>User</i>'s resources on <i class="rd">Rightsdraw</i> (in terms of modifications to <i>MCO documents</i> or to  <i>User</i>'s settings) is expected and those which only return application data.
+Regarding the format it must be noted that they are not all always idempotent.
+ </p>
+<p>The default output data format is <i>text/html</i> and is conceived to be presented to the <i>User</i> by means of the browser (e.g. Firefox).
+Other used output data formats are: <i>text/plain</i>, to be expected for receiving execution results in terms of Success/Failure or item list, and <i>text/xml</i>, used for exporting <i>MCO documents</i>.</p>
+		<p>
+<i class="rd">Rightsdraw</i> services can also be used by remote applications and other services, without human interaction or with a different GUI interface.
+</p>
+<p>The documentation provides the following information items:</p>
+<ul>
+	<li><i>context prefix</i> - the services are grouped into context in which they share the prefix of the URL.
+The current implementation insert the <i>User</i> in the prefix string as indicated.
+	<li><i>name</i> - the service name have to be added to the context prefix in other to complete service URL
+	<li><i>description</i> - what the service does or provides
+	<li><i>Method</i> - Accepted method, can be GET or POST, it affects the mechanism for parameter input. 
+	For GET case the parameters will be retrieved by the parsing of the QUERY_STRING expected in the format
+	<pre>
+		<i class="cmd">&lt;serviceurl&gt;?&lt;parameter1&gt;=&lt;value1&gt;&amp;&lt;parameter2&gt;=&lt;value2&gt;..</i>
+	</pre>
+	<li><i>Parameters</i> - list of input parameters with <i>name</i> and <i>description</i>
+	<li><i>Returned content-type</i> 
+</ul>
+
+<hr/>
+	</body>
+</html>

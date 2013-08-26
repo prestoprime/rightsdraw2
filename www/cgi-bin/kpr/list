@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set echo_style = both
-echo "content-type: text/html\n"
+echo "content-type: text/plain\n"
 set repo = $pdir/www/html/kpr
 set this = `basename $0`
 if ( $REQUEST_METHOD != "GET" ) then

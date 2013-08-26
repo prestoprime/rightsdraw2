@@ -1,0 +1,69 @@
+#!/bin/tcsh -f
+
+#  rightsdraw
+#  Version: 2.0.2
+#  Authors: L. Boch
+#
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+set echo_style = both
+set this = `basename $0`
+if ( !($?pdir) ) then
+	echo
+	echo "$this Error "
+	echo "\tVariable 'pdir' must be defined in environment"
+	echo
+	exit 99
+endif
+
+if ( $#argv != 2 ) then
+	echo
+	echo "\tUsage:"
+	echo "\t$this owl-input-file result-file"
+	echo
+	exit
+endif
+#Sanity Check on java deps
+set isowlapi = `find $pdir/lib -name "owlapi*.jar"`
+if ( "$isowlapi" == "" ) then
+	echo
+	echo "$this Error "
+	echo "\towlapi library not found."
+	echo "\tTry to get it from http://owlapi.sourceforge.net and place it under $pdir/lib/lib"
+	echo
+	exit 98
+endif
+#
+#	Settings
+#
+#  path to java binary to be modified if necessary
+set javabin = `which java`
+set jarpath = $pdir/lib/MCOSerializationConverter.jar
+set mcoparent = $pdir/share
+set inoutparent = `dirname $1`
+set inbase = `basename $1`
+set outbase = $this.$$.out
+set copyprefixes = false
+$javabin -jar $jarpath mcoparent $mcoparent inoutparent $inoutparent inbase $inbase outbase $outbase copyprefixes $copyprefixes >& $pdir/logs/$this.$$
+if ( -ersf $inoutparent/$outbase ) then
+	mv $inoutparent/$outbase $2
+	exit 0
+else
+	ln $pdir/logs/$this.$$ $2
+	exit 1
+endif
+exit 0

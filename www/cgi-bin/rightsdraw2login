@@ -25,21 +25,24 @@ if ( -er "$pdir/users/$username" ) then
 	'	  <link href="/rightsdraw2/css/mco.css" type="text/css" rel="stylesheet"/>'	\
 	'	</head>'
 	echo '<h2>Welcome user <i>'$username'</i></h2>'
-	echo '<div class="divleft20""><h3>View and Edit</h3>' \
+	echo '<div class="divleft20"><h3>View and Edit</h3>' \
 		'<form action="/cgi-bin/rightsdraw2/'$username'/mco/guiadm"><input type="submit" value="holdings       "><input type="hidden" name="mcomode" value="pprights"></form>' \
 		'<form action="/cgi-bin/rightsdraw2/'$username'/mco/guiadm"><input type="submit" value="contracts      "><input type="hidden" name="mcomode" value="contracts"></form>' \
 		'<form action="/cgi-bin/rightsdraw2/'$username'/mkr/guiadm"><input type="submit" value="holdings /kp"></form>' \
 		'<form action="/cgi-bin/rightsdraw2/'$username'/mco/guiadm"><input type="submit" value="key patterns"><input type="hidden" name="mcomode" value="kpr"></form>' \
 		'</div>'
+	echo '<div class="divleft50p"><p></p></div>'
 	echo '<div class="divleft20"><h3>CheckWith & Search</h3>' \
-		'<form action="/cgi-bin/rightsdraw2/'$username'/query.local/guiadm"><input type="submit" value="on repo"></form>' \
-		'<form action="/cgi-bin/rightsdraw2/'$username'/query/guiadm"><input type="submit" value="on   P4  "></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/query/guiadm"><input type="hidden" name="querymode" value="local"><input type="submit" value="on repo"></form>' \
+		'<form action="/cgi-bin/rightsdraw2/'$username'/query/guiadm"><input type="hidden" name="querymode" value="p4"><input type="submit" value="on   P4  "></form>' \
 		'</div>'
+	echo '<div class="divleft50p"><p></p></div>'
 	echo '<div class="divleft20"><h3>Purchases and Sales</h3>' \
 		'<form action="/cgi-bin/rightsdraw2/'$username'/combine/guiadm"><input type="submit" value="combine"></form>' \
 		'</div>'
+	echo '<div class="divleft50p"><p></p></div>'
 	echo '<div class="divleft20"><h3>Tools</h3>' \
-		'<form action="/cgi-bin/rightsdraw2/'$username'/pprights/guiadm"><input type="submit" value="load/deliver"></form>' \
+#		'<form action="/cgi-bin/rightsdraw2/'$username'/pprights/guiadm"><input type="submit" value="load/deliver"></form>' \
 		'<form action="/cgi-bin/rightsdraw2/'$username'/kpr/guiadm"><input type="submit" value="key pattern  "></form>' \
 		'<form action="/cgi-bin/rightsdraw2/'$username'/config/guiadm"><input type="submit" value="settings         "></form>' \
 		'<form action="/cgi-bin/rightsdraw2/'$username'/docs"><input type="submit" value="help                "></form>' \

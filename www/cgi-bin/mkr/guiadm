@@ -40,10 +40,11 @@ echo '</tr></table>'
 ########################################
 echo '<div style="float:left;vertical-align:top">'
 echo '<form method="get" action="create" target="rightsdraw2_main"><input type="submit" value="Create new MCO pprights document">'
-echo '<b>What this is about</b> (IP Entity)<br/>Identifier <input type="text" name="identifier"> Title <input type="text" name="title"><br/>Description <textarea rows="2" cols="60" name="description"></textarea></form>'
+echo '<b>What this is about</b> (IP Entity)<br/>Identifier <input type="text" name="identifier"> Title <input type="text" name="title"><br/>Description <br/><textarea rows="2" cols="50" name="description"></textarea></form>'
 echo '</div>'
 ##############
 
+echo '<div style="float:left;width:50px"><p></p></div>'
 #### selection for view and edit
 echo '<div style="float:left;vertical-align:top">'
 #view and Edit

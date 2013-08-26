@@ -3,7 +3,7 @@
 #  Version: 2.0.1
 #  Authors: L. Boch
 #
-#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -237,6 +237,19 @@
 <div name="relatedidentifier" style="float:left">
 	<xsl:choose>
 		<xsl:when test="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI = $ind and owl:DataProperty/@IRI='urn:mpeg:mpeg21:2002:01-DII-NS#Identifier']">
+			<xsl:if test="substring-after(/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI = $ind and owl:DataProperty/@IRI='urn:mpeg:mpeg21:2002:01-DII-NS#Identifier']/owl:Literal/text(),'#')=''">
+			<form action="definefragment" method="get" target="mco_log">
+				<xsl:call-template name="inserthiddeninput"/>
+				<input type="submit" value="Define Fragment"/>
+				from <input type="text" name="start" size="3" value="0"/>
+				to <input type="text" name="end" size="3" value="0"/>
+				<select name="track">
+					<option value="null">all</option>
+					<option>audio</option>
+					<option>video</option>
+				</select>
+			</form>
+			</xsl:if>
 		</xsl:when>
 		<xsl:otherwise>
 			<form action="adddataproperty" method="get" target="mco_log">
@@ -265,9 +278,13 @@
 		<input type="text" name="ind" size="8"/>
 	</form>
 </div>	
-<div id="contractincludeparty" style="float:left">
-</div>	
 <div id="contractdate" style="float:right">
+	<xsl:choose>
+		<xsl:when test="/owl:Ontology/owl:AnnotationAssertion[owl:IRI = $ind and owl:AnnotationProperty/@IRI='http://purl.org/dc/elements/1.1/date']">
+			Contract Date:
+			<xsl:value-of select="/owl:Ontology/owl:AnnotationAssertion[owl:IRI = $ind and owl:AnnotationProperty/@IRI='http://purl.org/dc/elements/1.1/date']/owl:Literal/text()"/>
+		</xsl:when>
+		<xsl:otherwise>
 	<form id="contractdateform" action="addmd" method="get" target="mco_log">
 		<script id="jscal1x">var cal1x = new CalendarPopup(); </script>
 		<xsl:call-template name="inserthiddeninput"/>
@@ -276,6 +293,8 @@
 		<input type="text" size="8" name="mdvalue"/><br/>
 		<a HREF="#" onClick="cal1x.select(document.forms['contractdateform'].mdvalue,'anchor1x','yyyy-MM-dd'); return false;" TITLE="cal1x.select(document.forms['contractdateform'].mdvalue,'anchor1x','yyyy-MM-dd'); return false;" NAME="anchor1x" ID="anchor1x"><small>format: YYYY-MM-DD</small></a>
 	</form>
+		</xsl:otherwise>
+	</xsl:choose>
 </div>	
 <div style="clear:both"></div>
 <div name="contractadddeontic" style="float:left">
@@ -289,13 +308,6 @@
 		</select>	
 	</form>
 </div>	
-<!--div id="contractaddtextualclause" style="float:right">
-	<form action="addtextualclause" method="post" ENCTYPE="multipart/form-data" target="mco_log">
-		<xsl:call-template name="inserthiddeninput"/>
-		<input type="submit" value="Add Textual Clause"/><br/>
-		<textarea name="clausetext" rows="3" cols="18"/>
-	</form>
-</div-->	
 <div name="contracttextversion" style="clear:right">
 	<xsl:choose>
 		<xsl:when test="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI = $ind and substring-after(owl:DataProperty/@IRI,'#')='TextVersion']">
@@ -330,6 +342,26 @@
 		<input type="submit" value="isSignedBy"/>
 		<select name="ind"><xsl:call-template name="insertsignedby"/></select>
 		<!--input type="text" name="ind" size="8"/-->
+	</form>
+</div>	
+<div style="clear:both"/>
+<div name="contractproperty" style="float:right">
+	<form action="addobj" method="get" target="mco_log" name="pform">
+		<xsl:call-template name="inserthiddeninput"/>
+		<input type="hidden" name="class" value="urn:mpeg:mpeg21:mco:core:2012#Contract"/>
+		<input type="submit" value="Add relationship"/>
+		<br/>
+		This Contract
+		<select name="obj">
+			<option value="urn:mpeg:mpeg21:mco:core:2012#cancels">cancels</option>
+			<option value="urn:mpeg:mpeg21:mco:core:2012#isAmendmentOf">isAmendmentOf</option>
+			<option value="urn:mpeg:mpeg21:mco:core:2012#prevailsOver">prevailsOver</option>
+			<option value="urn:mpeg:mpeg21:mco:core:2012#supersedes">supersedes</option>
+		</select>
+		<input type="text" name="ind" size="8"/>
+		<xsl:call-template name="selectindividual">
+			<xsl:with-param name="classname">Contract</xsl:with-param>
+		</xsl:call-template>
 	</form>
 </div>	
 </xsl:template>
@@ -865,6 +897,8 @@
 				<tr><td>number of runs</td><td><input type="text" size="4" value="null" name="numruns"/></td><td><a href="javascript:decrun('pform','numruns')">-</a> / <a href="javascript:incrun('pform','numruns')">+</a> </td></tr>
 				<tr><td><a href="#" onclick="window.open('/rightsdraw2/durationForm.html','','top=100,left=300,width=400,height=400,scrollbars')">run validity</a></td><td><input type="text" size="8" value="null" name="runduration"/> </td></tr>
 				<tr><td>number of reps</td><td><input type="text" size="4" value="null" name="numreps"/></td><td><a href="javascript:decrun('pform','numreps')">-</a> / <a href="javascript:incrun('pform','numreps')">+</a> </td></tr>
+				<tr><td><a href="#" onclick="window.open('/rightsdraw2/durationFormLength.html','','top=100,left=300,width=400,height=400,scrollbars')">max length</a></td><td><input type="text" size="8" value="null" name="maxlength"/> </td></tr>
+				<tr><td>part of IPEntity</td><td><input type="text" size="8" value="null" name="partofipentitycontext"/></td><td><input type="checkbox" name="negativepartofipentitycontext" selected="false"/></td></tr>
 				<tr><td><a href="#" onclick="window.open('/rightsdraw2/channelsOptions.html','','top=100,left=300,width=400,height=400,scrollbars')">over channels</a></td><td><input type="text" size="8" value="null" name="channels"/></td><td><input type="checkbox" name="negativechannels" selected="false"/></td></tr>
 			</table>
 		</div>

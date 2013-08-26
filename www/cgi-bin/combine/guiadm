@@ -61,7 +61,7 @@ echo '          </select>'
 echo '  </form>'
 echo '</div>'
 echo '<div style="float:left;vertical-align:top">'
-echo '          <iframe id="combine_log" name="combine_log" src="about:blank" frameborder="0" width="600" height="120"></iframe>'
+echo '          <iframe id="combine_log" name="combine_log" src="about:blank" frameborder="0" width="800" height="350"></iframe>'
 echo '</div>'
 echo '<div style="clear:both;vertical-align:top"/>'
 #echo "<p>End of the story</p>"

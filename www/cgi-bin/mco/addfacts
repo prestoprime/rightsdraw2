@@ -1,9 +1,9 @@
 #!/bin/tcsh -f
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
-#  Copyright (C) 2010-2012 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
+#  Copyright (C) 2010-2013 RAI - Radiotelevisione Italiana <cr_segreteria@rai.it>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as published by
@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set echo_style = both
-echo "content-type: text/html\n"
+echo "content-type: text/plain\n"
 set mcomode = `cat $pdir/users/$puser/config/mcomode`
 set repo = $pdir/users/$puser/repo/$mcomode
 set colors = `cat $pdir/users/$puser/config/colors`
@@ -45,6 +45,9 @@ set device = "null"
 set usertimeaccess = "null"
 set relatedaction = "null"
 set channels = "null"
+set maxlength = "null"
+set partofipentitycontext = "null"
+set negativepartofipentitycontext = "no"
 set negativechannels = "no"
 set negativeaccesspolicy = "no"
 set negativeserviceaccesspolicy = "no" 
@@ -116,6 +119,15 @@ while ( $i < $#inquery )
         else if ( "$inquery[$i]" == "channels" ) then
                 @ i++
                 set channels = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "maxlength" ) then
+                @ i++
+                set maxlength = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "partofipentitycontext" ) then
+                @ i++
+                set partofipentitycontext = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "negativepartofipentitycontext" ) then
+                @ i++
+                set negativepartofipentitycontext = "$inquery[$i]"
         else if ( "$inquery[$i]" == "negativechannels" ) then
                 @ i++
                 set negativechannels = "$inquery[$i]"
@@ -276,7 +288,7 @@ if ( $numruns != null ) then
 	echo $xnum > $pdir/users/$puser/config/inumber
 	set twoname = "#x$xnum"
 	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#Run"
-	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative $negative $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative no $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
 	set ret = $?
 	if ( $ret ) then
 		echo "500"
@@ -395,6 +407,38 @@ if ( $territories != null ) then
 	endif
 	mv $repo/.tmp.$instance $repo/$instance
 endif
+if ( $maxlength != null ) then
+#	create Length
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#Length"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative no $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+#	add Data Properties
+	set owner = $twoname
+	set key = "urn:mpeg:mpeg21:mco:ipre:2012#hasMaxLength"
+	set value = $maxlength
+	xsltproc --stringparam owner $owner --stringparam key $key --stringparam value $value $pdir/xsl/addDataProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+endif
 if ( $channels != null ) then
 #	create Channels 
 	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
@@ -422,6 +466,38 @@ if ( $channels != null ) then
 		echo "500"
 		echo "Server Error"
 		echo "$this failed on addDataProperty ($owner, $key, $value) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+endif
+if ( $partofipentitycontext != null ) then
+#	create IPEntity context
+	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
+	@ xnum ++
+	echo $xnum > $pdir/users/$puser/config/inumber
+	set twoname = "#x$xnum"
+	set twoclass = "urn:mpeg:mpeg21:mco:ipre:2012#IPEntityContext"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative $negativepartofipentitycontext $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
+		cp $repo/.tmp/$instance.$$.bak $repo/$instance
+		exit 8
+	endif
+	mv $repo/.tmp.$instance $repo/$instance
+	set one = "#x$xnum"
+	set twoname = "$partofipentitycontext"
+	set twoclass = "http://purl.oclc.org/NET/mvco.owl#IPEntity"
+	set obj = "urn:mpeg:mpeg21:mco:ipre:2012#partOf"
+	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname --stringparam negative no $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
+	set ret = $?
+	if ( $ret ) then
+		echo "500"
+		echo "Server Error"
+		echo "$this failed on addObjProperty ($obj, $one, $twoclass, $twoname) to $instance"
 		cp $repo/.tmp/$instance.$$.bak $repo/$instance
 		exit 8
 	endif
