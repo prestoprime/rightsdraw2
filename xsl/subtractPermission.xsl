@@ -42,7 +42,7 @@
 	<xsl:value-of select="$minuendfacts"/>
 <xsl:text>
 </xsl:text>
-	<xsl:if test="$minuendaction!=$subtrahendaction">ActionMismatch:<xsl:text>	</xsl:text><xsl:value-of select="$minuendaction"/><xsl:text>      </xsl:text><xsl:value-of select="$subtrahendaction"/><xsl:text>
+	<xsl:if test="$minuendaction!=$subtrahendaction">ActionMismatch:<xsl:text>	</xsl:text><xsl:value-of select="$minuendaction"/><xsl:text>	</xsl:text><xsl:value-of select="$subtrahendaction"/><xsl:text>
 </xsl:text> 
 	</xsl:if>
 	<xsl:for-each select="document($subtrahenddoc)/owl:Ontology/owl:ObjectPropertyAssertion[owl:NamedIndividual[position()=1]/@IRI=$subtrahend and owl:ObjectProperty/@IRI='http://purl.oclc.org/NET/mvco.owl#hasRequired']">

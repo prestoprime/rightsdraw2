@@ -39,6 +39,8 @@ set instance = "null"
 set classname = "null"
 set classiri = "null"
 set fieldname = "null"
+set formname = "null"
+set formname = "pform"
 set i = 1
 while ( $i < $#inquery )
         if ( "$inquery[$i]" == "instance" ) then
@@ -47,6 +49,9 @@ while ( $i < $#inquery )
         else if ( "$inquery[$i]" == "fieldname" ) then
                 @ i++
                 set fieldname = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "formname" ) then
+                @ i++
+                set formname = "$inquery[$i]"
         else if ( "$inquery[$i]" == "classname" ) then
                 @ i++
                 set classname = "$inquery[$i]"
@@ -88,9 +93,9 @@ echo '<html> \
 <body> \
 <h4>'$classname's in '$instance'</h4> \
 <div style="background:white;float:left"><form action="javascript:window.close()"><input type="submit" value="Close"></form></div> \
-<div style="background:white;float:left"><form action="javascript:setLabel('"'pform','$fieldname','null')"'"><input type="submit" value="Clear"></form></div>'
+<div style="background:white;float:left"><form action="javascript:setLabel('"'$formname','$fieldname','null')"'"><input type="submit" value="Clear"></form></div>'
 foreach ind ( $listofindividuals )
-	echo '<div style="clear:left"><a href="javascript:setLabel('"'pform','$fieldname','$ind')"'">'$ind'</a></div>'
+	echo '<div style="clear:left"><a href="javascript:setLabel('"'$formname','$fieldname','$ind')"'">'$ind'</a></div>'
 end
 echo "</body>\n</html>"
 exit 0

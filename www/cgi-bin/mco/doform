@@ -22,6 +22,7 @@ set echo_style = both
 echo "content-type: text/html\n"
 set mcomode = `cat $pdir/users/$puser/config/mcomode`
 set repo = $pdir/users/$puser/repo/$mcomode
+set mykpr = `cat $pdir/users/$puser/config/mykpr`
 set colors = `cat $pdir/users/$puser/config/colors`
 set rankdir = `cat $pdir/users/$puser/config/rankdir`
 set this = `basename $0`
@@ -62,7 +63,8 @@ if ( !( -e "$repo/$instance" ) ) then
 	exit 2
 endif
 # Proposing the forms according to the context of the given individuals
-xsltproc --stringparam instance $instance --stringparam ind "$ind" $pdir/xsl/mco.doform.xsl $repo/$instance
+set kplist = `ls -1 $pdir/www/html/kpr/$mykpr`
+xsltproc --stringparam instance $instance --stringparam ind "$ind" --stringparam kplist "$kplist" $pdir/xsl/mco.doform.xsl $repo/$instance
 set ret = $?
 if ( $ret ) then
 	echo "500"

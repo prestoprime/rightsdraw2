@@ -1,32 +1,33 @@
-<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="http://www.prestoprime.eu/ppavro/2012/dummy.owl" ontologyIRI="http://www.prestoprime.eu/ppavro/2012/dummy.owl">
+<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="urn:it.rai:mco-rights-AllRights" ontologyIRI="urn:it.rai:mco-rights-AllRights">
   <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
   <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
   <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
   <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
-  <Import>urn:mpeg:mpeg21:celmc:owl:2012#</Import>
-  
+  <Prefix name="mco-core" IRI="urn:mpeg:mpeg21:mco:core:2012#"/>
+  <Prefix name="mco-ipre" IRI="urn:mpeg:mpeg21:mco:ipre:2012#"/>
+  <Import>urn:mpeg:mpeg21:mco:ipre:2012</Import>
   <Declaration>
-    <NamedIndividual IRI="#x338"/>
+    <NamedIndividual IRI="#x2247"/>
   </Declaration>
   <Declaration>
-    <NamedIndividual IRI="#x339"/>
+    <NamedIndividual IRI="#x2248"/>
   </Declaration>
-  
   <ClassAssertion>
     <Class IRI="http://purl.oclc.org/NET/mvco.owl#Permission"/>
-    <NamedIndividual IRI="#x338"/>
+    <NamedIndividual IRI="#x2247"/>
   </ClassAssertion>
   <ClassAssertion>
-    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#ExploitIPRights"/>
-    <NamedIndividual IRI="#x339"/>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#ExploitIPRights"/>
+    <NamedIndividual IRI="#x2248"/>
   </ClassAssertion>
   <ObjectPropertyAssertion>
     <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#permitsAction"/>
-    <NamedIndividual IRI="#x338"/>
-    <NamedIndividual IRI="#x339"/>
+    <NamedIndividual IRI="#x2247"/>
+    <NamedIndividual IRI="#x2248"/>
   </ObjectPropertyAssertion>
-  
-  
-  
-  
+  <AnnotationAssertion>
+    <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/title"/>
+    <IRI>#x2247</IRI>
+    <Literal datatypeIRI="&amp;xsd;string">All&amp;nbsp;Rights</Literal>
+  </AnnotationAssertion>
 </Ontology>

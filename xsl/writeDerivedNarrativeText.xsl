@@ -1,6 +1,6 @@
 <!--
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
 #  Copyritght (C) 2012-2013 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
@@ -28,7 +28,7 @@
 <xsl:variable name="ontoIRI"><xsl:value-of select="/owl:Ontology/@ontologyIRI"/></xsl:variable>
 
 <xsl:template match="/">
-	<html><head></head><body><div style="position:relative;left:30px;width:650px;font-family:'Courier New';background-color:lightgrey">
+	<html><head></head><body><div style="position:relative;left:15px;width:650px;font-family:'Courier New';background-color:lightgrey">
 	<xsl:choose>
 		<xsl:when test="$startFrom = 'Contract'">
 			<xsl:for-each select="owl:Ontology/owl:ClassAssertion[owl:Class/@IRI='urn:mpeg:mpeg21:mco:core:2012#Contract']">
@@ -46,7 +46,12 @@
 				</xsl:call-template>
 			</xsl:for-each>
 		</xsl:when>
-		<xsl:otherwise>unsupported case</xsl:otherwise>
+		<xsl:otherwise>
+			<xsl:call-template name="WriteDeontic">
+				<xsl:with-param name="deontic"><xsl:value-of select="$startFrom"/></xsl:with-param>
+			</xsl:call-template>
+		</xsl:otherwise>
+		<!--xsl:otherwise>unsupported case</xsl:otherwise-->
 	</xsl:choose>
 	</div> </body> </html>
 </xsl:template>
@@ -202,7 +207,7 @@
 		</xsl:when>
 		<xsl:when test="$class = 'urn:mpeg:mpeg21:mco:core:2012#FactUnion'">
 			<!-- assuming, for the moment that Union is not negative -->
-			<p>Case: <b><xsl:value-of select="$ind"/></b> - It is required that at least one of the following Facts hold:</p>
+			<p>Case: <b><xsl:value-of select="$fact"/></b> - It is required that at least one of the following Facts hold:</p>
 			<ul>
 				<xsl:for-each select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:ObjectProperty/@IRI='urn:mpeg:mpeg21:mco:core:2012#hasFact' and owl:NamedIndividual[position()=1]/@IRI=$fact]">
 				<li>
@@ -216,7 +221,7 @@
 		</xsl:when>
 		<xsl:when test="$class = 'urn:mpeg:mpeg21:mco:core:2012#FactNegation'">
 			<!-- Provisional, not really expected -->
-			<p>Case: <b><xsl:value-of select="$ind"/></b> - It is required that the following Fact is not true</p>
+			<p>Case: <b><xsl:value-of select="$fact"/></b> - It is required that the following Fact is not true</p>
 			<ul>
 				<xsl:for-each select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:ObjectProperty/@IRI='urn:mpeg:mpeg21:mco:core:2012#hasFact' and owl:NamedIndividual[position()=1]/@IRI=$fact]">
 				<li>
@@ -347,7 +352,7 @@
 		</xsl:when>
 		<xsl:when test="$class = 'urn:mpeg:mpeg21:mco:ipre:2012#SpatialContext'">
 			<xsl:variable name="territories"><xsl:value-of select="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$fact and owl:DataProperty/@IRI='urn:mpeg:mpeg21:mco:ipre:2012#inCountry']/owl:Literal/text()"/></xsl:variable>
-	<p>The exploitation is constrained to <xsl:if test="$isnegative='yes'">OUT OF</xsl:if> <b><xsl:value-of select="substring-after($class,'#')"/></b>, that is the action can<xsl:if test="$isnegative='yes'">NOT</xsl:if> be executed <xsl:if test="$isnegative!='yes'">only</xsl:if> within the territory identified by the following country codes: <xsl:value-of select="$territories"/> </p>
+	<p>The exploitation is constrained to <xsl:if test="$isnegative='yes'">OUT OF </xsl:if> <b><xsl:value-of select="substring-after($class,'#')"/></b>, that is the action can<xsl:if test="$isnegative='yes'">NOT</xsl:if> be executed <xsl:if test="$isnegative!='yes'">only</xsl:if> within the territory identified by the following country codes: <xsl:value-of select="$territories"/> </p>
 		</xsl:when>
 		<xsl:when test="$class = 'urn:mpeg:mpeg21:mco:ipre:2012#Language'">
 			<xsl:variable name="languages"><xsl:value-of select="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI=$fact and owl:DataProperty/@IRI='urn:mpeg:mpeg21:mco:ipre:2012#hasLanguage']/owl:Literal/text()"/></xsl:variable>

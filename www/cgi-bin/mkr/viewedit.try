@@ -80,6 +80,7 @@ if ( $ret ) then
 endif
 #	writing table of kp vs perms
 echo '<mkr instance="'$instance'">' > $repo/.tmp/$instance.mkr.xml
+echo > $repo/.tmp/$instance.mkr.true.list
 date >> $pdir/logs/$this.time
 set mylist = `setenv QUERY_STRING "folder=$mykpr" ; $pdir/www/cgi-bin/kpr/list | awk 'FNR>1'`
 set ret = $?
@@ -96,7 +97,7 @@ else
 	echo '<div style="float:left;overflow:scroll;height:80%"><table border="0">'
 	set loop = 3
 	while ( $loop <= $#mylist )
-		$pdir/bin/rightscompare -disablecontexts -all $pdir/www/html/kpr/$mykpr/$mylist[$loop] $pdir/logs/.tmp.$this.$$.$instance.index > $pdir/logs/.tmp.$this.$$.$loop.rpout
+		$pdir/bin/rightscompare -quick -disablecontexts -all $pdir/www/html/kpr/$mykpr/$mylist[$loop] $pdir/logs/.tmp.$this.$$.$instance.index > $pdir/logs/.tmp.$this.$$.$loop.rpout
 		set ret = $?
 		if ( $ret ) then
         		echo "500"
@@ -107,6 +108,7 @@ else
 		if ( "$perm" != '' ) then
 			echo "$perm" >> $pdir/logs/$this.time
 			echo '\t<kp><name>'$mylist[$loop]'</name><permissions>'$perm'</permissions></kp>' >>  $repo/.tmp/$instance.mkr.xml
+			cat $pdir/logs/.tmp.$this.$$.$loop.rpout|grep true |cut -d '|' -f5|sed -e s/\$/';'/g >> $repo/.tmp/$instance.mkr.true.list
 		endif
 		echo '<tr><td>'
 #################
@@ -119,8 +121,24 @@ else
 (echo -n "---"; date) >> $pdir/logs/$this.time
 	end
 date >> $pdir/logs/$this.time
-	echo '</table></div>' \
-	     '<div style="float:left;"><iframe name="showPermissionConstraints" width="700" height="900" frameborder="0" src="about:blank"></iframe></div>'\
+	echo '</table></div>' 
+	@ loop --
+	sort -u $repo/.tmp/$instance.mkr.true.list  > $repo/.tmp/$instance.mkr.true.sorted.list
+	cat $pdir/logs/.tmp.$this.$$.$loop.rpout|cut -s -d '|' -f5|sed -e s/\$/';'/g > $repo/.tmp/$instance.mkr.all.list
+	set otherperms = `fgrep -v -x -f  $repo/.tmp/$instance.mkr.true.sorted.list $repo/.tmp/$instance.mkr.all.list`
+	if ( "$otherperms" != '' ) then
+		echo '<div><b>Other' $#otherperms 'permissions beyond KP:</b> '
+		foreach op ( $otherperms )
+			set opi = `echo $op |cut -d';' -f1`
+			echo '<form action="../mco/writederivedtext" method="get" target="showPermissionConstraints">' \
+				'<input type="hidden" name="instance" value="'$instance'">' \
+				'<input type="hidden" name="handle" value="'$opi'">' \
+				'<input type="submit" value="'$opi' Derived Text">' \
+				'</form>'
+		end
+		echo '</div>'
+	endif
+	echo '<div style="float:left;"><iframe name="showPermissionConstraints" width="700" height="900" frameborder="0" src="about:blank"></iframe></div>'\
 	     '<div style="float:left;"><iframe name="addkpform" width="500" height="900" frameborder="0" src="about:blank"></iframe></div>'
 endif
 echo '</mkr>' >>  $repo/.tmp/$instance.mkr.xml

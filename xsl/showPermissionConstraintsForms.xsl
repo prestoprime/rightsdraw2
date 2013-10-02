@@ -107,6 +107,24 @@
 			permission: <xsl:value-of select="$permission"/>
 		</div>
 		<div style="float:right;text-align:right">
+			<form action="../mco/writederivedtext" method="get" target="showPermissionConstraints">
+				<xsl:element name="input">
+					<xsl:attribute name="name">instance</xsl:attribute>
+					<xsl:attribute name="type">hidden</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="$instance"/></xsl:attribute>
+				</xsl:element>
+				<xsl:element name="input">
+					<xsl:attribute name="name">handle</xsl:attribute>
+					<xsl:attribute name="type">hidden</xsl:attribute>
+					<xsl:attribute name="value"><xsl:value-of select="$permission"/></xsl:attribute>
+				</xsl:element>
+				<xsl:element name="input">
+					<xsl:attribute name="type">submit</xsl:attribute>
+					<xsl:attribute name="value">Derived Text</xsl:attribute>
+				</xsl:element>
+			</form>
+		</div>
+		<div style="float:right;text-align:right">
 			<form action="showpermissionconstraints" method="get" target="showPermissionConstraints">
 				<xsl:element name="input">
 					<xsl:attribute name="name">instance</xsl:attribute>
@@ -125,7 +143,7 @@
 				</xsl:element>
 				<xsl:element name="input">
 					<xsl:attribute name="type">submit</xsl:attribute>
-					<xsl:attribute name="value">Show Constraints</xsl:attribute>
+					<xsl:attribute name="value">Constraints</xsl:attribute>
 				</xsl:element>
 			</form>
 		</div>

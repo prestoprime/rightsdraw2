@@ -43,6 +43,9 @@ while ( $i < $#inquery )
         else if ( "$inquery[$i]" == "startfrom" ) then
                 @ i++
                 set startfrom = "$inquery[$i]"
+        else if ( "$inquery[$i]" == "handle" ) then
+                @ i++
+                set startfrom = "$inquery[$i]"
         else
 		echo "400"
 		echo "Bad request "

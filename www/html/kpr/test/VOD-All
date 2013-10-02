@@ -1,0 +1,45 @@
+<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="urn:it.rai:mco-rights-VOD-All" ontologyIRI="urn:it.rai:mco-rights-VOD-All">
+  <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+  <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+  <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+  <Prefix name="mco-core" IRI="urn:mpeg:mpeg21:mco:core:2012#"/>
+  <Prefix name="mco-ipre" IRI="urn:mpeg:mpeg21:mco:ipre:2012#"/>
+  <Import>urn:mpeg:mpeg21:mco:ipre:2012</Import>
+  <Declaration>
+    <NamedIndividual IRI="#x2339"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x2340"/>
+  </Declaration>
+  <Declaration>
+    <NamedIndividual IRI="#x2341"/>
+  </Declaration>
+  <ClassAssertion>
+    <Class IRI="http://purl.oclc.org/NET/mvco.owl#Permission"/>
+    <NamedIndividual IRI="#x2339"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#CommunicationToThePublic"/>
+    <NamedIndividual IRI="#x2340"/>
+  </ClassAssertion>
+  <ClassAssertion>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandBasis"/>
+    <NamedIndividual IRI="#x2341"/>
+  </ClassAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#permitsAction"/>
+    <NamedIndividual IRI="#x2339"/>
+    <NamedIndividual IRI="#x2340"/>
+  </ObjectPropertyAssertion>
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x2339"/>
+    <NamedIndividual IRI="#x2341"/>
+  </ObjectPropertyAssertion>
+  <AnnotationAssertion>
+    <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/title"/>
+    <IRI>#x2339</IRI>
+    <Literal datatypeIRI="&amp;xsd;string">VOD&amp;nbsp;all</Literal>
+  </AnnotationAssertion>
+</Ontology>

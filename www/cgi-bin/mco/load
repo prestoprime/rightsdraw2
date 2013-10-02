@@ -84,7 +84,8 @@ if ( $ret ) then
 	if ( -ersf $pdir/lib/mcoserializationconverter ) then
 		#Trying if it's RDF/XML
 		set result = $pdir/logs/$this.$$.result
-		$pdir/lib/mcoserializationconverter $outdata $result false
+#		$pdir/lib/mcoserializationconverter $outdata $result false  #interface happen to be 2 arguments and "false" is default (to be further checked)
+		$pdir/lib/mcoserializationconverter $outdata $result
 		#Relying better on mco.dosvg for exit code
 		$pdir/bin/mco.dosvg $result >& /dev/null
 		set ret = $?
@@ -103,6 +104,7 @@ if ( $ret ) then
 				if ( -e $result ) then
 					rm $result
 				endif
+			#	$pdir/lib/mcoserializationconverter $result.mco $result false
 				$pdir/lib/mcoserializationconverter $result.mco $result false
 				set ret = $?
 				if ( $ret ) then

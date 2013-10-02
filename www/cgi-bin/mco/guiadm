@@ -89,6 +89,11 @@ if ( $p4enable == on && $mcomode == "pprights" ) then
 	echo '		<form action="import" method="get" style="margin:0px"><input type="submit" value="Import from P4"/> archive ID'
 	echo '			<input type="text" name="identifier" size="24"/>'
 	echo '          </form>'
+#SPERIMENTO HTML5
+#	echo '<p></p>'
+#	echo '		<form action="import" method="get" style="margin:0px"><input type="submit" value="Import from P4"/> archive ID'
+#	echo '			<input type="date" name="identifier"/>'
+#	echo '          </form>'
 endif
 echo '</div>'
 echo '<div style="float:left;width:50px"><p></p></div>'

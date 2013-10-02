@@ -1,56 +1,57 @@
-<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="http://www.prestoprime.eu/ppavro/2012/dummy.owl" ontologyIRI="http://www.prestoprime.eu/ppavro/2012/dummy.owl">
+<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="urn:it.rai:mco-rights-VODPay" ontologyIRI="urn:it.rai:mco-rights-VODPay">
   <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
   <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
   <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
   <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
-  <Import>urn:mpeg:mpeg21:celmc:owl:2012#</Import>
-  
+  <Prefix name="mco-core" IRI="urn:mpeg:mpeg21:mco:core:2012#"/>
+  <Prefix name="mco-ipre" IRI="urn:mpeg:mpeg21:mco:ipre:2012#"/>
+  <Import>urn:mpeg:mpeg21:mco:ipre:2012</Import>
   <Declaration>
-    <NamedIndividual IRI="#x385"/>
+    <NamedIndividual IRI="#x2316"/>
   </Declaration>
   <Declaration>
-    <NamedIndividual IRI="#x386"/>
+    <NamedIndividual IRI="#x2317"/>
   </Declaration>
   <Declaration>
-    <NamedIndividual IRI="#x387"/>
+    <NamedIndividual IRI="#x2318"/>
   </Declaration>
   <Declaration>
-    <NamedIndividual IRI="#x388"/>
+    <NamedIndividual IRI="#x2319"/>
   </Declaration>
-  
   <ClassAssertion>
     <Class IRI="http://purl.oclc.org/NET/mvco.owl#Permission"/>
-    <NamedIndividual IRI="#x385"/>
+    <NamedIndividual IRI="#x2316"/>
   </ClassAssertion>
   <ClassAssertion>
-    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#CommunicationToThePublic"/>
-    <NamedIndividual IRI="#x386"/>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#CommunicationToThePublic"/>
+    <NamedIndividual IRI="#x2317"/>
   </ClassAssertion>
   <ClassAssertion>
-    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#Pay"/>
-    <NamedIndividual IRI="#x387"/>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#Pay"/>
+    <NamedIndividual IRI="#x2318"/>
   </ClassAssertion>
   <ClassAssertion>
-    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#OnDemandBasis"/>
-    <NamedIndividual IRI="#x388"/>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#OnDemandBasis"/>
+    <NamedIndividual IRI="#x2319"/>
   </ClassAssertion>
   <ObjectPropertyAssertion>
     <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#permitsAction"/>
-    <NamedIndividual IRI="#x385"/>
-    <NamedIndividual IRI="#x386"/>
-  </ObjectPropertyAssertion>
-  
-  <ObjectPropertyAssertion>
-    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
-    <NamedIndividual IRI="#x385"/>
-    <NamedIndividual IRI="#x387"/>
+    <NamedIndividual IRI="#x2316"/>
+    <NamedIndividual IRI="#x2317"/>
   </ObjectPropertyAssertion>
   <ObjectPropertyAssertion>
     <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
-    <NamedIndividual IRI="#x385"/>
-    <NamedIndividual IRI="#x388"/>
+    <NamedIndividual IRI="#x2316"/>
+    <NamedIndividual IRI="#x2318"/>
   </ObjectPropertyAssertion>
-  
-  
-  
+  <ObjectPropertyAssertion>
+    <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#hasRequired"/>
+    <NamedIndividual IRI="#x2316"/>
+    <NamedIndividual IRI="#x2319"/>
+  </ObjectPropertyAssertion>
+  <AnnotationAssertion>
+    <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/title"/>
+    <IRI>#x2316</IRI>
+    <Literal datatypeIRI="&amp;xsd;string">VODPay</Literal>
+  </AnnotationAssertion>
 </Ontology>

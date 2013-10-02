@@ -1,6 +1,6 @@
 <!--
 #  rightsdraw
-#  Version: 2.0.1
+#  Version: 2.0.2
 #  Authors: L. Boch
 #
 #  Copyright (C) 2010-2013 RAI – Radiotelevisione Italiana <cr_segreteria@rai.it>
@@ -26,6 +26,7 @@
 <xsl:output method="html" indent="yes" omit-xml-declaration="yes"/>
 <xsl:param name="instance">null</xsl:param>
 <xsl:param name="ind">null</xsl:param>
+<xsl:param name="kplist">null</xsl:param>
 <xsl:variable name="class"><xsl:value-of select="substring-after(/owl:Ontology/owl:ClassAssertion[owl:NamedIndividual/@IRI=$ind]/owl:Class/@IRI,'#')"/></xsl:variable>
 <xsl:variable name="ListOfActions">(Action),(ExploitIPRights),(CommunicationToThePublic),(Distribute),(PublicPerformance), (Duplicate),(Fixate),(Transform),(MakeCutAndEdit),(MakeExcerpt) </xsl:variable>
 <xsl:variable name="ListOfResultsInActions">(Duplicate),(Fixate),(Transform),(MakeCutAndEdit),(MakeExcerpt) </xsl:variable>
@@ -43,6 +44,7 @@
 <script src="/rightsdraw2/js/CalendarPopup.js"></script><script>document.write(getCalendarStyles());</script>
 <script src="/rightsdraw2/js/putrunproperties"></script>
 <script src="/rightsdraw2/js/putpercentages"></script>
+<script src="/rightsdraw2/js/showhidefields.js"></script>
 </head>
 <body>	
 	<h3><xsl:value-of select="$class"/>:<xsl:value-of select="$ind"/></h3>
@@ -320,7 +322,7 @@
 		<div style="float:left">
 			<form action="removedataproperty" method="get" target="mco_log">
 				<xsl:call-template name="inserthiddeninput"/>
-				<input type="hidden" name="key" value="TextVersion"/>
+				<input type="hidden" name="key" value="urn:mpeg:mpeg21:mco:core:2012#TextVersion"/>
 				<input type="submit" value="Remove Text Version"/>
 			</form>
 		</div>
@@ -346,7 +348,7 @@
 </div>	
 <div style="clear:both"/>
 <div name="contractproperty" style="float:right">
-	<form action="addobj" method="get" target="mco_log" name="pform">
+	<form action="addobj" method="get" target="mco_log" name="contractform">
 		<xsl:call-template name="inserthiddeninput"/>
 		<input type="hidden" name="class" value="urn:mpeg:mpeg21:mco:core:2012#Contract"/>
 		<input type="submit" value="Add relationship"/>
@@ -361,6 +363,7 @@
 		<input type="text" name="ind" size="8"/>
 		<xsl:call-template name="selectindividual">
 			<xsl:with-param name="classname">Contract</xsl:with-param>
+			<xsl:with-param name="formname">contractform</xsl:with-param>
 		</xsl:call-template>
 	</form>
 </div>	
@@ -374,15 +377,15 @@
 </xsl:template>
 <!-- ************************************************************-->
 <xsl:template name="party">
-<div name="partyaddress" style="float:left">
+<div name="partyaddress" style="float:left;">
 	<xsl:choose>
 		<xsl:when test="/owl:Ontology/owl:DataPropertyAssertion[owl:NamedIndividual/@IRI = $ind and substring-after(owl:DataProperty/@IRI,'#')='Address']"> </xsl:when>
 		<xsl:otherwise>
 			<form action="adddataproperty" method="get" target="mco_log">
 				<xsl:call-template name="inserthiddeninput"/>
-				<input type="submit" value="Add Address"/>
 				<input type="hidden" name="key" value="urn:mpeg:mpeg21:mco:core:2012#Address"/>
 				<textarea name="value" rows="3" cols="18"/>
+				<input type="submit" value="Add Address" style="float:left"/>
 			</form>
 		</xsl:otherwise>
 	</xsl:choose>
@@ -409,13 +412,29 @@
 		</xsl:otherwise>
 	</xsl:choose>
 </div>
+<div style="clear:both"/>
+<div name="contactbookload" style="float:left">
+	<form action="contactbook" method="get" target="mco_log">
+		<xsl:call-template name="inserthiddeninput"/>
+		<input type="hidden" name="action" value="load"/>
+		<input type="submit" value="Load from Book"/>
+	</form>
+</div>
+<div name="contactbooksave" style="float:left">
+	<form action="contactbook" method="get" target="mco_log">
+		<xsl:call-template name="inserthiddeninput"/>
+		<input type="hidden" name="action" value="save"/>
+		<input type="submit" value="Save to Book"/>
+	</form>
+</div>
 </xsl:template>
 <!-- ************************************************************-->
 <xsl:template name="selectindividual">
 	<xsl:param name="classname"/>
 	<xsl:param name="fieldname">ind</xsl:param>
+	<xsl:param name="formname">pform</xsl:param>
 	<small>
-	<xsl:text disable-output-escaping="yes">&lt;a href="#" onclick="window.open('selectindividual?instance=</xsl:text><xsl:value-of select="$instance"/><xsl:text disable-output-escaping="yes">&amp;fieldname=</xsl:text><xsl:value-of select="$fieldname"/><xsl:text disable-output-escaping="yes">&amp;classname=</xsl:text><xsl:value-of select="$classname"/><xsl:text disable-output-escaping="yes">','','top=100,left=300,width=400,height=400,scrollbars')"&gt;</xsl:text><xsl:value-of select="$classname"/><xsl:text disable-output-escaping="yes">&lt;/a&gt;</xsl:text>
+	<xsl:text disable-output-escaping="yes">&lt;a href="#" onclick="window.open('selectindividual?instance=</xsl:text><xsl:value-of select="$instance"/><xsl:text disable-output-escaping="yes">&amp;formname=</xsl:text><xsl:value-of select="$formname"/><xsl:text disable-output-escaping="yes">&amp;fieldname=</xsl:text><xsl:value-of select="$fieldname"/><xsl:text disable-output-escaping="yes">&amp;classname=</xsl:text><xsl:value-of select="$classname"/><xsl:text disable-output-escaping="yes">','','top=100,left=300,width=400,height=400,scrollbars')"&gt;</xsl:text><xsl:value-of select="$classname"/><xsl:text disable-output-escaping="yes">&lt;/a&gt;</xsl:text>
 	</small>
 </xsl:template>
 <!-- ************************************************************-->
@@ -520,7 +539,7 @@
 	<xsl:when test="/owl:Ontology/owl:ObjectPropertyAssertion[owl:NamedIndividual/@IRI = $ind and substring-after(owl:ObjectProperty/@IRI,'#')='issuedIn']"></xsl:when>
 	<xsl:otherwise>
 <div name="issuedin" style="float:left">
-	<form action="addobj" method="get" target="mco_log">
+	<form name="issuedinform" action="addobj" method="get" target="mco_log">
 		<xsl:call-template name="inserthiddeninput"/>
 		<div style="float:left">
 			<input type="submit" value="Issued in Contract"/>
@@ -531,6 +550,7 @@
 			<input name="ind" type="text" size="10"/><br/>
 			<xsl:call-template name="selectindividual">
 				<xsl:with-param name="classname">Contract</xsl:with-param>
+				<xsl:with-param name="formname">issuedinform</xsl:with-param>
 			</xsl:call-template>
 		</div>
 	</form>
@@ -550,6 +570,12 @@
 		</select>
 	</form>
 </div-->	
+<div style="clear:both">
+	<form action="writederivedtext" method="get" target="mco_log">
+		<input type="submit" value="Show Derived Text"/><br/>
+		<xsl:call-template name="inserthiddeninput"/>
+	</form>
+</div>
 <div style="clear:both"/>
 <div name="implements" style="float:left">
 	<form action="addtextualclause" method="post" ENCTYPE="multipart/form-data" target="mco_log">
@@ -670,7 +696,8 @@
 		<xsl:if test="substring-after(/owl:Ontology/owl:ClassAssertion[owl:NamedIndividual/@IRI=$party]/owl:Class/@IRI,'#')='User'">
 			<option><xsl:value-of select="$party"/></option>
 		</xsl:if>
-	</xsl:for-each-->
+	</xsl:for-each>
+	 For User is not required to explicit isSignedBy-->
 	<xsl:for-each select="/owl:Ontology/owl:ObjectPropertyAssertion[substring-after(owl:ObjectProperty/@IRI,'#')='hasSignatory']">
 		<option><xsl:value-of select="owl:NamedIndividual[position()=2]/@IRI"/></option>
 	</xsl:for-each>
@@ -802,9 +829,33 @@
 		exclusive: <input type="checkbox"  name="isexclusive"/>
 		sublicense: <input type="checkbox" checked="checked" name="hassublicense"/>
 		<br/>
-		<xsl:call-template name="factsform"/>
+		<xsl:call-template name="factsform-conditions"/>
+		<xsl:call-template name="factsform-constraints"/>
 	</form>
+	<form action="../mkr/addkp" method="get" target="mco_log">
+			<xsl:call-template name="inserthiddeninput"/>
+		or	<input type="submit" value="Define Permission as KP"/>
+			<select name="kp">
+				<xsl:call-template name="insertkpoption">
+					<xsl:with-param name="kpoptions"><xsl:value-of select="$kplist"/><xsl:text> </xsl:text></xsl:with-param>
+				</xsl:call-template>
+			</select>
+		<br/>
+		exclusive: <input type="checkbox"  name="isexclusive"/>
+		sublicense: <input type="checkbox" checked="checked" name="hassublicense"/>
+	</form><br/>
 </div>	
+</xsl:template>
+<!-- ************************************************************************* -->
+<xsl:template name="insertkpoption">
+	<xsl:param name="kpoptions"/>
+	<option><xsl:value-of select="substring-before($kpoptions,' ')"/></option>
+	<xsl:variable name="tail"><xsl:value-of select="substring-after($kpoptions,' ')"/></xsl:variable>
+	<xsl:if test="$tail != ''">
+		<xsl:call-template name="insertkpoption">
+			<xsl:with-param name="kpoptions"><xsl:value-of select="$tail"/></xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
 </xsl:template>
 <!-- ************************************************************************* -->
 <xsl:template name="addfacts">
@@ -814,12 +865,13 @@
 		<xsl:call-template name="inserthiddeninput"/>
 		<input type="submit" value="Add Other Conditions"/>
 		<br/>
-		<xsl:call-template name="factsform"/>
+		<xsl:call-template name="factsform-conditions"/>
+		<xsl:call-template name="factsform-constraints"/>
 	</form>
 </div>	
 </xsl:template>
 <!-- ************************************************************************* -->
-<xsl:template name="factsform">
+<xsl:template name="factsform-conditions">
 		<div name="conditions" style="float:left">
 			<table border="0">
 				<tr><td>Conditions</td><td style="color:#ff0000;font-size:8pt;text-align:center">negative<br/>flag</td></tr>
@@ -881,6 +933,9 @@
 				</td></tr>
 			</table>
 		</div>
+</xsl:template>
+<!-- ************************************************************************* -->
+<xsl:template name="factsform-constraints">
 		<div name="constraints" style="float:left">
 			<table border="0">
 				<tr><td colspan="2">Conditions</td><td style="color:#ff0000;font-size:8pt;text-align:center">negative<br/>flag</td></tr>

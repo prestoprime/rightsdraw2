@@ -32,6 +32,7 @@
 
 <xsl:param name="perm">null</xsl:param>
 <xsl:param name="newindbase">null</xsl:param> 
+<xsl:param name="newactionclass">null</xsl:param> 
 
 <xsl:variable name="permittedaction">
 	<xsl:value-of select="/owl:Ontology/owl:ObjectPropertyAssertion[owl:ObjectProperty/@IRI='http://purl.oclc.org/NET/mvco.owl#permitsAction' and owl:NamedIndividual[position()=1]/@IRI=$perm]/owl:NamedIndividual[position()=2]/@IRI"/>
@@ -39,6 +40,24 @@
 
 <xsl:template match="/">
 	<xsl:apply-templates/>
+</xsl:template>
+
+<xsl:template match="owl:ClassAssertion">
+	<xsl:copy>
+		<xsl:choose>
+			<xsl:when test="$newactionclass != 'null' and owl:NamedIndividual/@IRI=$permittedaction">
+				<xsl:element name="Class" namespace="http://www.w3.org/2002/07/owl#">
+					<xsl:attribute name="IRI"><xsl:value-of select="$newactionclass"/></xsl:attribute>
+				</xsl:element>
+				<xsl:element name="NamedIndividual" namespace="http://www.w3.org/2002/07/owl#">
+					<xsl:attribute name="IRI"><xsl:value-of select="owl:NamedIndividual/@IRI"/><xsl:value-of select="$newindbase"/></xsl:attribute>
+				</xsl:element>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:copy>
 </xsl:template>
 
 <xsl:template match="owl:NamedIndividual">
@@ -53,6 +72,7 @@
 		</xsl:choose>
 	</xsl:copy>
 </xsl:template>
+
 <xsl:template match="owl:IRI">
 	<xsl:copy>
 		<xsl:choose>

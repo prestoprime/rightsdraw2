@@ -43,8 +43,30 @@
 <xsl:template match="owl:AnnotationAssertion">
 <div style="clear:both">
 	<div style="float:left">
+		<xsl:choose>
+			<xsl:when test="substring-after(owl:AnnotationProperty/@IRI,'http')!=''">
+			<xsl:element name="a">
+				<xsl:attribute name="href"><xsl:value-of select="owl:AnnotationProperty/@IRI"/></xsl:attribute>
+				<xsl:attribute name="target">_new</xsl:attribute>
+		<xsl:value-of select="owl:AnnotationProperty/@IRI"/>
+			</xsl:element><br/>
+			</xsl:when>
+			<xsl:otherwise>
 		<xsl:value-of select="owl:AnnotationProperty/@IRI"/><br/>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:choose>
+			<xsl:when test="substring-after(owl:Literal/text(),'http')!=''">
+			<xsl:element name="a">
+				<xsl:attribute name="href"><xsl:value-of select="owl:Literal/text()" disable-output-escaping="yes"/></xsl:attribute>
+				<xsl:attribute name="target">_new</xsl:attribute>
+				<b>go to link</b>
+			</xsl:element><br/>
+			</xsl:when>
+			<xsl:otherwise>
 		<b><xsl:value-of select="owl:Literal/text()" disable-output-escaping="yes"/></b>
+			</xsl:otherwise>
+		</xsl:choose>
 	</div>
 	<div style="float:right">
 		<form action="removemd" method="get">

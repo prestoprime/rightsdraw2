@@ -47,22 +47,22 @@ h4 {
 }
 
 .button {
-	background: #9f9f9f;
+	background: #f0f0f0;
 	clear: both;
 	float: left;
-	width: 300px;
-	height: 28px;
+	width: 200px;
+	height: 26px;
 	margin: 0 auto;
-	color: #FFF;
+	color: auto;
 	text-align: center;
 	cursor: pointer;
 }
 
 .nascosto {
-	background: white;
+	background: #f0f0f0;
 	clear: both;
 	position: left
-	width: 300px;
+	width: auto;
 	height: auto;
 	margin: 0 auto;
 	text-align: center;

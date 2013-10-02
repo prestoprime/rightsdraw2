@@ -27,6 +27,7 @@
 <xsl:output method="text" indent="yes" omit-xml-declaration="yes"/>
 <xsl:param name="ppavro">ppavro.owl</xsl:param>
 <xsl:param name="querydoc">null</xsl:param>
+<xsl:param name="querycache">null</xsl:param>
 <!--xsl:param name="countrycodes">http://www.ebu.ch/metadata/cs/ebu_Iso3166CountryCodeCS.xml</xsl:param-->
 <xsl:param name="countrycodes">ebu_Iso3166CountryCodeCS.xml</xsl:param>
 <xsl:param name="languagecodes">ebu_Iso639_1LanguageCodeCS.xml</xsl:param>
@@ -34,6 +35,7 @@
 <xsl:variable name="query">
 	<xsl:choose>
 		<xsl:when test="$querydoc != 'null'"><xsl:apply-templates select="document($querydoc)/owl:Ontology" /></xsl:when>
+		<xsl:when test="$querycache != 'null'"><xsl:value-of select="$querycache"/></xsl:when>
 		<xsl:otherwise>NOQUERY</xsl:otherwise>
 	</xsl:choose>
 </xsl:variable>

@@ -368,17 +368,67 @@ else
 					exit 5
 				endif
 				set actionmismatch =  `grep -c "ActionMismatch:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$`
-				if ( $actionmismatch ) then
-					echo "500"
-					echo "Server Error"
-					echo "Unsupported Action mismatch between $psource and $ptransf for $instance and $contract"
-					grep "ActionMismatch:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ 
-					cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
-					exit 55
+				if ( $actionmismatch ) then	#MOLTA ATT MICA BUONO ANCORA#
+					set wideclassiri = `grep "ActionMismatch:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ | cut -f2`
+					set narrowclassiri = `grep "ActionMismatch:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ | cut -f3`
+#
+#					3.A. Get list of Actions resulting from difference in hierarchy (assuming rightscompare was okay)
+					xsltproc --stringparam wideclassiri "$wideclassiri" \
+						--stringparam narrowclassiri "$narrowclassiri" \
+						$pdir/xsl/DiffClassHierarchy.xsl $pdir/share/ppavro.owl > $repo/pprights/.tmp/diffactions.$ploop.$sloop.$$
+					set ret = $?
+					if ( $ret ) then
+        					echo "500"
+        					echo "Server Error"
+						echo "$this failed in getting difference in actions  ($wideclassiri,$narrowclassiri) related to ($psource,$ptransf) for $instance and $contract"
+						cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+						exit 5
+					endif
+					set diffActions = `cat $repo/pprights/.tmp/diffactions.$ploop.$sloop.$$`
+					set daction = 1
+					cp $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.$$ $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.action.$$
+#					3.B. For each Action
+					foreach diffAct ( $diffActions )
+#					Using permission extracted from Holdings 
+#					3.B.1 Rename Permission/Action individuals, as well as Class of Action
+						xsltproc --stringparam perm $psource \
+							--stringparam newindbase da$daction  \
+							--stringparam newactionclass $diffAct  \
+						$pdir/xsl/renamePermissionAction.xsl \
+						$repo/pprights/.tmp/$instance.psource.$ploop.$sloop.action.$$ > $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.a$daction.$$
+						set ret = $?
+						if ( $ret ) then
+        						echo "500"
+        						echo "Server Error"
+							echo "$this failed in renaming Permission/Action individuals ($psource,$ptransf,$daction,$diffAct) for $instance and $contract"
+							cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+							exit 5
+						endif
+#					3.B.2 Add results to Holdings
+						xsltproc --stringparam extinstance $repo/pprights/.tmp/$instance.psource.$ploop.$sloop.a$daction.$$ \
+					$pdir/xsl/mergeWithInstance.xsl $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$ > $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$.tmp
+						set ret = $?
+						if ( $ret ) then
+							echo "500"
+							echo "Server Error"
+							echo "$this could not merge $instance.psource.$ploop.$sloop.a$daction.$$ into $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$"
+							cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+							exit 5
+						endif
+						mv $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$.tmp $repo/pprights/.tmp/$instance.without.psource.$ploop.$sloop.$$
+						@ daction ++
+					end
+#
+				#	echo "500"
+				#	echo "Server Error"
+				#	echo "Unsupported Action mismatch between $psource and $ptransf for $instance and $contract"
+				#	grep "ActionMismatch:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ 
+				#	cp $repo/pprights/.tmp/$instance.$$.bak $repo/pprights/$instance
+				#	exit 55
 				endif
 				set numdiff = `grep -c "Fact:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$`
 				set diffFacts = `grep "Fact:" $repo/pprights/.tmp/diff.$ploop.$sloop.$$ | cut -f2` 
-#				4.A. If NO Difference. Source is sold without remaining
+#				4.A. If NO Difference. Source is sold without remaining (related to Facts)
 #				4.B. If Difference. Make Foreach
 				set obj = "http://purl.oclc.org/NET/mvco.owl#hasRequired"
 				set dfact = 1

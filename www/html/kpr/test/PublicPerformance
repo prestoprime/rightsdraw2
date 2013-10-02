@@ -1,31 +1,38 @@
-<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="http://www.prestoprime.eu/ppavro/2012/PublicPerformance" ontologyIRI="http://www.prestoprime.eu/ppavro/2012/PublicPerformance">
+<Ontology xmlns="http://www.w3.org/2002/07/owl#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xml:base="urn:it.rai:mco-rights-PublicPerformance" ontologyIRI="urn:it.rai:mco-rights-PublicPerformance">
   <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
   <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
   <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
   <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
-  <Import>urn:mpeg:mpeg21:celmc:owl:2012#</Import>
+  <Prefix name="mco-core" IRI="urn:mpeg:mpeg21:mco:core:2012#"/>
+  <Prefix name="mco-ipre" IRI="urn:mpeg:mpeg21:mco:ipre:2012#"/>
+  <Import>urn:mpeg:mpeg21:mco:ipre:2012</Import>
   <Declaration>
-    <NamedIndividual IRI="#x828"/>
+    <NamedIndividual IRI="#x2285"/>
   </Declaration>
   <Declaration>
-    <NamedIndividual IRI="#x829"/>
+    <NamedIndividual IRI="#x2286"/>
   </Declaration>
   <ClassAssertion>
     <Class IRI="http://purl.oclc.org/NET/mvco.owl#Permission"/>
-    <NamedIndividual IRI="#x828"/>
+    <NamedIndividual IRI="#x2285"/>
   </ClassAssertion>
   <ClassAssertion>
-    <Class IRI="urn:mpeg:mpeg21:celmc:owl:2012#PublicPerformance"/>
-    <NamedIndividual IRI="#x829"/>
+    <Class IRI="urn:mpeg:mpeg21:mco:ipre:2012#PublicPerformance"/>
+    <NamedIndividual IRI="#x2286"/>
   </ClassAssertion>
   <ObjectPropertyAssertion>
     <ObjectProperty IRI="http://purl.oclc.org/NET/mvco.owl#permitsAction"/>
-    <NamedIndividual IRI="#x828"/>
-    <NamedIndividual IRI="#x829"/>
+    <NamedIndividual IRI="#x2285"/>
+    <NamedIndividual IRI="#x2286"/>
   </ObjectPropertyAssertion>
   <AnnotationAssertion>
     <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/title"/>
-    <IRI>#x828</IRI>
-    <Literal datatypeIRI="&amp;xsd;string">description</Literal>
+    <IRI>#x2285</IRI>
+    <Literal datatypeIRI="&amp;xsd;string">Public&amp;nbsp;Performance</Literal>
+  </AnnotationAssertion>
+  <AnnotationAssertion>
+    <AnnotationProperty IRI="http://purl.org/dc/elements/1.1/description"/>
+    <IRI>#x2285</IRI>
+    <Literal datatypeIRI="&amp;xsd;string">All&amp;nbsp;public&amp;nbsp;performances</Literal>
   </AnnotationAssertion>
 </Ontology>

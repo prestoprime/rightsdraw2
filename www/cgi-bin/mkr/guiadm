@@ -21,6 +21,8 @@
 
 set echo_style = both
 echo "content-type: text/html\n"
+# mcomode is only read for raising a warning to the user
+set mcomode = `cat $pdir/users/$puser/config/mcomode`
 set repo = $pdir/users/$puser/repo/pprights
 set linelimit = 100
 set this = `basename $0`
@@ -35,6 +37,9 @@ echo '<td><form action="/cgi-bin/rightsdraw2/rightsdraw2login" style="margin:0px
 set lista = `ls -1 $repo`
 echo '<tr><td><h4 style="color:#660000">You have '$#lista' items in your repo</h4></td>'
 echo '<td><form method="get" action="guiadm" style="margin:0px">\n<input type="submit" value="Refresh"></input></form></td>'
+if ( "$mcomode" != "pprights" ) then
+	echo '<td><b>Warning:</b> your default repo is set to '$mcomode' instead of pprights. You may get errors when calling services from other contexts</td>'	
+endif
 echo '</tr></table>'
 
 ########################################

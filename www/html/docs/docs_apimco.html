@@ -14,6 +14,7 @@ The MCO context, with prefix <i>/cgi-bin/rightsdraw2/&lt;user&gt;/mco</i>, provi
 <a href="#addmd">addmd</a>
 <a href="#addobj">addobj</a>
 <a href="#addtextualclause">addtextualclause</a>
+<a href="#contactbook">contactbook</a>
 <a href="#create">create</a>
 <a href="#definefragment">definefragment</a>
 <a href="#definepermission">definepermission</a>
@@ -197,6 +198,32 @@ If <i>ind</i> doesn't exist or is not given, it is created.
 			<li><b>clausetext</b> - value of the mco-core:Text DataProperty
 			<li><b>handle</b> - IRI of Individual of mco-core:DeonticExpression acting as domain
 			<li><b>ind</b> - IRI of Individual of mco-core:TextualClause acting as range
+			<li><b>instance</b> - name of OWL file
+		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
+		<a name="contactbook">
+		<h4>Name: contactbook</h4>
+		<p>
+		<b>Description</b>
+Permits to use a  <b>Contact Book</b> in order to save details, such as metadata (annotation) and properties) about individuals, especially of  <i>mvco:User</i> or <i>mco-core:Organization</i>, for later use in other MCO documents.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>action</b> - required. It indicates which action is requested on the User's <b>Contact Book</b>
+			<ul>
+				<li><b>save</b> - requires <i>handle</i> and <i>instance</i>. The details of <i>handle</i> are saved in the User's <b>Contact Book</b>
+				<li><b>load</b> - requires <i>handle</i> and <i>instance</i>. The details of <i>handle</i> are retrieved from the User's <b>Contact Book</b> into the MCO document
+				<li><b>clean</b> - it empties the User's <b>Contact Book</b> 
+				<li><b>export</b> - it returns the User's <b>Contact Book</b> as OWL/XML.
+			</ul>
+			<li><b>handle</b> - IRI of Individual involved in the action
 			<li><b>instance</b> - name of OWL file
 		</ul>
 		<p> <b>Returned content-type:</b> text/plain </p>
@@ -637,7 +664,7 @@ Provides a narrative text of the contract automatically derived from the <i>MCO 
 		</p>
 		<ul>
 			<li><b>instance</b> - name of OWL file
-			<li><b>startfrom</b> - option from selection between 'Contract', in which the text is structured around the contract entities, and 'Holdings', in which the text is structured the objects of the rights and their associated permissions.
+			<li><b>startfrom</b> - option from selection between 'Contract', in which the text is structured around the contract entities, and 'Holdings', in which the text is structured around the objects of the rights and their associated permissions.
 		</ul>
 		<p> <b>Returned content-type:</b> text/html</p>
 <hr/>
