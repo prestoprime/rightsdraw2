@@ -42,7 +42,7 @@ while ( $i < $#inquery )
                 set instance = "$inquery[$i]"
         else if ( "$inquery[$i]" == "format" ) then
                 @ i++
-                if ( "$inquery[$i]" == "OWL/XML" ||  "$inquery[$i]" == "RDF/XML" || "$inquery[$i]" == "CEL/XML" ) then
+                if ( "$inquery[$i]" == "OWL/XML" ||  "$inquery[$i]" == "RDF/XML" || "$inquery[$i]" == "CEL/XML" || "$inquery[$i]" == "Turtle" ) then
 			set format = "$inquery[$i]"
 		endif
         else
@@ -69,7 +69,12 @@ if ( "$format" == "OWL/XML" ) then
 	cat $repo/$instance
 else if ( -ersf $pdir/lib/mcoserializationconverter ) then
 	set result = $pdir/logs/$this.$$.result
-	$pdir/lib/mcoserializationconverter $repo/$instance $result
+	if ( "$format" == "Turtle" ) then
+		$pdir/lib/mcoserializationconverter $repo/$instance $result $format
+	else
+#		RDFXML is used for both format "RDF/XML" and "CEL/XML"
+		$pdir/lib/mcoserializationconverter $repo/$instance $result RDFXML
+	endif
 	set ret = $?
 	if ( $ret ) then
 		echo "content-type: text/plain\n"
@@ -79,6 +84,9 @@ else if ( -ersf $pdir/lib/mcoserializationconverter ) then
 	else
 		if ( "$format" == "RDF/XML" ) then
 			echo "content-type: text/xml\n"
+			cat $result
+		else if ( "$format" == "Turtle" ) then
+			echo "content-type: text/plain\n"
 			cat $result
 		else if ( -ersf $pdir/lib/mco2cel ) then
 			$pdir/lib/mco2cel $result $result.cel
