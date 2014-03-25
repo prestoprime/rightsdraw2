@@ -557,7 +557,7 @@ if ( $channels != null ) then
 #	create Channels
 	set xnum = `cat $pdir/users/$puser/config/inumber|bc`
 	@ xnum ++
-	echo $xnum > $pdir/users/$puser/config/inumber\
+	echo $xnum > $pdir/users/$puser/config/inumber
 	set twoname = "#x$xnum"
 	set twoclass = "urn:mpeg:mpeg21:mco:rai:2013#NetworkContext"
 	xsltproc --stringparam obj $obj --stringparam one $one --stringparam twoclass $twoclass --stringparam twoname $twoname  --stringparam negative $negativechannels $pdir/xsl/addObjProperty.xsl $repo/$instance > $repo/.tmp.$instance
