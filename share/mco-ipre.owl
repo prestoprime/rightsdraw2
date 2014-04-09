@@ -25,6 +25,7 @@
     <owl:Ontology rdf:about="urn:mpeg:mpeg21:mco:ipre:2012">
         <dc:title rdf:datatype="&xsd;string">Media Contract Ontology -  Extension for Exploitation of Intellectual Property Rights</dc:title>
         <owl:imports rdf:resource="urn:mpeg:mpeg21:mco:core:2012"/>
+        <owl:versionIRI rdf:resource="urn:mpeg:mpeg21:mco:ipre:2012/cor1"/>
     </owl:Ontology>
     
 
@@ -37,7 +38,6 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <owl:AnnotationProperty rdf:about="&owl;versionInfo"/>
     <owl:AnnotationProperty rdf:about="&dc;date"/>
     <owl:AnnotationProperty rdf:about="&rdfs;label"/>
     <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
@@ -106,7 +106,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#partOf -->
 
     <owl:ObjectProperty rdf:about="&mco-ipre;partOf">
-        <rdfs:comment rdf:datatype="&xsd;string">for attributing which IPEntity is required to be the parent context by an IPEntityContext restriction</rdfs:comment>
+        <rdfs:comment xml:lang="en">for attributing which IPEntity is required to be the parent context by an IPEntityContext restriction</rdfs:comment>
         <rdfs:range rdf:resource="&mvco;IPEntity"/>
         <rdfs:domain rdf:resource="&mco-ipre;IPEntityContext"/>
     </owl:ObjectProperty>
@@ -141,7 +141,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#afterDate -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;afterDate">
-        <rdfs:comment>the date after which the TemporalContext is defined to be valid.</rdfs:comment>
+        <rdfs:comment xml:lang="en">the date after which the TemporalContext is defined to be valid.</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;date"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
         <rdfs:domain rdf:resource="&mco-ipre;TemporalContext"/>
@@ -152,7 +152,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#beforeDate -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;beforeDate">
-        <rdfs:comment>the date before which the TemporalContext is defined to be valid</rdfs:comment>
+        <rdfs:comment xml:lang="en">the date before which the TemporalContext is defined to be valid</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;date"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
         <rdfs:domain rdf:resource="&mco-ipre;TemporalContext"/>
@@ -163,10 +163,16 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#hasIncomePercentage -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;hasIncomePercentage">
-        <rdfs:comment>for modelling the cases when the income of exploitation of the Permission has to be shared.</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling the cases when the income of exploitation of the Permission has to be shared.</rdfs:comment>
         <rdfs:domain rdf:resource="&mvco;Permission"/>
-        <rdfs:range rdf:resource="&xsd;float"/>
-        <rdfs:range rdf:resource="&xsd;nonNegativeInteger"/>
+	<rdfs:range>
+	    <rdfs:Datatype>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&xsd;float"/>
+                    <rdf:Description rdf:about="&xsd;nonNegativeInteger"/>
+                </owl:unionOf>
+	    </rdfs:Datatype>
+	</rdfs:range>
         <rdfs:subPropertyOf rdf:resource="&mco-core;deonticProperty"/>
     </owl:DatatypeProperty>
     
@@ -175,7 +181,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#hasLanguage -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;hasLanguage">
-        <rdfs:comment>for attributing which languages are permitted, when language is constrained.</rdfs:comment>
+        <rdfs:comment xml:lang="en">for attributing which languages are permitted, when language is constrained.</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;string"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
         <rdfs:domain rdf:resource="&mco-ipre;Language"/>
@@ -186,7 +192,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#hasMaxLength -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;hasMaxLength">
-        <rdfs:comment>the maximum length, as duration of canonical play, of material resulting from an action.</rdfs:comment>
+        <rdfs:comment xml:lang="en">the maximum length, as duration of canonical play, of material resulting from an action.</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;duration"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
         <rdfs:domain rdf:resource="&mco-ipre;Length"/>
@@ -197,7 +203,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRepetitions -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;hasNumberOfRepetitions">
-        <rdfs:comment>if given, it attributes  the number of repetitions that,  within a validity window, have to be considered as a single run.</rdfs:comment>
+        <rdfs:comment xml:lang="en">if given, it attributes  the number of repetitions that,  within a validity window, have to be considered as a single run.</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;nonNegativeInteger"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
         <rdfs:domain rdf:resource="&mco-ipre;Run"/>
@@ -208,7 +214,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#hasNumberOfRuns -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;hasNumberOfRuns">
-        <rdfs:comment>attributing the number of permitted Runs, when they are constrained.</rdfs:comment>
+        <rdfs:comment xml:lang="en">attributing the number of permitted Runs, when they are constrained.</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;nonNegativeInteger"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
         <rdfs:domain rdf:resource="&mco-ipre;Run"/>
@@ -216,14 +222,20 @@
     
 
 
-    <!-- urn:mpeg:mpeg21:mco:ipre:2012#hasPropertyPercentage -->
+    <!-- urn:mpeg:mpeg21:mco:ipre:2012#hasUsePercentage -->
 
-    <owl:DatatypeProperty rdf:about="&mco-ipre;hasPropertyPercentage">
+    <owl:DatatypeProperty rdf:about="&mco-ipre;hasUsePercentage">
         <rdfs:label>hasUsePercentage</rdfs:label>
-        <rdfs:comment>for modelling the cases when the permission to use is shared with other actors (not 100%) and thus the permission cannot be actually exploited.</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling the cases when the permission to use is shared with other actors (not 100%) and thus the permission cannot be actually exploited.</rdfs:comment>
         <rdfs:domain rdf:resource="&mvco;Permission"/>
-        <rdfs:range rdf:resource="&xsd;float"/>
-        <rdfs:range rdf:resource="&xsd;nonNegativeInteger"/>
+	<rdfs:range>
+	    <rdfs:Datatype>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&xsd;float"/>
+                    <rdf:Description rdf:about="&xsd;nonNegativeInteger"/>
+                </owl:unionOf>
+	    </rdfs:Datatype>
+	</rdfs:range>
         <rdfs:subPropertyOf rdf:resource="&mco-core;deonticProperty"/>
     </owl:DatatypeProperty>
     
@@ -233,7 +245,7 @@
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;hasSublicenseRight">
         <rdfs:label>hasSublicenseRight</rdfs:label>
-        <rdfs:comment>for explicitly modelling the permission to sublicense a granted right. (a permission on the permission).</rdfs:comment>
+        <rdfs:comment xml:lang="en">for explicitly modelling the permission to sublicense a granted right. (a permission on the permission).</rdfs:comment>
         <rdfs:domain rdf:resource="&mvco;Permission"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;deonticProperty"/>
@@ -244,12 +256,18 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#hasValidity -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;hasValidity">
-        <rdfs:comment>for attributing the period of validity of the context expressed by the fact. When domain is mco-ipre:Limited, it attributes how long the end user can access the content after having got access. When domain is mco-ipre:Run, it attributes the period during which an unlimited or specified  number of repetitions have to be considered as a single run. When domain is mco-core:ActionDone, it attributes how long  the context of the fact has to be considered valid, i.e. true.</rdfs:comment>
+        <rdfs:comment xml:lang="en">for attributing the period of validity of the context expressed by the fact. When domain is mco-ipre:Limited, it attributes how long the end user can access the content after having got access. When domain is mco-ipre:Run, it attributes the period during which an unlimited or specified  number of repetitions have to be considered as a single run. When domain is mco-core:ActionRelatedFact, it attributes how long  the context of the fact has to be considered valid, i.e. true.</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;duration"/>
-        <rdfs:domain rdf:resource="&mco-core;ActionRelatedFact"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
-        <rdfs:domain rdf:resource="&mco-ipre;Limited"/>
-        <rdfs:domain rdf:resource="&mco-ipre;Run"/>
+	<rdfs:domain>
+	    <owl:Class>
+        	<owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&mco-core;ActionRelatedFact"/>
+                    <rdf:Description rdf:about="&mco-ipre;Limited"/>
+                    <rdf:Description rdf:about="&mco-ipre;Run"/>
+		</owl:unionOf>
+	    </owl:Class>
+	</rdfs:domain>
     </owl:DatatypeProperty>
     
 
@@ -257,7 +275,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#inCountry -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;inCountry">
-        <rdfs:comment>the countries in which the SpatialContext is valid, according to the country codes in ISO3166.</rdfs:comment>
+        <rdfs:comment xml:lang="en">the countries in which the SpatialContext is valid, according to the country codes in ISO3166.</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;string"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
         <rdfs:domain rdf:resource="&mco-ipre;SpatialContext"/>
@@ -269,7 +287,7 @@
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;isExclusive">
         <rdfs:label>isExclusive</rdfs:label>
-        <rdfs:comment>a Boolean value which tells if this exploitation might be granted by the issuer to multiple licensees in the same context or not. </rdfs:comment>
+        <rdfs:comment xml:lang="en">a Boolean value which tells if this exploitation might be granted by the issuer to multiple licensees in the same context or not. </rdfs:comment>
         <rdfs:domain rdf:resource="&mvco;Permission"/>
         <rdfs:range rdf:resource="&xsd;boolean"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;deonticProperty"/>
@@ -280,7 +298,7 @@
     <!-- urn:mpeg:mpeg21:mco:ipre:2012#withDelay -->
 
     <owl:DatatypeProperty rdf:about="&mco-ipre;withDelay">
-        <rdfs:comment>for attributing the elapsed time, following to the achievement of a related action,after which  the context of the fact has to be considered valid, i.e. true</rdfs:comment>
+        <rdfs:comment xml:lang="en">for attributing the elapsed time, following to the start (for mco-core:ActionStarted) or the achievement (for mco-core:ActionDone) of a related action,after which  the context of the fact has to be considered valid, i.e. true</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;duration"/>
         <rdfs:domain rdf:resource="&mco-core;ActionRelatedFact"/>
         <rdfs:subPropertyOf rdf:resource="&mco-core;factProperty"/>
@@ -396,7 +414,7 @@
     <owl:Class rdf:about="&mco-ipre;AccessPolicy">
         <rdfs:label>AccessPolicy</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact about the modality attributable to a content access or media service according to the management of the access by the media provider, being either of open or of restricted access.
+        <rdfs:comment xml:lang="en">Fact about the modality attributable to a content access or media service according to the management of the access by the media provider, being either of open or of restricted access.
 It can be used for modelling restriction on the way the final user is charged (or not) for the content fruition.</rdfs:comment>
     </owl:Class>
     
@@ -406,7 +424,7 @@ It can be used for modelling restriction on the way the final user is charged (o
 
     <owl:Class rdf:about="&mco-ipre;BroadcastTechnology">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Means"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users is point-to-multipoint.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is point-to-multipoint.</rdfs:comment>
     </owl:Class>
     
 
@@ -415,7 +433,7 @@ It can be used for modelling restriction on the way the final user is charged (o
 
     <owl:Class rdf:about="&mco-ipre;Broadcasting">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Linear"/>
-        <rdfs:comment>For modelling the restriction that the linear delivery modality is made by means of any point-to-multipoint technology (such as DTH Delivery , Cable TV Delivery, Satellite Delivery, IPTV Delivery , Analogue , Mobile Broadcast Technology), for which many simultaneous viewers access the content.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the linear delivery modality is made by means of any point-to-multipoint technology (such as DTH Delivery , Cable TV Delivery, Satellite Delivery, IPTV Delivery , Analogue , Mobile Broadcast Technology), for which many simultaneous viewers access the content.</rdfs:comment>
     </owl:Class>
     
 
@@ -424,7 +442,7 @@ It can be used for modelling restriction on the way the final user is charged (o
 
     <owl:Class rdf:about="&mco-ipre;Cable">
         <rdfs:subClassOf rdf:resource="&mco-ipre;BroadcastTechnology"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on television set is co-axial and/or fiber optic cable. It excludes the use of DSL, ADSL, Internet or other IP-based networks.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on television set is co-axial and/or fiber optic cable. It excludes the use of DSL, ADSL, Internet or other IP-based networks.</rdfs:comment>
     </owl:Class>
     
 
@@ -434,7 +452,7 @@ It can be used for modelling restriction on the way the final user is charged (o
     <owl:Class rdf:about="&mco-ipre;CommunicationToThePublic">
         <rdfs:subClassOf rdf:resource="&mvco;PublicCommunication"/>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitIPRights"/>
-        <rdfs:comment>for modelling a PublicCommunication in which the public is not present in the place where the communication is originated. Also subclass of mvco:PublicCommunication.</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling a PublicCommunication in which the public is not present in the place where the communication is originated.</rdfs:comment>
     </owl:Class>
     
 
@@ -443,7 +461,7 @@ It can be used for modelling restriction on the way the final user is charged (o
 
     <owl:Class rdf:about="&mco-ipre;Computer">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Device"/>
-        <rdfs:comment>For modelling the restriction that the device used by the final user for the fruition of content is a computer equipment.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the device used by the final user for the fruition of content is a computer equipment.</rdfs:comment>
     </owl:Class>
     
 
@@ -453,7 +471,7 @@ It can be used for modelling restriction on the way the final user is charged (o
     <owl:Class rdf:about="&mco-ipre;DeliveryModality">
         <rdfs:label>DeliveryModality</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact about the way the content is delivered to the viewer/user according to the control over the selection of the content and over their organization in a chronological schedule or in a catalogue: Linear vs Non-Linear.
+        <rdfs:comment xml:lang="en">Fact about the way the content is delivered to the viewer/user according to the control over the selection of the content and over their organization in a chronological schedule or in a catalogue: Linear vs Non-Linear.
 It can be used for modelling restrictions based on who (and how) has the control on the time (and place) of fruition of the communication to the public</rdfs:comment>
     </owl:Class>
     
@@ -464,7 +482,7 @@ It can be used for modelling restrictions based on who (and how) has the control
     <owl:Class rdf:about="&mco-ipre;Device">
         <rdfs:label>Device</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact about the Device which has been used to execute a certain Action, used for modelling the restrictions on the type of equipment used by the final user for the fruition of content.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact about the Device which has been used to execute a certain Action, used for modelling the restrictions on the type of equipment used by the final user for the fruition of content.</rdfs:comment>
     </owl:Class>
     
 
@@ -473,7 +491,7 @@ It can be used for modelling restrictions based on who (and how) has the control
 
     <owl:Class rdf:about="&mco-ipre;Download">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Internet"/>
-        <rdfs:comment>Use of the HTTP protocol or equivalent to retrieve content from a network.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Use of the HTTP protocol or equivalent to retrieve content from a network.</rdfs:comment>
     </owl:Class>
     
 
@@ -490,7 +508,7 @@ It can be used for modelling restrictions based on who (and how) has the control
 
     <owl:Class rdf:about="&mco-ipre;Duplicate">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitIPRights"/>
-        <rdfs:comment>the Action of duplicating the physical materials (including preprint materials, internegatives, interpositives, prints, soundtrack and still photos) in any medium now or hereafter known for the purpose of fully exploiting the Distribution rights.</rdfs:comment>
+        <rdfs:comment xml:lang="en">the Action of duplicating the physical materials (including preprint materials, internegatives, interpositives, prints, soundtrack and still photos) in any medium now or hereafter known for the purpose of fully exploiting the Distribution rights.</rdfs:comment>
     </owl:Class>
     
 
@@ -499,7 +517,7 @@ It can be used for modelling restrictions based on who (and how) has the control
 
     <owl:Class rdf:about="&mco-ipre;Excerpt">
         <rdfs:subClassOf rdf:resource="&mvco;Adaptation"/>
-        <rdfs:comment>for modelling this particular derivative work which cannot be made without the authorisation of the original author</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling this particular derivative work which cannot be made without the authorisation of the original author</rdfs:comment>
     </owl:Class>
     
 
@@ -508,7 +526,7 @@ It can be used for modelling restrictions based on who (and how) has the control
 
     <owl:Class rdf:about="&mco-ipre;ExploitIPRights">
         <rdfs:subClassOf rdf:resource="&mvco;Action"/>
-        <rdfs:comment>Action of exploiting the IP rights in some way</rdfs:comment>
+        <rdfs:comment xml:lang="en">Action of exploiting the IP rights in some way</rdfs:comment>
     </owl:Class>
     
 
@@ -518,7 +536,7 @@ It can be used for modelling restrictions based on who (and how) has the control
     <owl:Class rdf:about="&mco-ipre;ExploitationCondition">
         <rdfs:label>ExploitationCondition</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mvco;Fact"/>
-        <rdfs:comment>Fact used as Condition for the Exploitation of an IP Entity</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact used as Condition for the Exploitation of an IP Entity</rdfs:comment>
     </owl:Class>
     
 
@@ -527,7 +545,7 @@ It can be used for modelling restrictions based on who (and how) has the control
 
     <owl:Class rdf:about="&mco-ipre;Fixate">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitIPRights"/>
-        <rdfs:comment>the action by which a work or a performance is materially recorded</rdfs:comment>
+        <rdfs:comment xml:lang="en">the action by which a work or a performance is materially recorded</rdfs:comment>
     </owl:Class>
     
 
@@ -537,7 +555,7 @@ It can be used for modelling restrictions based on who (and how) has the control
     <owl:Class rdf:about="&mco-ipre;FreeOfCharge">
         <rdfs:label>FreeOfCharge</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;AccessPolicy"/>
-        <rdfs:comment>Fact on the modality of access to a certain Content, where no payment has been made to execute an Action.
+        <rdfs:comment xml:lang="en">Fact on the modality of access to a certain Content, where no payment has been made to execute an Action.
 For modelling the restriction that no charge is due other than fees levied by government agencies.</rdfs:comment>
     </owl:Class>
     
@@ -547,7 +565,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;IPEntityContext">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment rdf:datatype="&xsd;string">modeling the restriction on the IPEntity, over which a deontic expression is applied, to belong to a particular editorial context, e.g. being a part of another IPEntity. The Fact to hold, requires that between the two IPEntities there is a relationship such as mvco:isMadeUpOf</rdfs:comment>
+        <rdfs:comment xml:lang="en">modeling the restriction on the IPEntity, over which a deontic expression is applied, to belong to a particular editorial context, e.g. being a part of another IPEntity. The Fact to hold, requires that between the two IPEntities there is a relationship such as mvco:isMadeUpOf</rdfs:comment>
     </owl:Class>
     
 
@@ -556,7 +574,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;IPNetwork">
         <rdfs:subClassOf rdf:resource="&mco-ipre;BroadcastTechnology"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users is DSL or ADSL or any IP-based network via a dedicated private (or virtual private) network, but excluding Internet</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is DSL or ADSL or any IP-based network via a dedicated private (or virtual private) network, but excluding Internet</rdfs:comment>
     </owl:Class>
     
 
@@ -565,7 +583,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;Internet">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Means"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users is based on TCP/IP software protocols or any equivalent protocol.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is based on TCP/IP software protocols or any equivalent protocol.</rdfs:comment>
     </owl:Class>
     
 
@@ -575,7 +593,7 @@ For modelling the restriction that no charge is due other than fees levied by go
     <owl:Class rdf:about="&mco-ipre;Language">
         <rdfs:label>Language</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>For modelling the language for communication to the public, such as that for dubbing and/or that for subtitles.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the language for communication to the public, such as that for dubbing and/or that for subtitles.</rdfs:comment>
     </owl:Class>
     
 
@@ -584,7 +602,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;Length">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact defining restrictions about the length, i.e. duration, of the content materilal resulting from the Action.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact defining restrictions about the length, i.e. duration, of the content material resulting from the Action.</rdfs:comment>
     </owl:Class>
     
 
@@ -593,7 +611,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;Limited">
         <rdfs:subClassOf rdf:resource="&mco-ipre;UserTimeAccess"/>
-        <rdfs:comment>For expressing a limited availability over time of the content for the access by the end user (e.g. rental)</rdfs:comment>
+        <rdfs:comment xml:lang="en">For expressing a limited availability over time of the content for the access by the end user (e.g. rental)</rdfs:comment>
     </owl:Class>
     
 
@@ -602,7 +620,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;Linear">
         <rdfs:subClassOf rdf:resource="&mco-ipre;DeliveryModality"/>
-        <rdfs:comment>For modelling the restriction that the delivery modality is made by a media service provider simultaneously to many end users, on the basis of a programme schedule</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the delivery modality is made by a media service provider simultaneously to many end users, on the basis of a programme schedule</rdfs:comment>
     </owl:Class>
     
 
@@ -611,7 +629,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;MakeCutAndEdit">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Transform"/>
-        <rdfs:comment>for modelling cut, translation, editing, and what else alter the audiovisual content for customary exploitation purposes</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling cut, translation, editing, and what else alter the audiovisual content for customary exploitation purposes</rdfs:comment>
     </owl:Class>
     
 
@@ -620,7 +638,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;MakeExcerpt">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Transform"/>
-        <rdfs:comment>for modelling the use and exploitation of excerpts separate from the source audiovisual content</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling the use and exploitation of excerpts separate from the source audiovisual content</rdfs:comment>
     </owl:Class>
     
 
@@ -630,7 +648,7 @@ For modelling the restriction that no charge is due other than fees levied by go
     <owl:Class rdf:about="&mco-ipre;Means">
         <rdfs:label>Means</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact for modelling restrictions on the way in which the content is delivered to the public</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact for modelling restrictions on the way in which the content is delivered to the public</rdfs:comment>
     </owl:Class>
     
 
@@ -639,7 +657,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;MobileBroadcastDevice">
         <rdfs:subClassOf rdf:resource="&mco-ipre;MobileDevice"/>
-        <rdfs:comment>For modelling the restriction that the device used by the final user for the fruition of content is a mobile device capable of receiving transmission by means of wireless standard or technology for the point to multi-point broadcast of audio-visual contents to portable devices. It is a subclass of both mcowl:TelevisionDevice and mcowl:MobileDevice.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the device used by the final user for the fruition of content is a mobile device capable of receiving transmission by means of wireless standard or technology for the point to multi-point broadcast of audio-visual contents to portable devices. It is a subclass of both mcowl:TelevisionDevice and mcowl:MobileDevice.</rdfs:comment>
     </owl:Class>
     
 
@@ -649,7 +667,7 @@ For modelling the restriction that no charge is due other than fees levied by go
     <owl:Class rdf:about="&mco-ipre;MobileBroadcastTechnology">
         <rdfs:subClassOf rdf:resource="&mco-ipre;BroadcastTechnology"/>
         <rdfs:subClassOf rdf:resource="&mco-ipre;MobileTechnology"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on portable device is point-to-multi-point.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on portable device is point-to-multi-point.</rdfs:comment>
     </owl:Class>
     
 
@@ -658,7 +676,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;MobileDevice">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Device"/>
-        <rdfs:comment>For modelling the restriction that the device used by the final user for the fruition of content is a any portable equipment capable of receiving transmissions while the user is in motion.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the device used by the final user for the fruition of content is a any portable equipment capable of receiving transmissions while the user is in motion.</rdfs:comment>
     </owl:Class>
     
 
@@ -667,7 +685,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;MobileTechnology">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Means"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users is for reception while the user is in motion for viewing on a mobile device.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is for reception while the user is in motion for viewing on a mobile device.</rdfs:comment>
     </owl:Class>
     
 
@@ -676,7 +694,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;MobileTelecommunicationDevice">
         <rdfs:subClassOf rdf:resource="&mco-ipre;MobileDevice"/>
-        <rdfs:comment>For modelling the restriction that the device used by the final user for the fruition of content is a mobile device capable of receiving transmission by means of technologies used in point-to-point mobile telecommunications (such as GSM, UMTS, W-CDMA, DCS-1800, HSDPA, HSUPA, and their derivative systems).</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the device used by the final user for the fruition of content is a mobile device capable of receiving transmission by means of technologies used in point-to-point mobile telecommunications (such as GSM, UMTS, W-CDMA, DCS-1800, HSDPA, HSUPA, and their derivative systems).</rdfs:comment>
     </owl:Class>
     
 
@@ -685,7 +703,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;MobileTelecommunicationTechnology">
         <rdfs:subClassOf rdf:resource="&mco-ipre;MobileTechnology"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on portable device is point-to-point.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users for fruition on portable device is point-to-point.</rdfs:comment>
     </owl:Class>
     
 
@@ -694,7 +712,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;NonLinear">
         <rdfs:subClassOf rdf:resource="&mco-ipre;DeliveryModality"/>
-        <rdfs:comment>For modelling the restriction that the delivery modality is made by a media service provider for the view at the moment chosen by the end user and at his individual request on the basis of a catalogue of programmes selected by the media service provider. This delivery modality is also known as “makeAvailable”</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the delivery modality is made by a media service provider for the view at the moment chosen by the end user and at his individual request on the basis of a catalogue of programmes selected by the media service provider. This delivery modality is also known as “makeAvailable”</rdfs:comment>
     </owl:Class>
     
 
@@ -703,7 +721,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;OnDemandBasis">
         <rdfs:subClassOf rdf:resource="&mco-ipre;NonLinear"/>
-        <rdfs:comment>For modelling the restriction that the delivery of the of the non-linear modality is made in response to a user request</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the delivery of the of the non-linear modality is made in response to a user request</rdfs:comment>
     </owl:Class>
     
 
@@ -712,7 +730,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;OnDemandDownload">
         <rdfs:subClassOf rdf:resource="&mco-ipre;OnDemandBasis"/>
-        <rdfs:comment>For modelling the restriction that the on demand basis delivery is made of the reception of data to the user’s system from a remote system for viewing for limited time or perpetuity.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the on demand basis delivery is made of the reception of data to the user’s system from a remote system for viewing for limited time or perpetuity.</rdfs:comment>
     </owl:Class>
     
 
@@ -721,7 +739,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;OnDemandStreaming">
         <rdfs:subClassOf rdf:resource="&mco-ipre;OnDemandBasis"/>
-        <rdfs:comment>For modelling the restriction that the on demand basis delivery is made in streaming modality.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the on demand basis delivery is made in streaming modality.</rdfs:comment>
     </owl:Class>
     
 
@@ -730,7 +748,7 @@ For modelling the restriction that no charge is due other than fees levied by go
 
     <owl:Class rdf:about="&mco-ipre;Open">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ServiceAccessPolicy"/>
-        <rdfs:comment>For modelling the restriction that the service is provided to all consumers without the need for approval by the media service provider. This condition is independent from the policy of access that could be free of charge or pay.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the service is provided to all consumers without the need for approval by the media service provider. This condition is independent from the policy of access that could be free of charge or pay.</rdfs:comment>
     </owl:Class>
     
 
@@ -740,7 +758,7 @@ For modelling the restriction that no charge is due other than fees levied by go
     <owl:Class rdf:about="&mco-ipre;Pay">
         <rdfs:label>Pay</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;AccessPolicy"/>
-        <rdfs:comment>Fact on the modality of access to a certain Content, where a payment in any form has been made to execute an Action.
+        <rdfs:comment xml:lang="en">Fact on the modality of access to a certain Content, where a payment in any form has been made to execute an Action.
 For modelling the restriction that the content is accessible to the viewer through payment.</rdfs:comment>
     </owl:Class>
     
@@ -750,7 +768,7 @@ For modelling the restriction that the content is accessible to the viewer throu
 
     <owl:Class rdf:about="&mco-ipre;PayPerView">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Pay"/>
-        <rdfs:comment>For modelling the restriction that the acces requires a payment by the final user on a per-exhibition basis, at the time scheduled by the media service provider by continous exhibition.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the access requires a payment by the final user on a per-exhibition basis, at the time scheduled by the media service provider by continous exhibition.</rdfs:comment>
     </owl:Class>
     
 
@@ -761,8 +779,7 @@ For modelling the restriction that the content is accessible to the viewer throu
         <rdfs:label>PublicPerformance</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mvco;PublicCommunication"/>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitIPRights"/>
-        <owl:versionInfo>1.1</owl:versionInfo>
-        <rdfs:comment>for modelling a PublicCommunication in which the work is showed or played in public</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling a PublicCommunication in which the work is showed or played in public</rdfs:comment>
     </owl:Class>
     
 
@@ -771,7 +788,7 @@ For modelling the restriction that the content is accessible to the viewer throu
 
     <owl:Class rdf:about="&mco-ipre;Radio">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Means"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users is Radio.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is Radio.</rdfs:comment>
     </owl:Class>
     
 
@@ -780,7 +797,7 @@ For modelling the restriction that the content is accessible to the viewer throu
 
     <owl:Class rdf:about="&mco-ipre;Remix">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Transform"/>
-        <rdfs:comment>for modelling the to recombine audio tracks or channels from a recording to produce a new or modified audio recording</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modeling the recombination of audio tracks or channels from a recording to produce a new or modified audio recording.</rdfs:comment>
     </owl:Class>
     
 
@@ -789,7 +806,7 @@ For modelling the restriction that the content is accessible to the viewer throu
 
     <owl:Class rdf:about="&mco-ipre;Restricted">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ServiceAccessPolicy"/>
-        <rdfs:comment>For modelling the restriction that the service is provided only to customers who have obtained an approval by the media service provider. The provider knows and manages the consumer. The restricted policy service access is often linked to the concept of subscription (payment of service) but free forms of restricted access are also possible.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the service is provided only to customers who have obtained an approval by the media service provider. The provider knows and manages the consumer. The restricted policy service access is often linked to the concept of subscription (payment of service) but free forms of restricted access are also possible.</rdfs:comment>
     </owl:Class>
     
 
@@ -798,7 +815,7 @@ For modelling the restriction that the content is accessible to the viewer throu
 
     <owl:Class rdf:about="&mco-ipre;RobotDevice">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Device"/>
-        <rdfs:comment>For modelling the restriction that the device used by the final user for the fruition of content is any equipment capable of performing automated tasks without human interaction.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the device used by the final user for the fruition of content is any equipment capable of performing automated tasks without human interaction.</rdfs:comment>
     </owl:Class>
     
 
@@ -808,7 +825,7 @@ For modelling the restriction that the content is accessible to the viewer throu
     <owl:Class rdf:about="&mco-ipre;Run">
         <rdfs:label>Run</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>For modelling restrictions on maximum number of runs, that is the number of times which an Action can be executed.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling restrictions on maximum number of runs, that is the number of times which an Action can be executed.</rdfs:comment>
     </owl:Class>
     
 
@@ -817,7 +834,7 @@ For modelling the restriction that the content is accessible to the viewer throu
 
     <owl:Class rdf:about="&mco-ipre;Satellite">
         <rdfs:subClassOf rdf:resource="&mco-ipre;BroadcastTechnology"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users makes use of a geostationary satellite system.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users makes use of a geostationary satellite system.</rdfs:comment>
     </owl:Class>
     
 
@@ -827,7 +844,7 @@ For modelling the restriction that the content is accessible to the viewer throu
     <owl:Class rdf:about="&mco-ipre;ServiceAccessPolicy">
         <rdfs:label>ServiceAccessPolicy</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact about the service access policy. It can be used for modelling restrictions on how the access of the final users to the services delivery the content object of the communication to the public is established (i.e. open or restricted).</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact about the service access policy. It can be used for modelling restrictions on how the access of the final users to the services delivery the content object of the communication to the public is established (i.e. open or restricted).</rdfs:comment>
     </owl:Class>
     
 
@@ -836,7 +853,7 @@ For modelling the restriction that the content is accessible to the viewer throu
 
     <owl:Class rdf:about="&mco-ipre;SpatialContext">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact describing the location of a User at the moment of his execution of an Action.
+        <rdfs:comment xml:lang="en">Fact describing the location of a User at the moment of his execution of an Action.
 For modelling restrictions on the Territory when an Action can be executed.</rdfs:comment>
     </owl:Class>
     
@@ -846,7 +863,7 @@ For modelling restrictions on the Territory when an Action can be executed.</rdf
 
     <owl:Class rdf:about="&mco-ipre;StorageDevice">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Device"/>
-        <rdfs:comment>For modelling the restriction that the device used by the final user for the fruition of content is any device with storage capabilities, allowing the user to keep and reuse the content saved locally.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the device used by the final user for the fruition of content is any device with storage capabilities, allowing the user to keep and reuse the content saved locally.</rdfs:comment>
     </owl:Class>
     
 
@@ -855,7 +872,7 @@ For modelling restrictions on the Territory when an Action can be executed.</rdf
 
     <owl:Class rdf:about="&mco-ipre;Subscription">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Pay"/>
-        <rdfs:comment>For modelling the restriction that the access requires a payment of a subscription fee by the final user.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the access requires a payment of a subscription fee by the final user.</rdfs:comment>
     </owl:Class>
     
 
@@ -864,7 +881,7 @@ For modelling restrictions on the Territory when an Action can be executed.</rdf
 
     <owl:Class rdf:about="&mco-ipre;TelevisionDevice">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Device"/>
-        <rdfs:comment>For modelling the restriction that the device used by the final user for the fruition of content is any equipment with television functionalities.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the device used by the final user for the fruition of content is any equipment with television functionalities.</rdfs:comment>
     </owl:Class>
     
 
@@ -873,7 +890,7 @@ For modelling restrictions on the Territory when an Action can be executed.</rdf
 
     <owl:Class rdf:about="&mco-ipre;TelevisionSet">
         <rdfs:subClassOf rdf:resource="&mco-ipre;TelevisionDevice"/>
-        <rdfs:comment>For modelling the restriction that the Television device used by the final user for the fruition of content is not a mobile broadcast device.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the Television device used by the final user for the fruition of content is not a mobile broadcast device.</rdfs:comment>
     </owl:Class>
     
 
@@ -882,7 +899,7 @@ For modelling restrictions on the Territory when an Action can be executed.</rdf
 
     <owl:Class rdf:about="&mco-ipre;TemporalContext">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact describing the time of a User at the moment of his execution of an Action. 
+        <rdfs:comment xml:lang="en">Fact describing the time of a User at the moment of his execution of an Action. 
 For modelling the “licence period”, that the time when an Action can be executed.
 </rdfs:comment>
     </owl:Class>
@@ -893,7 +910,7 @@ For modelling the “licence period”, that the time when an Action can be exec
 
     <owl:Class rdf:about="&mco-ipre;Terrestrial">
         <rdfs:subClassOf rdf:resource="&mco-ipre;BroadcastTechnology"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users makes use of a terrestrial television transmitter.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users makes use of a terrestrial television transmitter.</rdfs:comment>
     </owl:Class>
     
 
@@ -902,7 +919,7 @@ For modelling the “licence period”, that the time when an Action can be exec
 
     <owl:Class rdf:about="&mco-ipre;Transform">
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitIPRights"/>
-        <rdfs:comment>for modelling all forms of modifications. </rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling all forms of modifications. </rdfs:comment>
     </owl:Class>
     
 
@@ -919,7 +936,7 @@ For modelling the “licence period”, that the time when an Action can be exec
 
     <owl:Class rdf:about="&mco-ipre;Unlimited">
         <rdfs:subClassOf rdf:resource="&mco-ipre;UserTimeAccess"/>
-        <rdfs:comment>For expressing unlimited availability over time of the content for the access by the end user</rdfs:comment>
+        <rdfs:comment xml:lang="en">For expressing unlimited availability over time of the content for the access by the end user</rdfs:comment>
     </owl:Class>
     
 
@@ -928,7 +945,7 @@ For modelling the “licence period”, that the time when an Action can be exec
 
     <owl:Class rdf:about="&mco-ipre;Upload">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Internet"/>
-        <rdfs:comment>Use of the HTTP protocol or equivalent to store content in a network.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Use of the HTTP protocol or equivalent to store content in a network.</rdfs:comment>
     </owl:Class>
     
 
@@ -938,7 +955,7 @@ For modelling the “licence period”, that the time when an Action can be exec
     <owl:Class rdf:about="&mco-ipre;UserTimeAccess">
         <rdfs:label>UserTimeAccess</rdfs:label>
         <rdfs:subClassOf rdf:resource="&mco-ipre;ExploitationCondition"/>
-        <rdfs:comment>Fact about the user time access. It can be used for modelling restrictions based on the possibility to establish expiration of the time of availability of the content for the fruition of the final user (e.g. rental).</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact about the user time access. It can be used for modelling restrictions based on the possibility to establish expiration of the time of availability of the content for the fruition of the final user (e.g. rental).</rdfs:comment>
     </owl:Class>
     
 
@@ -947,7 +964,7 @@ For modelling the “licence period”, that the time when an Action can be exec
 
     <owl:Class rdf:about="&mco-ipre;Videogram">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Means"/>
-        <rdfs:comment>For modelling the restriction that the technology used for the transmission of audiovisual content to end users is the creation of a container in any format (such as videocassets, DVD, DVD-RIM, internet access ready DVD, CDi, CD, CD-ROM, UMD, VCD).</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the technology used for the transmission of audiovisual content to end users is the creation of a container in any format (such as videocassets, DVD, DVD-RIM, internet access ready DVD, CDi, CD, CD-ROM, UMD, VCD).</rdfs:comment>
     </owl:Class>
     
 
@@ -956,30 +973,7 @@ For modelling the “licence period”, that the time when an Action can be exec
 
     <owl:Class rdf:about="&mco-ipre;Webcasting">
         <rdfs:subClassOf rdf:resource="&mco-ipre;Linear"/>
-        <rdfs:comment>For modelling the restriction that the linear delivery modality is made by streaming via Internet.</rdfs:comment>
+        <rdfs:comment xml:lang="en">For modelling the restriction that the linear delivery modality is made by streaming via Internet.</rdfs:comment>
     </owl:Class>
     
-
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Individuals
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    
-
-
-    <!-- urn:mpeg:mpeg21:mco:ipre:2012#MakeAdaptation001 -->
-
-    <owl:NamedIndividual rdf:about="&mco-ipre;MakeAdaptation001">
-        <rdf:type rdf:resource="&mvco;MakeAdaptation"/>
-    </owl:NamedIndividual>
 </rdf:RDF>
-
-
-
-<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
-

@@ -5,8 +5,8 @@
     <!ENTITY mco-core "urn:mpeg:mpeg21:mco:core:2012#" >
     <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
     <!ENTITY dii "urn:mpeg:mpeg21:2002:01-DII-NS#" >
-    <!ENTITY vcard "http://www.w3.org/2006/vcard/ns#" >
     <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
+    <!ENTITY vcard "http://www.w3.org/2006/vcard/ns#" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
     <!ENTITY mvco "http://purl.oclc.org/NET/mvco.owl#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
@@ -14,7 +14,7 @@
 ]>
 
 
-<rdf:RDF 
+<rdf:RDF xmlns="urn:mpeg:mpeg21:mco:core:2012#"
      xml:base="urn:mpeg:mpeg21:mco:core:2012"
      xmlns:dc="http://purl.org/dc/elements/1.1/"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
@@ -25,11 +25,12 @@
      xmlns:dii="urn:mpeg:mpeg21:2002:01-DII-NS#"
      xmlns:mvco="http://purl.oclc.org/NET/mvco.owl#"
      xmlns:vcard="http://www.w3.org/2006/vcard/ns#">
-     <owl:Ontology rdf:about="urn:mpeg:mpeg21:mco:core:2012"> 
-	<dc:title rdf:datatype="&xsd;string">Media Contract Ontology -  Core</dc:title>
-     	<!--owl:imports rdf:resource="http://purl.oclc.org/NET/mvco.owl"/-->
-     	<owl:imports rdf:resource="http://purl.oclc.org/NET/mvco.owl"/>
-     </owl:Ontology>
+    <owl:Ontology rdf:about="urn:mpeg:mpeg21:mco:core:2012">
+        <dc:title rdf:datatype="&xsd;string">Media Contract Ontology -  Core</dc:title>
+        <owl:imports rdf:resource="http://purl.oclc.org/NET/mvco.owl"/>
+        <owl:versionIRI rdf:resource="urn:mpeg:mpeg21:mco:core:2012/cor1"/>
+    </owl:Ontology>
+    
 
 
     <!-- 
@@ -40,23 +41,42 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
-    <owl:AnnotationProperty rdf:about="&dc;creator"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/contributor -->
+
     <owl:AnnotationProperty rdf:about="&dc;contributor"/>
-    <owl:AnnotationProperty rdf:about="&dc;language"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/creator -->
+
+    <owl:AnnotationProperty rdf:about="&dc;creator"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/date -->
+
     <owl:AnnotationProperty rdf:about="&dc;date"/>
-    <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/language -->
+
+    <owl:AnnotationProperty rdf:about="&dc;language"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/title -->
+
     <owl:AnnotationProperty rdf:about="&dc;title"/>
     
 
 
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Datatypes
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
+    <!-- http://www.w3.org/2000/01/rdf-schema#comment -->
 
+    <owl:AnnotationProperty rdf:about="&rdfs;comment"/>
     
 
 
@@ -74,7 +94,7 @@
     <!-- http://purl.oclc.org/NET/mvco.owl#actedBy -->
 
     <rdf:Description rdf:about="&mvco;actedBy">
-        <rdfs:range rdf:resource="&mco-core;Organization"/>
+        <rdfs:subPropertyOf rdf:resource="&mco-core;actedBy"/>
     </rdf:Description>
     
 
@@ -82,7 +102,7 @@
     <!-- http://purl.oclc.org/NET/mvco.owl#actedOver -->
 
     <rdf:Description rdf:about="&mvco;actedOver">
-        <rdfs:range rdf:resource="&mco-core;Service"/>
+        <rdfs:subPropertyOf rdf:resource="&mco-core;actedOver"/>
     </rdf:Description>
     
 
@@ -90,8 +110,7 @@
     <!-- http://purl.oclc.org/NET/mvco.owl#hasRequired -->
 
     <owl:ObjectProperty rdf:about="&mvco;hasRequired">
-        <rdfs:domain rdf:resource="&mco-core;Obligation"/>
-        <rdfs:domain rdf:resource="&mco-core;Prohibition"/>
+        <rdfs:subPropertyOf rdf:resource="&mco-core;hasRequired"/>
     </owl:ObjectProperty>
     
 
@@ -99,9 +118,7 @@
     <!-- http://purl.oclc.org/NET/mvco.owl#issuedBy -->
 
     <owl:ObjectProperty rdf:about="&mvco;issuedBy">
-        <rdfs:domain rdf:resource="&mco-core;Obligation"/>
-        <rdfs:range rdf:resource="&mco-core;Organization"/>
-        <rdfs:domain rdf:resource="&mco-core;Prohibition"/>
+        <rdfs:subPropertyOf rdf:resource="&mco-core;issuedBy"/>
     </owl:ObjectProperty>
     
 
@@ -112,10 +129,37 @@
     
 
 
+    <!-- urn:mpeg:mpeg21:mco:core:2012#actedBy -->
+
+    <owl:ObjectProperty rdf:about="&mco-core;actedBy">
+        <rdfs:comment xml:lang="en">for  extending the range of mvco:actedBy</rdfs:comment>
+        <rdfs:domain rdf:resource="&mvco;Action"/>
+        <rdfs:range rdf:resource="&mco-core;Party"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- urn:mpeg:mpeg21:mco:core:2012#actedOver -->
+
+    <owl:ObjectProperty rdf:about="&mco-core;actedOver">
+        <rdfs:comment xml:lang="en">for  extending the range of mvco:actedOver</rdfs:comment>
+        <rdfs:domain rdf:resource="&mvco;Action"/>
+        <rdfs:range>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&mvco;IPEntity"/>
+                    <rdf:Description rdf:about="&mco-core;Service"/>
+                </owl:unionOf>
+            </owl:Class>
+        </rdfs:range>
+    </owl:ObjectProperty>
+    
+
+
     <!-- urn:mpeg:mpeg21:mco:core:2012#cancels -->
 
     <owl:ObjectProperty rdf:about="&mco-core;cancels">
-        <rdfs:comment rdf:datatype="&xsd;string">the parties agree to cancel all the effects of the referenced contract</rdfs:comment>
+        <rdfs:comment xml:lang="en">the parties agree to cancel all the effects of the referenced contract</rdfs:comment>
         <rdfs:subPropertyOf rdf:resource="&mco-core;contractProperty"/>
     </owl:ObjectProperty>
     
@@ -124,7 +168,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#contractProperty -->
 
     <owl:ObjectProperty rdf:about="&mco-core;contractProperty">
-        <rdfs:comment rdf:datatype="&xsd;string">parent property of all the properties attributable to celowl:mco-core:Contract as both domain and range, for modelling relationships between contracts</rdfs:comment>
+        <rdfs:comment xml:lang="en">parent property of all the properties attributable to mco-core:Contract as both domain and range, for modelling relationships between contracts</rdfs:comment>
         <rdfs:range rdf:resource="&mco-core;Contract"/>
         <rdfs:domain rdf:resource="&mco-core;Contract"/>
     </owl:ObjectProperty>
@@ -134,7 +178,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#forbidsAction -->
 
     <owl:ObjectProperty rdf:about="&mco-core;forbidsAction">
-        <rdfs:comment>Relation used to express the Actions that are forbidden</rdfs:comment>
+        <rdfs:comment xml:lang="en">Relation used to express the Actions that are forbidden</rdfs:comment>
         <rdfs:range rdf:resource="&mvco;Action"/>
         <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
         <rdfs:domain rdf:resource="&mco-core;Prohibition"/>
@@ -145,7 +189,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#hasFact -->
 
     <owl:ObjectProperty rdf:about="&mco-core;hasFact">
-        <rdfs:comment>relation between a FactComposition and each of its component Facts</rdfs:comment>
+        <rdfs:comment xml:lang="en">relation between a FactComposition and each of its component Facts</rdfs:comment>
         <rdfs:range rdf:resource="&mvco;Fact"/>
         <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
         <rdfs:domain rdf:resource="&mco-core;FactComposition"/>
@@ -156,9 +200,19 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#hasParty -->
 
     <owl:ObjectProperty rdf:about="&mco-core;hasParty">
-        <rdfs:range rdf:resource="&mvco;User"/>
+        <rdfs:comment xml:lang="en">relation used to express a party in a contract</rdfs:comment>
         <rdfs:domain rdf:resource="&mco-core;Contract"/>
-        <rdfs:range rdf:resource="&mco-core;Organization"/>
+        <rdfs:range rdf:resource="&mco-core;Party"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- urn:mpeg:mpeg21:mco:core:2012#hasRequired -->
+
+    <owl:ObjectProperty rdf:about="&mco-core;hasRequired">
+        <rdfs:comment xml:lang="en">for  extending the domain of mvco:hasRequired</rdfs:comment>
+        <rdfs:range rdf:resource="&mvco;Fact"/>
+        <rdfs:domain rdf:resource="&mco-core;DeonticExpression"/>
     </owl:ObjectProperty>
     
 
@@ -166,7 +220,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#hasSignatory -->
 
     <owl:ObjectProperty rdf:about="&mco-core;hasSignatory">
-        <rdfs:comment rdf:datatype="&xsd;string">for  modelling the identification of the signatory on behalf of a party</rdfs:comment>
+        <rdfs:comment xml:lang="en">for  modelling the identification of the signatory on behalf of a party</rdfs:comment>
         <rdfs:range rdf:resource="&mvco;User"/>
         <rdfs:domain rdf:resource="&mco-core;Organization"/>
     </owl:ObjectProperty>
@@ -176,10 +230,9 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#hasVCard -->
 
     <owl:ObjectProperty rdf:about="&mco-core;hasVCard">
-        <rdfs:comment rdf:datatype="&xsd;string">for modelling the address information of the contract parties and signatories</rdfs:comment>
-        <rdfs:domain rdf:resource="&mvco;User"/>
+        <rdfs:comment xml:lang="en">for modelling the address information of the contract parties and signatories</rdfs:comment>
         <rdfs:range rdf:resource="&vcard;VCard"/>
-        <rdfs:domain rdf:resource="&mco-core;Organization"/>
+        <rdfs:domain rdf:resource="&mco-core;Party"/>
     </owl:ObjectProperty>
     
 
@@ -187,7 +240,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#implements -->
 
     <owl:ObjectProperty rdf:about="&mco-core;implements">
-        <rdfs:comment rdf:datatype="&xsd;string">for modelling the reference from a deontic expression to narrative contract excerpts of which it makes the operative part</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling the reference from a deontic expression to narrative contract excerpts of which it makes the operative part</rdfs:comment>
         <rdfs:domain rdf:resource="&mco-core;DeonticExpression"/>
         <rdfs:range rdf:resource="&mco-core;TextualClause"/>
     </owl:ObjectProperty>
@@ -197,7 +250,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#isAmendmentOf -->
 
     <owl:ObjectProperty rdf:about="&mco-core;isAmendmentOf">
-        <rdfs:comment rdf:datatype="&xsd;string">the referenced contract is partially modified by the new agreement</rdfs:comment>
+        <rdfs:comment xml:lang="en">the referenced contract is partially modified by the new agreement</rdfs:comment>
         <rdfs:subPropertyOf rdf:resource="&mco-core;contractProperty"/>
     </owl:ObjectProperty>
     
@@ -206,9 +259,19 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#isSignedBy -->
 
     <owl:ObjectProperty rdf:about="&mco-core;isSignedBy">
-        <rdfs:comment rdf:datatype="&xsd;string">relation used to identify the signatory of a contract when different from a party</rdfs:comment>
+        <rdfs:comment xml:lang="en">relation used to identify the signatory of a contract when different from a party</rdfs:comment>
         <rdfs:range rdf:resource="&mvco;User"/>
         <rdfs:domain rdf:resource="&mco-core;Contract"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- urn:mpeg:mpeg21:mco:core:2012#issuedBy -->
+
+    <owl:ObjectProperty rdf:about="&mco-core;issuedBy">
+        <rdfs:comment xml:lang="en">for  extending the domain and range of mvco:issuedBy</rdfs:comment>
+        <rdfs:domain rdf:resource="&mco-core;DeonticExpression"/>
+        <rdfs:range rdf:resource="&mco-core;Party"/>
     </owl:ObjectProperty>
     
 
@@ -216,7 +279,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#issuedIn -->
 
     <owl:ObjectProperty rdf:about="&mco-core;issuedIn">
-        <rdfs:comment rdf:datatype="&xsd;string">for modelling the identification of the contract in which the deontic expression is issued, in any context where information about multiple contracts are collected</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling the identification of the contract in which the deontic expression is issued, in any context where information about multiple contracts are collected</rdfs:comment>
         <rdfs:range rdf:resource="&mco-core;Contract"/>
         <rdfs:domain rdf:resource="&mco-core;DeonticExpression"/>
     </owl:ObjectProperty>
@@ -226,7 +289,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#makesTrue -->
 
     <owl:ObjectProperty rdf:about="&mco-core;makesTrue">
-        <rdfs:comment>Relation between an Action and the ActionDone facts which hold on its accomplishment  </rdfs:comment>
+        <rdfs:comment xml:lang="en">relation used to express the dependency between the truth of a Fact and the status of a related action</rdfs:comment>
         <rdfs:domain rdf:resource="&mvco;Action"/>
         <rdfs:range rdf:resource="&mco-core;ActionRelatedFact"/>
     </owl:ObjectProperty>
@@ -236,7 +299,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#obligatesAction -->
 
     <owl:ObjectProperty rdf:about="&mco-core;obligatesAction">
-        <rdfs:comment>Relation used to express the Actions that are obligated to be performed.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Relation used to express the Actions that are obligated to be performed.</rdfs:comment>
         <rdfs:range rdf:resource="&mvco;Action"/>
         <rdfs:subPropertyOf rdf:resource="&owl;topObjectProperty"/>
         <rdfs:domain rdf:resource="&mco-core;Obligation"/>
@@ -247,7 +310,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#prevailsOver -->
 
     <owl:ObjectProperty rdf:about="&mco-core;prevailsOver">
-        <rdfs:comment rdf:datatype="&xsd;string">the referenced contract is generally still valid, but the in case of conflict the terms of the new one prevail</rdfs:comment>
+        <rdfs:comment xml:lang="en">the referenced contract is generally still valid, but the in case of conflict the terms of the new one prevail</rdfs:comment>
         <rdfs:subPropertyOf rdf:resource="&mco-core;contractProperty"/>
     </owl:ObjectProperty>
     
@@ -256,9 +319,8 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#providesTo -->
 
     <owl:ObjectProperty rdf:about="&mco-core;providesTo">
-        <rdfs:comment rdf:datatype="&xsd;string">for attributing the beneficiary of a mco-core:ProvideMaterial Action</rdfs:comment>
-        <rdfs:range rdf:resource="&mvco;User"/>
-        <rdfs:range rdf:resource="&mco-core;Organization"/>
+        <rdfs:comment xml:lang="en">for attributing the beneficiary of a mco-core:ProvideMaterial Action</rdfs:comment>
+        <rdfs:range rdf:resource="&mco-core;Party"/>
         <rdfs:domain rdf:resource="&mco-core;ProvideMaterial"/>
     </owl:ObjectProperty>
     
@@ -267,7 +329,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#supersedes -->
 
     <owl:ObjectProperty rdf:about="&mco-core;supersedes">
-        <rdfs:comment rdf:datatype="&xsd;string">the referenced contract has to be considered terminated by the new agreement which totally replaces it</rdfs:comment>
+        <rdfs:comment xml:lang="en">the referenced contract has to be considered terminated by the new agreement which totally replaces it</rdfs:comment>
         <rdfs:subPropertyOf rdf:resource="&mco-core;contractProperty"/>
     </owl:ObjectProperty>
     
@@ -293,7 +355,7 @@
     <!-- urn:mpeg:mpeg21:2002:01-DII-NS#Identifier -->
 
     <owl:DatatypeProperty rdf:about="&dii;Identifier">
-        <rdfs:comment rdf:datatype="&xsd;string">it allows the identification information of a Digital Item</rdfs:comment>
+        <rdfs:comment xml:lang="en">it allows the identification information of a Digital Item</rdfs:comment>
         <rdfs:domain rdf:resource="&mvco;IPEntity"/>
         <rdfs:range rdf:resource="&xsd;string"/>
     </owl:DatatypeProperty>
@@ -303,10 +365,9 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#Address -->
 
     <owl:DatatypeProperty rdf:about="&mco-core;Address">
-        <rdfs:comment rdf:datatype="&xsd;string">it attributes address information as plain text</rdfs:comment>
-        <rdfs:domain rdf:resource="&mvco;User"/>
+        <rdfs:comment xml:lang="en">it attributes address information as plain text</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;string"/>
-        <rdfs:domain rdf:resource="&mco-core;Organization"/>
+        <rdfs:domain rdf:resource="&mco-core;Party"/>
     </owl:DatatypeProperty>
     
 
@@ -314,7 +375,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#Signature -->
 
     <owl:DatatypeProperty rdf:about="&mco-core;Signature">
-        <rdfs:comment rdf:datatype="&xsd;string">for expressing acceptance of the contract terms and identification of the signatory</rdfs:comment>
+        <rdfs:comment xml:lang="en">for expressing acceptance of the contract terms and identification of the signatory</rdfs:comment>
         <rdfs:domain rdf:resource="&mvco;User"/>
         <rdfs:range rdf:resource="&rdf;XMLLiteral"/>
     </owl:DatatypeProperty>
@@ -324,7 +385,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#Text -->
 
     <owl:DatatypeProperty rdf:about="&mco-core;Text">
-        <rdfs:comment rdf:datatype="&xsd;string">it contains the text of a textual clause of the narrative contract, i.e.  an excerpt of the narrative contract text. </rdfs:comment>
+        <rdfs:comment xml:lang="en">it contains the text of a textual clause of the narrative contract, i.e.  an excerpt of the narrative contract text. </rdfs:comment>
         <rdfs:range rdf:resource="&rdfs;Literal"/>
         <rdfs:domain rdf:resource="&mco-core;TextualClause"/>
     </owl:DatatypeProperty>
@@ -334,7 +395,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#TextVersion -->
 
     <owl:DatatypeProperty rdf:about="&mco-core;TextVersion">
-        <rdfs:comment rdf:datatype="&xsd;string">it contains the whole text of the narrative contract</rdfs:comment>
+        <rdfs:comment xml:lang="en">it contains the whole text of the narrative contract</rdfs:comment>
         <rdfs:range rdf:resource="&rdfs;Literal"/>
         <rdfs:domain rdf:resource="&mco-core;Contract"/>
     </owl:DatatypeProperty>
@@ -344,7 +405,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#deonticProperty -->
 
     <owl:DatatypeProperty rdf:about="&mco-core;deonticProperty">
-        <rdfs:comment>superclass of all the properties attributable to a Deontic Expression</rdfs:comment>
+        <rdfs:comment xml:lang="en">superclass of all the properties attributable to a Deontic Expression</rdfs:comment>
         <rdfs:subPropertyOf rdf:resource="&owl;topDataProperty"/>
     </owl:DatatypeProperty>
     
@@ -353,7 +414,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#encryptedContractPart -->
 
     <owl:DatatypeProperty rdf:about="&mco-core;encryptedContractPart">
-        <rdfs:comment rdf:datatype="&xsd;string">for addressing the encryption needs regarding a part, or the entirety, of a contract document</rdfs:comment>
+        <rdfs:comment xml:lang="en">for addressing the encryption needs regarding a part, or the entirety, of a contract document</rdfs:comment>
         <rdfs:range rdf:resource="&rdf;XMLLiteral"/>
         <rdfs:domain rdf:resource="&mco-core;Contract"/>
     </owl:DatatypeProperty>
@@ -363,7 +424,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#factProperty -->
 
     <owl:DatatypeProperty rdf:about="&mco-core;factProperty">
-        <rdfs:comment>superclass of all the properties attributable to a Fact</rdfs:comment>
+        <rdfs:comment xml:lang="en">superclass of all the properties attributable to a Fact</rdfs:comment>
         <rdfs:subPropertyOf rdf:resource="&owl;topDataProperty"/>
     </owl:DatatypeProperty>
     
@@ -372,7 +433,7 @@
     <!-- urn:mpeg:mpeg21:mco:core:2012#isOnLoan -->
 
     <owl:DatatypeProperty rdf:about="&mco-core;isOnLoan">
-        <rdfs:comment rdf:datatype="&xsd;string">It attributes that the Material is provided  on loan, thus the property of Material is kept by the provider. It can be considered false if not given.</rdfs:comment>
+        <rdfs:comment xml:lang="en">It attributes that the Material is provided  on loan, thus the property of Material is kept by the provider. It can be considered false if not given.</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;boolean"/>
         <rdfs:domain rdf:resource="&mco-core;ProvideMaterial"/>
     </owl:DatatypeProperty>
@@ -402,6 +463,12 @@
     
 
 
+    <!-- http://purl.oclc.org/NET/mvco.owl#IPEntity -->
+
+    <owl:Class rdf:about="&mvco;IPEntity"/>
+    
+
+
     <!-- http://purl.oclc.org/NET/mvco.owl#Permission -->
 
     <owl:Class rdf:about="&mvco;Permission"/>
@@ -424,7 +491,7 @@
 
     <owl:Class rdf:about="&mco-core;ActionDone">
         <rdfs:subClassOf rdf:resource="&mco-core;ActionRelatedFact"/>
-        <rdfs:comment rdf:datatype="&xsd;string">Fact whose truth value depends on the accomplishment of Actions related to it by the mco-core:makesTrue property </rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact whose truth value depends on the accomplishment of Actions related to it by the mco-core:makesTrue property </rdfs:comment>
     </owl:Class>
     
 
@@ -433,8 +500,7 @@
 
     <owl:Class rdf:about="&mco-core;ActionRelatedFact">
         <rdfs:subClassOf rdf:resource="&mvco;Fact"/>
-        <rdfs:comment rdf:datatype="&xsd;string">Fact whose truth value depends on the status of Actions related to it by the 
-mco-core:makesTrue property</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact whose truth value depends on the status of Actions related to it by the mco-core:makesTrue property</rdfs:comment>
     </owl:Class>
     
 
@@ -443,7 +509,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;ActionStarted">
         <rdfs:subClassOf rdf:resource="&mco-core;ActionRelatedFact"/>
-        <rdfs:comment rdf:datatype="&xsd;string">Fact whose truth value depends on the beginning of Actions related to it by the mco-core:makesTrue property.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact whose truth value depends on the beginning of Actions related to it by the mco-core:makesTrue property.</rdfs:comment>
     </owl:Class>
     
 
@@ -452,7 +518,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Authenticate">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Confirm the identity of a Content item in a value chain</rdfs:comment>
+        <rdfs:comment xml:lang="en">Confirm the identity of a Content item in a value chain</rdfs:comment>
     </owl:Class>
     
 
@@ -461,7 +527,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;ConsumeService">
         <rdfs:subClassOf rdf:resource="&mvco;Action"/>
-        <rdfs:comment>Consume a Service.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Consume a Service.</rdfs:comment>
     </owl:Class>
     
 
@@ -469,7 +535,7 @@ mco-core:makesTrue property</rdfs:comment>
     <!-- urn:mpeg:mpeg21:mco:core:2012#Contract -->
 
     <owl:Class rdf:about="&mco-core;Contract">
-        <rdfs:comment>the contract entity itself</rdfs:comment>
+        <rdfs:comment xml:lang="en">the contract entity itself</rdfs:comment>
     </owl:Class>
     
 
@@ -478,7 +544,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Deliver">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Transfer Content between Users of a value chain</rdfs:comment>
+        <rdfs:comment xml:lang="en">Transfer Content between Users of a value chain</rdfs:comment>
     </owl:Class>
     
 
@@ -495,7 +561,7 @@ mco-core:makesTrue property</rdfs:comment>
                 </owl:unionOf>
             </owl:Class>
         </owl:equivalentClass>
-        <rdfs:comment>Defined class. An individual belongs to this class if it belongs to either celowl:Prohibition, celowl:Prohibition or mvco:Permission.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Defined class. An individual belongs to this class if it belongs to either mco-core:Prohibition, mco-core:Prohibition or mvco:Permission.</rdfs:comment>
     </owl:Class>
     
 
@@ -504,7 +570,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Describe">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Associate metadata to Content in a value chain</rdfs:comment>
+        <rdfs:comment xml:lang="en">Associate metadata to Content in a value chain</rdfs:comment>
     </owl:Class>
     
 
@@ -513,7 +579,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;FactComposition">
         <rdfs:subClassOf rdf:resource="&mvco;Fact"/>
-        <rdfs:comment>Fact whose truth depends on one or more atomic facts, being an atomic fact the fact whose truth depends on no other fact</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact whose truth depends on one or more atomic facts, being an atomic fact the fact whose truth depends on no other fact</rdfs:comment>
     </owl:Class>
     
 
@@ -522,7 +588,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;FactIntersection">
         <rdfs:subClassOf rdf:resource="&mco-core;FactComposition"/>
-        <rdfs:comment>Fact  whose truth value will be evaluated as holding if any of the two Facts which must be related to it through an object property do also hold. It is restricted to being related with two and exactly two other Facts.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact  whose truth value will be evaluated as holding if any of the two Facts which must be related to it through an object property do also hold. It is restricted to being related with two and exactly two other Facts.</rdfs:comment>
     </owl:Class>
     
 
@@ -531,7 +597,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;FactNegation">
         <rdfs:subClassOf rdf:resource="&mco-core;FactComposition"/>
-        <rdfs:comment>Fact  whose truth value will be evaluated as holding if the only Facts which must be related to it through does not hold. It is restricted to being related with one and only one other Fact.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact  whose truth value will be evaluated as holding if the only Facts which must be related to it through does not hold. It is restricted to being related with one and only one other Fact.</rdfs:comment>
     </owl:Class>
     
 
@@ -540,7 +606,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;FactUnion">
         <rdfs:subClassOf rdf:resource="&mco-core;FactComposition"/>
-        <rdfs:comment>Fact  whose truth value will be evaluated as holding if the two Facts which must be related to it through an object property do also hold. It is restricted to being related with two and exactly two other Facts</rdfs:comment>
+        <rdfs:comment xml:lang="en">Fact  whose truth value will be evaluated as holding if the two Facts which must be related to it through an object property do also hold. It is restricted to being related with two and exactly two other Facts</rdfs:comment>
     </owl:Class>
     
 
@@ -549,7 +615,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Identify">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Assign Identifiers to Content in a value chain</rdfs:comment>
+        <rdfs:comment xml:lang="en">Assign Identifiers to Content in a value chain</rdfs:comment>
     </owl:Class>
     
 
@@ -558,7 +624,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;InteractWith">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Trigger an action within a value chain through Content presented</rdfs:comment>
+        <rdfs:comment xml:lang="en">Trigger an action within a value chain through Content presented</rdfs:comment>
     </owl:Class>
     
 
@@ -566,7 +632,7 @@ mco-core:makesTrue property</rdfs:comment>
     <!-- urn:mpeg:mpeg21:mco:core:2012#Obligation -->
 
     <owl:Class rdf:about="&mco-core;Obligation">
-        <rdfs:comment>Clause binding one of the parties to execute an Action</rdfs:comment>
+        <rdfs:comment xml:lang="en">Clause binding one of the parties to execute an Action</rdfs:comment>
     </owl:Class>
     
 
@@ -574,7 +640,7 @@ mco-core:makesTrue property</rdfs:comment>
     <!-- urn:mpeg:mpeg21:mco:core:2012#Organization -->
 
     <owl:Class rdf:about="&mco-core;Organization">
-        <rdfs:comment rdf:datatype="&xsd;string">for modelling a party represented in the contract by a signatory</rdfs:comment>
+        <rdfs:comment xml:lang="en">for modelling a party represented in the contract by a signatory</rdfs:comment>
     </owl:Class>
     
 
@@ -583,7 +649,23 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Package">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Make Content ready for delivery</rdfs:comment>
+        <rdfs:comment xml:lang="en">Make Content ready for delivery</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- urn:mpeg:mpeg21:mco:core:2012#Party -->
+
+    <owl:Class rdf:about="&mco-core;Party">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&mvco;User"/>
+                    <rdf:Description rdf:about="&mco-core;Organization"/>
+                </owl:unionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="en">Defined class. An individual belongs to this class if it belongs to either mvco:User or mco-core:Organization</rdfs:comment>
     </owl:Class>
     
 
@@ -592,7 +674,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Post">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Let other Users access their Content</rdfs:comment>
+        <rdfs:comment xml:lang="en">Let other Users access their Content</rdfs:comment>
     </owl:Class>
     
 
@@ -601,7 +683,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Present">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Experience Content</rdfs:comment>
+        <rdfs:comment xml:lang="en">Experience Content</rdfs:comment>
     </owl:Class>
     
 
@@ -610,7 +692,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Process">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Perform operations on Content in a value chain</rdfs:comment>
+        <rdfs:comment xml:lang="en">Perform operations on Content in a value chain</rdfs:comment>
     </owl:Class>
     
 
@@ -618,7 +700,7 @@ mco-core:makesTrue property</rdfs:comment>
     <!-- urn:mpeg:mpeg21:mco:core:2012#Prohibition -->
 
     <owl:Class rdf:about="&mco-core;Prohibition">
-        <rdfs:comment>Clause binding one of the parties not to execute an Action</rdfs:comment>
+        <rdfs:comment xml:lang="en">Clause binding one of the parties not to execute an Action</rdfs:comment>
     </owl:Class>
     
 
@@ -627,7 +709,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;ProvideMaterial">
         <rdfs:subClassOf rdf:resource="&mvco;Action"/>
-        <rdfs:comment rdf:datatype="&xsd;string">The action of providing at the disposal of (or making a delivery to)  a mvco:User or mco-core:Organization material related to an IPEntity (copies or instances)</rdfs:comment>
+        <rdfs:comment xml:lang="en">The action of providing at the disposal of (or making a delivery to)  a mvco:User or mco-core:Organization material related to an IPEntity (copies or instances)</rdfs:comment>
     </owl:Class>
     
 
@@ -636,7 +718,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;ProvideService">
         <rdfs:subClassOf rdf:resource="&mvco;Action"/>
-        <rdfs:comment>Offer a Service</rdfs:comment>
+        <rdfs:comment xml:lang="en">Offer a Service</rdfs:comment>
     </owl:Class>
     
 
@@ -644,7 +726,7 @@ mco-core:makesTrue property</rdfs:comment>
     <!-- urn:mpeg:mpeg21:mco:core:2012#Service -->
 
     <owl:Class rdf:about="&mco-core;Service">
-        <rdfs:comment>Transaction between two parties, where one of them performs a task for the second </rdfs:comment>
+        <rdfs:comment xml:lang="en">Transaction between two parties, where one of them performs a task for the second </rdfs:comment>
     </owl:Class>
     
 
@@ -653,7 +735,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Store">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Save Content for later use</rdfs:comment>
+        <rdfs:comment xml:lang="en">Save Content for later use</rdfs:comment>
     </owl:Class>
     
 
@@ -661,7 +743,7 @@ mco-core:makesTrue property</rdfs:comment>
     <!-- urn:mpeg:mpeg21:mco:core:2012#TextualClause -->
 
     <owl:Class rdf:about="&mco-core;TextualClause">
-        <rdfs:comment rdf:datatype="&xsd;string">a specific part of a narrative contract which can be referenced</rdfs:comment>
+        <rdfs:comment xml:lang="en">a specific part of a narrative contract which can be referenced</rdfs:comment>
     </owl:Class>
     
 
@@ -670,7 +752,7 @@ mco-core:makesTrue property</rdfs:comment>
 
     <owl:Class rdf:about="&mco-core;Verify">
         <rdfs:subClassOf rdf:resource="&mco-core;Service"/>
-        <rdfs:comment>Check the integrity of Content</rdfs:comment>
+        <rdfs:comment xml:lang="en">Check the integrity of Content</rdfs:comment>
     </owl:Class>
 </rdf:RDF>
 

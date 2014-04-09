@@ -63,6 +63,7 @@ set inoutparent = `dirname $1`
 set inbase = `basename $1`
 set outbase = $this.$$.out
 set copyprefixes = false
+set copyprefixes = true
 $javabin -jar $jarpath mcoparent $mcoparent inoutparent $inoutparent inbase $inbase outbase $outbase copyprefixes $copyprefixes outserialization $outserialization >& $pdir/logs/$this.$$
 if ( -ersf $inoutparent/$outbase ) then
 	mv $inoutparent/$outbase $2

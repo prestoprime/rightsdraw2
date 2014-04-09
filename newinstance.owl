@@ -6,6 +6,7 @@
     <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY mvco "http://purl.oclc.org/NET/mvco.owl#" >
     <!ENTITY mco-core "urn:mpeg:mpeg21:mco:core:2012#" >
     <!ENTITY mco-ipre "urn:mpeg:mpeg21:mco:ipre:2012#" >
 ]>
@@ -22,6 +23,7 @@
     <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
     <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
     <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="mvco" IRI="http://purl.oclc.org/NET/mvco.owl#"/>
     <Prefix name="mco-core" IRI="urn:mpeg:mpeg21:mco:core:2012#"/>
     <Prefix name="mco-ipre" IRI="urn:mpeg:mpeg21:mco:ipre:2012#"/>
     <Import>urn:mpeg:mpeg21:mco:ipre:2012</Import>
