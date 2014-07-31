@@ -16,6 +16,7 @@ The MCO context, with prefix <i>/cgi-bin/rightsdraw2/&lt;user&gt;/mco</i>, provi
 <a href="#addtextualclause">addtextualclause</a>
 <a href="#contactbook">contactbook</a>
 <a href="#create">create</a>
+<a href="#definedeontic">definedeontic</a>
 <a href="#definefragment">definefragment</a>
 <a href="#definepermission">definepermission</a>
 <a href="#delete">delete</a>
@@ -132,7 +133,7 @@ Adds a number of Media Contract Facts, together with their DataProperties, to ei
 		</ul>
 		<p> <b>Returned content-type:</b> text/plain </p>
 		<p>
-		<b>See also:</b> <a href="#definepermission">definepermission</a>
+		<b>See also:</b> <a href="#definedeontic">definedeontic</a><a href="#definepermission">definepermission</a>
 		</p>
 
 <!-- //////////////////////////////////////////////////////////////-->
@@ -251,6 +252,67 @@ After creation the OWL document is immediately open for editing, by re-direction
 		<p> <b>Returned content-type:</b> text/html </p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>
+		<a name="definedeontic">
+		<h4>Name: definedeontic</h4>
+		<p>
+		<b>Description</b>
+It completely defines a Permission or Obligation or Prohibition for an Action, including all required Facts and their DataProperties.  
+If the given <i>handle</i> is of Class mvco:IPEntity (or its SubClasses), both a Permission and the Action will be created and thus the deontic expression will be completely defined.
+If the given <i>handle</i> is of Class mvco:Permission (or mco-core:Obligation or mco-core:Prohibition), the permitted (or obligated or forbidden) Action will be created, but the IPEntity over which it can (or must or cannot) be acted will still need to be identified.
+		</p>
+		<p>
+		<b>Method:</b> GET
+		</p>
+		<p>
+		<b>Parameters:</b>
+		</p>
+		<ul>
+			<li><b>handle</b> - IRI of Individual from which the request was activated. If it is of Class mvco:IPentity (or its subclasses), a new mvco:Permission will be created, otherwise the <i>handle</i> is expected to be an undefined Permission
+			<li><b>instance</b> - name of OWL file
+			<li><b>deonticaction</b> - IRI of a SubClassOf mvco:Action, which is going to be permitted (or obligated or forbidden) by the defined Permission (or Obligation or Prohibition)
+			<li>DataProperties of the Permission
+			<li><b>isexclusive</b> - boolean value of mco-ipre:isExlclusive  (default: false) 
+			<li><b>hassublicense</b> - boolean value of mco-ipre:hasSublicenseRight  (default: true) 
+			<li>Classes of Facts
+			<li><b>accesspolicy</b> - IRI of a SubClassOf mco-ipre:AccessPolicy
+			<li><b>deliverymodality</b> - IRI of a SubClassOf mco-ipre:DeliveryModality
+			<li><b>device</b> - IRI of a SubClassOf mco-ipre:Device
+			<li><b>means</b> - IRI of a SubClassOf mco-ipre:Means
+			<li><b>relatedaction</b> - IRI of a SubClassOf mco-core:ActionRelatedFact
+			<li><b>serviceaccesspolicy</b> - IRI of a SubClassOf mco-ipre:ServiceAccessPolicy
+			<li><b>usertimeaccess</b> - IRI of a SubClassOf mco-ipre:UserTimeAccess
+			<li>Flags for setting Facts to Negative
+			<li><b>negativeaccesspolicy</b> 
+			<li><b>negativechannels</b> 
+			<li><b>negativedeliverymodality</b>
+			<li><b>negativedevice</b>
+			<li><b>negativelanguages</b>
+			<li><b>negativemeans</b>
+			<li><b>negativepartofipentitycontext</b>
+			<li><b>negativerelatedaction</b>
+			<li><b>negativeserviceaccesspolicy</b>
+			<li><b>negativespatialcontext</b>
+			<li><b>negativetemporalcontext</b>
+			<li><b>negativeusertimeaccess</b>
+			<li>DataProperties implying related Facts
+			<li><b>afterdate</b> - value of mco-ipre:afterDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>beforedate</b> - value of mco-ipre:beforeDate for a mco-ipre:TemporalContext - format: YYYYMMDD
+			<li><b>channels</b> - value of mco-rai2013:hasChannel for a mco-rai2013:NetworkContext - format: list of channel URIs
+			<li><b>languages</b> - value of mco-ipre:hasLanguage for a mco-ipre:Language - format: list of ISO 639-1 language codes (each as '#&lt;code&gt;;') 
+			<li><b>maxlength</b> - value of mco-ipre:hasMaxLength for a mco-ipre:Length - ISO 8601 Duration
+			<li><b>numruns</b> - value of mco-ipre:hasNumberOfRuns for a mco-ipre:Run - format: positiveInteger
+			<li><b>runduration</b> - value of mco-ipre:hasValidity for a mco-ipre:Run - ISO 8601 Duration
+			<li><b>numreps</b> - value of mco-ipre:hasNumberOfRepetitions for a mco-ipre:Run - format: positiveInteger
+			<li><b>territories</b> - value of mco-ipre:hasCountry for a mco-ipre:SpatialContext - format: list of ISO 3166 country codes (each as '#&lt;CODE&gt;;') 
+			<li>Other inputs implying related Facts
+			<li><b>partofipentitycontext</b> - IRI of IPEntity to be used as range for a mco-ipre:IPEntityContext fact through ObjectProperty mco-ipre:partOf
+		</ul>
+		<p> <b>Returned content-type:</b> text/plain </p>
+		<p>
+		<b>See also:</b> <a href="#addfacts">addfacts</a>, <a href="#definepermission">definepermission</a>.
+		</p>
+<!-- //////////////////////////////////////////////////////////////-->
+<hr/>
 		<a name="definefragment">
 		<h4>Name: definefragment</h4>
 		<p>
@@ -332,7 +394,7 @@ If the given <i>handle</i> is of Class mvco:IPEntity (or its SubClasses), both t
 		</ul>
 		<p> <b>Returned content-type:</b> text/plain </p>
 		<p>
-		<b>See also:</b> <a href="#addfacts">addfacts</a>
+		<b>See also:</b> <a href="#addfacts">addfacts</a>, <a href="#definedeontic">definedeontic</a> (from which can be replaced)
 		</p>
 <!-- //////////////////////////////////////////////////////////////-->
 <hr/>

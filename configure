@@ -231,7 +231,7 @@ while ( $i <= $#argv )
                 set apacheconfigdir = "$argv[$i]"
         else if ( "$argv[$i]" == "--apachehtpasswdcmd" ) then
                 @ i++
-                set apachehtpaswdcmd = "$argv[$i]"
+                set apachehtpasswdcmd = "$argv[$i]"
         else if ( "$argv[$i]" == "--apacheuser" ) then
                 @ i++
                 set apacheuser = "$argv[$i]"

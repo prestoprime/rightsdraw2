@@ -61,7 +61,7 @@
 		<xsl:choose>
 			<xsl:when test="$class='Contract'"><xsl:call-template name="contract"/></xsl:when>
 			<xsl:when test="$class='User' or $class='Organization'"><xsl:call-template name="party"/></xsl:when>
-			<xsl:when test="$class='Permission'"><xsl:call-template name="permission"/></xsl:when>
+			<xsl:when test="$class='Permission' or $class='Obligation' or $class='Prohibition'"><xsl:call-template name="permission"/></xsl:when>
 			<xsl:when test="$class='TextualClause'"><xsl:call-template name="textualclause"/></xsl:when>
 			<xsl:when test="contains($ListOfActions,$pclass)"><xsl:call-template name="action"/></xsl:when>
 			<xsl:when test="contains($ListOfIPEntities,$pclass)"><xsl:call-template name="ipentity"/></xsl:when>
@@ -526,7 +526,8 @@
 	<form action="addobj" method="get" target="mco_log">
 		<xsl:call-template name="inserthiddeninput"/>
 		<input type="submit" value="Issued by"/>
-		<input type="hidden" name="obj" value="http://purl.oclc.org/NET/mvco.owl#issuedBy"/>
+		<!-- input type="hidden" name="obj" value="http://purl.oclc.org/NET/mvco.owl#issuedBy"/-->
+		<input type="hidden" name="obj" value="urn:mpeg:mpeg21:mco:core:2012#issuedBy"/>
 		<select name="ind">
 			<xsl:call-template name="insertparties"/>
 		</select>
@@ -559,7 +560,8 @@
 </xsl:choose>
 <xsl:choose>
 	<!--doesn't check position of named individual, which should be 1 by itself -->
-	<xsl:when test="/owl:Ontology/owl:ObjectPropertyAssertion[owl:NamedIndividual/@IRI = $ind and substring-after(owl:ObjectProperty/@IRI,'#')='permitsAction']">
+	<!--xsl:when test="/owl:Ontology/owl:ObjectPropertyAssertion[owl:NamedIndividual/@IRI = $ind and substring-after(owl:ObjectProperty/@IRI,'#')='permitsAction']"-->
+	<xsl:when test="/owl:Ontology/owl:ObjectPropertyAssertion[owl:NamedIndividual/@IRI = $ind and contains(substring-after(owl:ObjectProperty/@IRI,'#'),'sAction')]">
 <!--div name="implements" style="float:left">
 	<form action="addobj" method="get" target="mco_log">
 		<xsl:call-template name="inserthiddeninput"/>
@@ -586,12 +588,14 @@
 </div>	
 <div  style="float:right">
 	<xsl:call-template name="insertfactcomposition"/>
-	<xsl:call-template name="insertpercentages">
-		<xsl:with-param name="percentage">urn:mpeg:mpeg21:mco:ipre:2012#hasUsePercentage</xsl:with-param>
-	</xsl:call-template>
-	<xsl:call-template name="insertpercentages">
-		<xsl:with-param name="percentage">urn:mpeg:mpeg21:mco:ipre:2012#hasIncomePercentage</xsl:with-param>
-	</xsl:call-template>
+	<xsl:if test="$class='Permission'">
+		<xsl:call-template name="insertpercentages">
+			<xsl:with-param name="percentage">urn:mpeg:mpeg21:mco:ipre:2012#hasUsePercentage</xsl:with-param>
+		</xsl:call-template>
+		<xsl:call-template name="insertpercentages">
+			<xsl:with-param name="percentage">urn:mpeg:mpeg21:mco:ipre:2012#hasIncomePercentage</xsl:with-param>
+		</xsl:call-template>
+	</xsl:if>
 </div>
 	<xsl:call-template name="addfacts"/>
 	</xsl:when>
@@ -818,17 +822,33 @@
 <!-- ************************************************************************* -->
 <xsl:template name="definepermission">
 <div name="definepermission" style="float:left;background:#f0f0f0">
-	<form id="pform" action="definepermission" method="get" target="mco_log">
+	<form id="pform" action="definedeontic" method="get" target="mco_log">
 		<script id="jscal1x">var cal1x = new CalendarPopup(); </script>
 		<xsl:call-template name="inserthiddeninput"/>
-		<input type="submit" value="Define Permission to"/>
-		<select name="permittedaction">
+		<!--input type="submit" value="Define Permission to"/-->
+		<xsl:choose>
+			<xsl:when test="$class='Permission'">
+				<input type="submit" value="Define Permission to"/>
+			</xsl:when>
+			<xsl:when test="$class='Obligation'">
+				<input type="submit" value="Define Obligation to"/>
+			</xsl:when>
+			<xsl:when test="$class='Prohibition'">
+				<input type="submit" value="Define Prohibition to"/>
+			</xsl:when>
+			<xsl:otherwise><!-- As class can be IPEntity, in which case we stay for previous behavior of creating Permission -->
+				<input type="submit" value="Define Permission to"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		<select name="deonticaction">
 			<xsl:call-template name="ActionOptions"/>
 		</select> 
 		<br/>
-		exclusive: <input type="checkbox"  name="isexclusive"/>
-		sublicense: <input type="checkbox" checked="checked" name="hassublicense"/>
-		<br/>
+		<xsl:if test="$class!='Obligation' and $class != 'Prohibition'">
+			exclusive: <input type="checkbox"  name="isexclusive"/>
+			sublicense: <input type="checkbox" checked="checked" name="hassublicense"/>
+			<br/>
+		</xsl:if>
 		<xsl:call-template name="factsform-conditions"/>
 		<xsl:call-template name="factsform-constraints"/>
 	</form>
